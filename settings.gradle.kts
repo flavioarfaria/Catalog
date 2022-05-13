@@ -14,3 +14,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Catalog"
 include(":sample", ":catalog")
+include(":compiler")
