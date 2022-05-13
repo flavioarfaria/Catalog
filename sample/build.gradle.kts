@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    compileSdk = 31
+    compileSdk = 32
 
     defaultConfig {
         applicationId = "com.flaviofaria.catalog"
@@ -17,6 +17,7 @@ android {
     kotlinOptions {
         freeCompilerArgs += "-Xcontext-receivers"
     }
+    namespace = "com.flaviofaria.catalog.sample"
 }
 
 

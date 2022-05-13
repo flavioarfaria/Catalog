@@ -4,9 +4,12 @@ plugins {
 }
 
 android {
+    compileSdk = 32
+
     kotlinOptions {
         freeCompilerArgs += "-Xcontext-receivers"
     }
+    namespace = "com.flaviofaria.catalog"
 }
 
 dependencies {
