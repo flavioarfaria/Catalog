@@ -1,9 +1,34 @@
 plugins {
-    id("java-library")
     id("org.jetbrains.kotlin.jvm")
+    `java-library`
+    `java-gradle-plugin`
+    `maven-publish`
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    targetCompatibility = JavaVersion.VERSION_1_7
+dependencies {
+    implementation(gradleApi())
+}
+
+gradlePlugin {
+    plugins {
+        create("catalog") {
+            id = "com.flaviofaria.catalog"
+            implementationClass = "com.flaviofaria.catalog.CatalogPlugin"
+        }
+    }
+}
+
+group = "com.flaviofaria.catalog"
+version = "0.1"
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "com.flaviofaria.catalog"
+            artifactId = "catalog"
+            version = "0.1"
+
+            from(components["java"])
+        }
+    }
 }

@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("com.flaviofaria.catalog") version "0.1"
 }
 
 android {
