@@ -13,14 +13,15 @@ class MainActivity : AppCompatActivity() {
     setContentView(TextView(this).apply {
       text = Strings.appName()
     })
+    /*R.string.app_name_demo
+    R.string.app_name_debug*/
   }
 
-  object Strings {
+  object Strings
 
-    context(Context)
-    fun appName(): String {
-      return getString(R.string.app_name)
-    }
+  context(Context)
+          private fun Strings.appName(): String {
+    return getString(R.string.app_name)
   }
 
 }

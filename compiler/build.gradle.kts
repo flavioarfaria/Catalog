@@ -1,12 +1,13 @@
+dependencies {
+    implementation("com.android.tools.build:gradle:7.2.0")
+}
+
 plugins {
     id("org.jetbrains.kotlin.jvm")
+    kotlin("android.extensions")
     `java-library`
     `java-gradle-plugin`
     `maven-publish`
-}
-
-dependencies {
-    implementation(gradleApi())
 }
 
 gradlePlugin {
