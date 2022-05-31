@@ -1,27 +1,22 @@
 package com.flaviofaria.catalog
 
-import android.content.Context
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.flaviofaria.catalog.sample.R
+import com.flaviofaria.catalog.sample.Plurals
+import com.flaviofaria.catalog.sample.StringArrays
+import com.flaviofaria.catalog.sample.Strings
 
 class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(TextView(this).apply {
-      text = Strings.appName()
+      text = Strings.stringWithNonPositionedArgs(1, 2)
+      text = Plurals.somePlural(2, 1, 2)
     })
-    /*R.string.app_name_demo
-    R.string.app_name_debug*/
+    Strings.appName()
+    StringArrays.someStringArray()
+    //stringResource(id = )
   }
-
-  object Strings
-
-  context(Context)
-          private fun Strings.appName(): String {
-    return getString(R.string.app_name)
-  }
-
 }

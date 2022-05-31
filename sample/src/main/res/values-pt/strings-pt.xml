@@ -4,7 +4,7 @@
     <!-- Some test doc 2 -->
     <string name="some_other_string_resource">Some other string resource</string>
     <string name="string_with_non_positioned_args">Args %d are %d out of order</string>
-    <string name="string_with_positioned_args">Args %3$d are %1$f out %4$s of %2$c order</string>
+    <string name="string_with_positioned_args">Argumentos %3$d estão %1$f fora %4$s de %2$c ordem %5$s</string>
 
     <!-- there's no arg count validation, the only risk is going out of bounds -->
     <plurals name="some_plural">
