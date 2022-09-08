@@ -85,10 +85,12 @@ class XmlResourceParser {
                         .textContent
                         .extractArgs()
                         .associateBy { it.position }
-                    highestArgPosition = max(
-                        highestArgPosition,
-                        quantityArgs.values.maxOf { it.position },
-                    )
+                    if (quantityArgs.isNotEmpty()) { // plurals with no argument
+                        highestArgPosition = max(
+                            highestArgPosition,
+                            quantityArgs.values.maxOf { it.position },
+                        )
+                    }
                     allArgs += quantityArgs
                 }
             }
@@ -130,6 +132,9 @@ class XmlResourceParser {
                 continue
             }
             val type = matcher.group(6).first().lowercase().first()
+            if (type == '%') { // double % symbol (escaping)
+                continue
+            }
             val positionGroup = matcher.group(1)
             args += if (positionGroup != null) {
                 require(positionGroup.endsWith("$")) { // TODO improve error message for debugging

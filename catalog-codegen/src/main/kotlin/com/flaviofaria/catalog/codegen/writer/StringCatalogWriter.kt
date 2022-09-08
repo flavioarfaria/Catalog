@@ -20,17 +20,16 @@ class StringCatalogWriter(
                 |import android.content.Context
                 |import android.view.View
                 |import androidx.fragment.app.Fragment
+                |import com.flaviofaria.catalog.runtime.Strings
                 |
                 |import $packageName.R
                 |
-                |object Strings {
+                |${resources.joinToString("\n\n") { it.generateProperty() }}
                 |
-                |${resources.joinToString("\n\n") { it.generateProperty().prependIndent(" ") }}
+                |${resources.joinToString("\n\n") { it.generateContextMethod() }}
                 |
-                |${resources.joinToString("\n\n") { it.generateContextMethod().prependIndent("  ") }}
+                |${resources.joinToString("\n\n") { it.generateFragmentMethod() }}
                 |
-                |${resources.joinToString("\n\n") { it.generateFragmentMethod().prependIndent("  ") }}
-                |}
                 """.trimMargin().toByteArray()
             stream.write(fileContent)
         }
@@ -39,7 +38,7 @@ class StringCatalogWriter(
     // TODO avoid calling toCamelCase() frequently
     private fun ResourceEntry.String.generateProperty(): String {
         return """
-            |${generateDocs()}val ${name.toCamelCase()}: Int
+            |${generateDocs()}inline val Strings.${name.toCamelCase()}: Int
             |  get() = R.string.$name
             """.trimMargin()
     }
@@ -71,10 +70,13 @@ class StringCatalogWriter(
             ", " + sortedArgs.mapIndexed { i, _ -> "arg${i + 1}" }.joinToString()
         } else ""
 
+        val styledByDefault = varargs.isEmpty()
+        val returnType = if (styledByDefault) "CharSequence" else "String"
+        val methodName = if (styledByDefault) "getText" else "getString"
         return """
             |${generateDocs()}context($methodReceiver)
-            |fun ${name.toCamelCase()}(${typedArgs.joinToString()}): String {
-            |  return getString(R.string.$name$varargs)
+            |inline fun Strings.${name.toCamelCase()}(${typedArgs.joinToString()}): $returnType {
+            |  return $methodName(R.string.$name$varargs)
             |}
             """.trimMargin()
     }

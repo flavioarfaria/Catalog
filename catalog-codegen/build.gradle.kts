@@ -1,8 +1,3 @@
-dependencies {
-    implementation("com.android.tools.build:gradle:7.2.0")
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.6.21-1.0.5")
-}
-
 plugins {
     id("org.jetbrains.kotlin.jvm")
     kotlin("android.extensions")
@@ -11,11 +6,24 @@ plugins {
     `maven-publish`
 }
 
-gradlePlugin {
-    plugins {
-        create("catalog") {
-            id = "com.flaviofaria.catalog"
-            implementationClass = "com.flaviofaria.catalog.CatalogPlugin"
+group = "com.flaviofaria.catalog"
+version = "0.1"
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "com.flaviofaria.catalog"
+            artifactId = "catalog-codegen"
+            version = "0.1"
+
+
+            from(components["java"])
         }
     }
+}
+
+
+dependencies {
+    implementation("com.android.tools.build:gradle:7.2.0")
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.7.10-1.0.6")
 }

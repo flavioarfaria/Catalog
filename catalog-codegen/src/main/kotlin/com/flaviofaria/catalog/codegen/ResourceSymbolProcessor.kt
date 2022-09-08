@@ -12,16 +12,14 @@ import java.io.File
 class ResourceSymbolProcessor(
     private val codeGenerator: CodeGenerator,
     private val resourcesPath: String,
+    pkg: String,
     private val xmlResourceParser: XmlResourceParser,
 ) : SymbolProcessor {
 
     private val resourceReducer = ResourceReducer()
-    private val stringCatalogWriter =
-        StringCatalogWriter("com.flaviofaria.catalog.sample") // TODO grab package from manifest
-    private val pluralCatalogWriter =
-        PluralCatalogWriter("com.flaviofaria.catalog.sample") // TODO grab package from manifest
-    private val stringArrayCatalogWriter =
-        StringArrayCatalogWriter("com.flaviofaria.catalog.sample") // TODO grab package from manifest
+    private val stringCatalogWriter = StringCatalogWriter(pkg)
+    private val pluralCatalogWriter = PluralCatalogWriter(pkg)
+    private val stringArrayCatalogWriter = StringArrayCatalogWriter(pkg)
     private var invoked = false
 
     override fun process(resolver: Resolver): List<KSAnnotated> {

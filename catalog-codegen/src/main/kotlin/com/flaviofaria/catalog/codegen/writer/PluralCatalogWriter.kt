@@ -20,17 +20,16 @@ class PluralCatalogWriter(
                 |import android.content.Context
                 |import android.view.View
                 |import androidx.fragment.app.Fragment
+                |import com.flaviofaria.catalog.runtime.Plurals
                 |
                 |import $packageName.R
                 |
-                |object Plurals {
+                |${resources.joinToString("\n\n") { it.generateProperty() }}
                 |
-                |${resources.joinToString("\n\n") { it.generateProperty().prependIndent(" ") }}
+                |${resources.joinToString("\n\n") { it.generateContextMethod() }}
                 |
-                |${resources.joinToString("\n\n") { it.generateContextMethod().prependIndent("  ") }}
+                |${resources.joinToString("\n\n") { it.generateFragmentMethod() }}
                 |
-                |${resources.joinToString("\n\n") { it.generateFragmentMethod().prependIndent("  ") }}
-                |}
                 """.trimMargin().toByteArray()
             stream.write(fileContent)
         }
@@ -39,7 +38,7 @@ class PluralCatalogWriter(
     // TODO avoid calling toCamelCase() frequently
     private fun ResourceEntry.Plural.generateProperty(): String {
         return """
-            |${generateDocs()}val ${name.toCamelCase()}: Int
+            |${generateDocs()}inline val Plurals.${name.toCamelCase()}: Int
             |  get() = R.plurals.$name
             """.trimMargin()
     }
@@ -75,7 +74,7 @@ class PluralCatalogWriter(
 
         return """
             |${generateDocs()}context($methodReceiver)
-            |fun ${name.toCamelCase()}(quantity: Int, ${typedArgs.joinToString()}): String {
+            |inline fun Plurals.${name.toCamelCase()}(quantity: Int, ${typedArgs.joinToString()}): String {
             |  return resources.getQuantityString(R.plurals.$name, quantity$varargs)
             |}
             """.trimMargin()

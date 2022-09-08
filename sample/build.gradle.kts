@@ -1,17 +1,16 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("com.google.devtools.ksp") version "1.6.21-1.0.5"
-    //id("com.flaviofaria.catalog") version "0.1"
 }
 
 android {
-    compileSdk = 32
+    namespace = "com.flaviofaria.catalog.sample"
+    compileSdk = 33
 
     defaultConfig {
         applicationId = "com.flaviofaria.catalog"
         minSdk = 24
-        targetSdk = 31
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
     }
@@ -37,23 +36,14 @@ android {
     /*composeOptions {
         kotlinCompilerExtensionVersion = "1.1.1"
     }*/
-
-    /*kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs += "-Xcontext-receivers"
-    }*/
-    namespace = "com.flaviofaria.catalog.sample"
-}
-
-ksp {
-    arg("resourcesPath", android.sourceSets["main"].res.srcDirs.first().absolutePath)
 }
 
 dependencies {
+    implementation(project(":catalog-runtime"))
+    implementation(project(":library"))
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.1")
     /*implementation("androidx.compose.ui:ui:1.2.0-beta2")
     implementation("androidx.compose.ui:ui-tooling:1.2.0-beta2")*/
     implementation("com.google.android.material:material:1.6.0")
-    ksp(project(":catalog-codegen"))
 }

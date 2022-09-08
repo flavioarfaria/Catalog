@@ -9,7 +9,7 @@ gradlePlugin {
     plugins {
         create("catalog") {
             id = "com.flaviofaria.catalog"
-            implementationClass = "com.flaviofaria.catalog.CatalogPlugin"
+            implementationClass = "com.flaviofaria.catalog.gradle.CatalogPlugin"
         }
     }
 }
@@ -21,7 +21,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = "com.flaviofaria.catalog"
-            artifactId = "catalog"
+            artifactId = "catalog-gradle-plugin"
             version = "0.1"
 
             from(components["java"])
@@ -31,5 +31,5 @@ publishing {
 
 dependencies {
     implementation("com.android.tools.build:gradle:7.2.0")
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.6.21-1.0.5")
+    implementation("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:1.7.10-1.0.6")
 }

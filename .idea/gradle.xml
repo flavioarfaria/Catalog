@@ -13,6 +13,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/catalog-codegen" />
             <option value="$PROJECT_DIR$/catalog-gradle-plugin" />
+            <option value="$PROJECT_DIR$/catalog-runtime" />
+            <option value="$PROJECT_DIR$/library" />
             <option value="$PROJECT_DIR$/sample" />
           </set>
         </option>

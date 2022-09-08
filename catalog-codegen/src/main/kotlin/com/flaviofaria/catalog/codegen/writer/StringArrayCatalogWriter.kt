@@ -23,17 +23,16 @@ class StringArrayCatalogWriter(
                 |import android.content.Context
                 |import android.view.View
                 |import androidx.fragment.app.Fragment
+                |import com.flaviofaria.catalog.runtime.StringArrays
                 |
                 |import $packageName.R
                 |
-                |object StringArrays {
+                |${resources.joinToString("\n\n") { it.generateProperty() }}
                 |
-                |${resources.joinToString("\n\n") { it.generateProperty().prependIndent(" ") }}
+                |${resources.joinToString("\n\n") { it.generateContextMethod() }}
                 |
-                |${resources.joinToString("\n\n") { it.generateContextMethod().prependIndent("  ") }}
+                |${resources.joinToString("\n\n") { it.generateFragmentMethod() }}
                 |
-                |${resources.joinToString("\n\n") { it.generateFragmentMethod().prependIndent("  ") }}
-                |}
                 """.trimMargin().toByteArray()
             stream.write(fileContent)
         }
@@ -42,7 +41,7 @@ class StringArrayCatalogWriter(
     // TODO avoid calling toCamelCase() frequently
     private fun ResourceEntry.StringArray.generateProperty(): String {
         return """
-            |${generateDocs()}val ${name.toCamelCase()}: Int
+            |${generateDocs()}inline val StringArrays.${name.toCamelCase()}: Int
             |  get() = R.array.$name
             """.trimMargin()
     }
@@ -58,7 +57,7 @@ class StringArrayCatalogWriter(
     private fun ResourceEntry.StringArray.generateExtensionMethod(methodReceiver: String): String {
         return """
             |${generateDocs()}context($methodReceiver)
-            |fun ${name.toCamelCase()}(): Array<String> {
+            |inline fun StringArrays.${name.toCamelCase()}(): Array<String> {
             |  return resources.getStringArray(R.array.$name)
             |}
             """.trimMargin()

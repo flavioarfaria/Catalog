@@ -5,6 +5,8 @@
     <string name="some_other_string_resource">Some other string resource</string>
     <string name="string_with_non_positioned_args">Args %d are %d out of order</string>
     <string name="string_with_positioned_args">Argumentos %3$d estão %1$f fora %4$s de %2$c ordem %5$s</string>
+    <string name="double_percent_symbol">Símbolo %% duplo</string>
+    <string name="escaped_percent_symbol">\% escapado</string>
 
     <!-- there's no arg count validation, the only risk is going out of bounds -->
     <plurals name="some_plural">
