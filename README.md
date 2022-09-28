@@ -29,6 +29,15 @@ You can also use Catalog to access the resource id directly:
 
 Catalog also works with plurals and string arrays. In the future, other resource types will also be supported.
 
+Resource comments are also carried over to extension properties and methods:
+
+```xml
+<!-- This string resource is used in the launcher screen. -->
+<string name="app_name" translatable="false">Catalog</string>
+```
+
+<img width="509" alt="Screen Shot 2022-09-27 at 10 59 06 PM" src="https://user-images.githubusercontent.com/1800351/192677607-06a8d538-8786-4419-98df-21ad0cd4acd5.png">
+
 ## How it works
 
 Catalog generates `Context` and `Fragment` extensions using [context receivers](https://blog.jetbrains.com/kotlin/2022/02/kotlin-1-6-20-m1-released/#prototype-of-context-receivers-for-kotlin-jvm).
