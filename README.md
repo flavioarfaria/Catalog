@@ -31,7 +31,7 @@ Catalog also works with plurals and string arrays. In the future, other resource
 
 ## How it works
 
-Catalog generates `Context` and `Fragment` extensions using https://blog.jetbrains.com/kotlin/2022/02/kotlin-1-6-20-m1-released/#prototype-of-context-receivers-for-kotlin-jvm.
+Catalog generates `Context` and `Fragment` extensions using [context receivers](https://blog.jetbrains.com/kotlin/2022/02/kotlin-1-6-20-m1-released/#prototype-of-context-receivers-for-kotlin-jvm).
 Since this language feature is still a prototype, make sure you opt-in for `-Xcontext-receivers`.
 
 <img width="546" alt="image" src="https://user-images.githubusercontent.com/1800351/192676257-5235ee2f-430a-4e87-ad1b-67a349051a8d.png">
