@@ -2,7 +2,7 @@
 
 **_Disclaimer: this is a work in progress._**
 
-Catalog is a Gradle plugin that generates user-friendly extensions to resolve Android resources.
+Catalog is a Gradle plugin that generates type-safe, user-friendly extensions to resolve Android resources.
 
 ```xml
 <string name="welcome_message">Hello, %1$s! You have %2$d unread messages.</string>
