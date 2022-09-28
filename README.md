@@ -36,11 +36,12 @@ Resource comments are also carried over to extension properties and methods:
 <string name="app_name">Catalog</string>
 ```
 
-<img width="509" alt="Screen Shot 2022-09-27 at 10 59 06 PM" src="https://user-images.githubusercontent.com/1800351/192677607-06a8d538-8786-4419-98df-21ad0cd4acd5.png">
+<img width="509" src="https://user-images.githubusercontent.com/1800351/192677607-06a8d538-8786-4419-98df-21ad0cd4acd5.png">
 
 ## How it works
 
 Catalog generates `Context` and `Fragment` extensions using [context receivers](https://blog.jetbrains.com/kotlin/2022/02/kotlin-1-6-20-m1-released/#prototype-of-context-receivers-for-kotlin-jvm).
 Since this language feature is still a prototype, make sure you opt-in for `-Xcontext-receivers`.
 
-<img width="546" alt="image" src="https://user-images.githubusercontent.com/1800351/192676257-5235ee2f-430a-4e87-ad1b-67a349051a8d.png">
+<img width="545" alt="Screen Shot 2022-09-27 at 11 14 14 PM" src="https://user-images.githubusercontent.com/1800351/192679242-be1b2d67-4b65-4e0a-a78a-14145f28dd47.png">
+
