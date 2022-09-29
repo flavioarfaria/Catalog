@@ -39,7 +39,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":catalog-runtime"))
     implementation(project(":library"))
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.1")

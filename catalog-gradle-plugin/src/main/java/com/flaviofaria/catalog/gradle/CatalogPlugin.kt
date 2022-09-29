@@ -14,6 +14,9 @@ class CatalogPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         val androidPluginHandler = { _: Plugin<*> ->
             project.afterEvaluate {
+                project.configurations.getByName("api").dependencies.add(
+                    project.dependencies.create("com.flaviofaria.catalog:catalog-runtime:0.1")
+                )
                 val ext = project.extensions.getByType(CommonExtension::class.java)
                 (ext as CommonExtension).sourceSets.forEach { androidSourceSet ->
                     (androidSourceSet.res as DefaultAndroidSourceDirectorySet).srcDirs
