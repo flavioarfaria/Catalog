@@ -23,16 +23,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    applicationVariants.all {
-        kotlin {
-            sourceSets {
-                getByName(name) {
-                    kotlin.srcDir("build/generated/ksp/$name/kotlin")
-                }
-            }
-        }
-    }
-
     /*composeOptions {
         kotlinCompilerExtensionVersion = "1.1.1"
     }*/

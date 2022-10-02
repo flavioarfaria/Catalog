@@ -1,23 +1,58 @@
 package com.flaviofaria.catalog.gradle
 
 import com.android.build.api.dsl.CommonExtension
+import com.android.build.api.dsl.LibraryExtension
 import com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet
 import com.android.build.gradle.internal.api.DefaultAndroidSourceFile
+import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.google.devtools.ksp.gradle.KspExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
 
 class CatalogPlugin : Plugin<Project> {
-    // android.namespace first, if absent, get package id from manifest
     override fun apply(project: Project) {
+        project.tasks.withType(KotlinCompile::class.java) {
+            it.kotlinOptions {
+                freeCompilerArgs = freeCompilerArgs + listOf("-Xcontext-receivers")
+            }
+        }
         val androidPluginHandler = { _: Plugin<*> ->
             project.afterEvaluate {
+                val isApp = project.plugins.hasPlugin("com.android.application")
+                val isLibrary = project.plugins.hasPlugin("com.android.library")
+
+                when {
+                    isApp -> {
+                        val ext = project.extensions.getByType(BaseAppModuleExtension::class.java)
+                        ext.applicationVariants.all { variant ->
+                            ext.sourceSets {
+                                getByName(variant.name) { sourceSet ->
+                                    sourceSet.kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
+                                }
+                            }
+                        }
+                    }
+                    isLibrary -> {
+                        val ext = project.extensions.getByType(LibraryExtension::class.java)
+                        ext.buildTypes.all { buildType ->
+                            ext.sourceSets {
+                                getByName(buildType.name) { sourceSet ->
+                                    sourceSet.kotlin.srcDir("build/generated/ksp/${buildType.name}/kotlin")
+                                }
+                            }
+                        }
+                    }
+                }
+
                 project.configurations.getByName("api").dependencies.add(
                     project.dependencies.create("com.flaviofaria.catalog:catalog-runtime:0.1")
                 )
+
                 val ext = project.extensions.getByType(CommonExtension::class.java)
+
                 (ext as CommonExtension).sourceSets.forEach { androidSourceSet ->
                     (androidSourceSet.res as DefaultAndroidSourceDirectorySet).srcDirs
                         .flatMap { resDir ->
@@ -35,6 +70,9 @@ class CatalogPlugin : Plugin<Project> {
                                 "com.flaviofaria.catalog:catalog-codegen:0.1"
                             )
                             val ksp = project.extensions.getByName("ksp") as KspExtension
+
+                            // android.namespace first, if absent, get package id from manifest
+
                             val manifestFile =
                                 (androidSourceSet.manifest as DefaultAndroidSourceFile).srcFile
                             val packageName = ext.namespace
@@ -42,7 +80,6 @@ class CatalogPlugin : Plugin<Project> {
                                 ?: error("Missing package name in $manifestFile")
                             ksp.arg("resourcesPath", stringsFile.parentFile.absolutePath)
                             ksp.arg("package", packageName)
-                            println(stringsFile)
                         }
                 }
             }
