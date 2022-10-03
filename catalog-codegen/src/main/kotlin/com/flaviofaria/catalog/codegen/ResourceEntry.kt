@@ -14,14 +14,14 @@ sealed class ResourceEntry {
         val args: List<StringArg>,
     ) : ResourceEntry()
 
-    class Plural(
+    data class Plural(
         override val file: File,
         override val name: kotlin.String,
         override val docs: kotlin.String?,
         val args: List<StringArg>,
     ) : ResourceEntry()
 
-    class StringArray(
+    data class StringArray(
         override val file: File,
         override val name: kotlin.String,
         override val docs: kotlin.String?,

@@ -66,7 +66,7 @@ class XmlResourceParser {
                     preceedingComment = null
                 }
                 Node.COMMENT_NODE -> {
-                    preceedingComment = (node as Comment).data
+                    preceedingComment = (node as Comment).data.trim()
                 }
             }
         }
@@ -120,7 +120,7 @@ class XmlResourceParser {
     private fun String.extractArgs(): List<StringArg> {
         val args = mutableListOf<StringArg>()
         val matcher = fsPattern.matcher(this)
-        var implicitPosition = -1
+        var implicitPosition = -1 // TODO make sure implicit and explicit indexes are both 1-based
         var hasPositionalArgs = false
         while (matcher.find()) {
             if (matcher.groupCount() == 1) {
@@ -131,10 +131,13 @@ class XmlResourceParser {
                 }
                 continue
             }
-            val type = matcher.group(6).first().lowercase().first()
-            if (type == '%') { // double % symbol (escaping)
+            val start = matcher.start()
+            val end = matcher.end()
+            if (start > 0 && this[start - 1] == '\\' || start < end && this[start + 1] == '%') {
+                // ignores \% and %%
                 continue
             }
+            val type = matcher.group(6).first().lowercase().first()
             val positionGroup = matcher.group(1)
             args += if (positionGroup != null) {
                 require(positionGroup.endsWith("$")) { // TODO improve error message for debugging
