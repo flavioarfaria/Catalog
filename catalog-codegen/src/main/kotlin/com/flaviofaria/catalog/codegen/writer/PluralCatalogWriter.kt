@@ -79,7 +79,7 @@ class PluralCatalogWriter(
                 'n' -> null
                 else -> error("Unexpected plural resource argument type: ${arg.type}")
             }
-            val nullability = if (arg.isOptional) "?" else ""
+            val nullability = if (!composeExtensions && arg.isOptional) "?" else ""
             primitiveType?.let { "arg${i + 1}: $primitiveType$nullability" }
         }.filterNotNull()
 

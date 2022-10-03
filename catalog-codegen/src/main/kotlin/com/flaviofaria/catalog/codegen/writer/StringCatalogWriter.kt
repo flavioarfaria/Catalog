@@ -76,7 +76,8 @@ class StringCatalogWriter(
                 'n' -> null
                 else -> error("Unexpected string resource argument type: ${arg.type}")
             }
-            primitiveType?.let { "arg${i + 1}: $primitiveType" }
+            val nullability = if (!composeExtensions && arg.isOptional) "?" else ""
+            primitiveType?.let { "arg${i + 1}: $primitiveType$nullability" }
         }.filterNotNull()
 
         val varargs = if (sortedArgs.isNotEmpty()) {

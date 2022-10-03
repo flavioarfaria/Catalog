@@ -16,7 +16,8 @@ dependencyResolutionManagement {
   }
 }
 rootProject.name = "Catalog"
-include(":sample")
+include(":sample-resources")
+include(":sample-compose")
 include(":catalog-codegen")
 include(":catalog-gradle-plugin")
 include(":library")

@@ -15,7 +15,8 @@
             <option value="$PROJECT_DIR$/catalog-gradle-plugin" />
             <option value="$PROJECT_DIR$/catalog-runtime" />
             <option value="$PROJECT_DIR$/library" />
-            <option value="$PROJECT_DIR$/sample" />
+            <option value="$PROJECT_DIR$/sample-compose" />
+            <option value="$PROJECT_DIR$/sample-resources" />
           </set>
         </option>
       </GradleProjectSettings>
