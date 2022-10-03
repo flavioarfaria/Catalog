@@ -7,6 +7,7 @@ import com.google.devtools.ksp.processing.Dependencies
 
 class StringCatalogWriter(
     private val packageName: String,
+    private val composeExtensions: Boolean,
 ) : CatalogWriter<ResourceEntry.String> {
     override fun write(codeGenerator: CodeGenerator, resources: Iterable<ResourceEntry.String>) {
         codeGenerator.createNewFile(
@@ -14,9 +15,15 @@ class StringCatalogWriter(
             packageName = packageName,
             fileName = "Strings",
         ).use { stream ->
+            val composeImports = if (composeExtensions) {
+                """
+                |import androidx.compose.runtime.Composable
+                |import androidx.compose.runtime.ReadOnlyComposable
+                |import androidx.compose.ui.res.stringResource"""
+            } else ""
             val fileContent = """
                 |package $packageName
-                |
+                |$composeImports
                 |import android.content.Context
                 |import android.view.View
                 |import androidx.fragment.app.Fragment
@@ -52,6 +59,12 @@ class StringCatalogWriter(
     }
 
     private fun ResourceEntry.String.generateExtensionMethod(methodReceiver: String): String {
+        val composeAnnotations = if (composeExtensions) {
+            """
+            |@Composable
+            |@ReadOnlyComposable"""
+        } else ""
+        val inline = if (composeExtensions) "" else "inline "
         val sortedArgs = args.sortedBy { it.position }
         val typedArgs = sortedArgs.mapIndexed { i, arg ->
             val primitiveType = when (arg.type) {
@@ -67,15 +80,19 @@ class StringCatalogWriter(
         }.filterNotNull()
 
         val varargs = if (sortedArgs.isNotEmpty()) {
-            ", " + sortedArgs.mapIndexed { i, _ -> "arg${i + 1}" }.joinToString()
+            ", " + List(sortedArgs.size) { i -> "arg${i + 1}" }.joinToString()
         } else ""
 
         val styledByDefault = varargs.isEmpty()
         val returnType = if (styledByDefault) "CharSequence" else "String"
-        val methodName = if (styledByDefault) "getText" else "getString"
+        val methodName = when {
+            composeExtensions -> "stringResource"
+            styledByDefault -> "getText"
+            else -> "getString"
+        }
         return """
-            |${generateDocs()}context($methodReceiver)
-            |inline fun Strings.${name.toCamelCase()}(${typedArgs.joinToString()}): $returnType {
+            |${generateDocs()}context($methodReceiver)$composeAnnotations
+            |${inline}fun Strings.${name.toCamelCase()}(${typedArgs.joinToString()}): $returnType {
             |  return $methodName(R.string.$name$varargs)
             |}
             """.trimMargin()

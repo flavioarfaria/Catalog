@@ -14,6 +14,8 @@ import javax.xml.parsers.DocumentBuilderFactory
 
 class CatalogPlugin : Plugin<Project> {
     override fun apply(project: Project) {
+        val extension = project.extensions.create("catalog", CatalogExtension::class.java)
+
         project.tasks.withType(KotlinCompile::class.java) {
             it.kotlinOptions {
                 freeCompilerArgs = freeCompilerArgs + listOf("-Xcontext-receivers")
@@ -46,6 +48,8 @@ class CatalogPlugin : Plugin<Project> {
                         }
                     }
                 }
+
+                val composeExtensions = extension.composeExtensions ?: project.dependsOnCompose()
 
                 project.configurations.getByName("api").dependencies.add(
                     project.dependencies.create("com.flaviofaria.catalog:catalog-runtime:0.1")
@@ -80,12 +84,26 @@ class CatalogPlugin : Plugin<Project> {
                                 ?: error("Missing package name in $manifestFile")
                             ksp.arg("resourcesPath", stringsFile.parentFile.absolutePath)
                             ksp.arg("package", packageName)
+                            ksp.arg("composeExtensions", composeExtensions.toString())
                         }
                 }
             }
         }
         project.plugins.withId("com.android.application", androidPluginHandler)
         project.plugins.withId("com.android.library", androidPluginHandler)
+    }
+
+    private fun Project.dependsOnCompose(): Boolean {
+        val dependencyConfigs = setOf(
+            configurations.getByName("api"),
+            configurations.getByName("compileOnly"),
+            configurations.getByName("implementation"),
+        )
+        return configurations
+            .asSequence()
+            .filter { config -> dependencyConfigs.any { it in config.extendsFrom } }
+            .flatMap { it.dependencies }
+            .any { it.group == "androidx.compose.ui" && it.name == "ui" }
     }
 
     private fun readPackageName(manifestFile: File): String? {

@@ -9,11 +9,12 @@ class ResourceSymbolProcessorProvider : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
         val resourcesPath = environment.options["resourcesPath"]
         val pkg = environment.options["package"]
-        println("Resources path = $resourcesPath")
+        val composeExtensions = environment.options["composeExtensions"] == "true"
         return ResourceSymbolProcessor(
             environment.codeGenerator,
             resourcesPath!!,
             pkg!!,
+            composeExtensions,
             XmlResourceParser(),
         )
     }

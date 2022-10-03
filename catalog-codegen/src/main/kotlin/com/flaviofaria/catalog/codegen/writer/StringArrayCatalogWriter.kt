@@ -7,6 +7,7 @@ import com.google.devtools.ksp.processing.Dependencies
 
 class StringArrayCatalogWriter(
     private val packageName: String,
+    private val composeExtensions: Boolean,
 ) : CatalogWriter<ResourceEntry.StringArray> {
     override fun write(
         codeGenerator: CodeGenerator,
@@ -17,9 +18,15 @@ class StringArrayCatalogWriter(
             packageName = packageName,
             fileName = "StringArrays",
         ).use { stream ->
+            val composeImports = if (composeExtensions) {
+                """
+                |import androidx.compose.runtime.Composable
+                |import androidx.compose.runtime.ReadOnlyComposable
+                |import androidx.compose.ui.res.stringArrayResource"""
+            } else ""
             val fileContent = """
                 |package $packageName
-                |
+                |$composeImports
                 |import android.content.Context
                 |import android.view.View
                 |import androidx.fragment.app.Fragment
@@ -55,10 +62,21 @@ class StringArrayCatalogWriter(
     }
 
     private fun ResourceEntry.StringArray.generateExtensionMethod(methodReceiver: String): String {
+        val composeAnnotations = if (composeExtensions) {
+            """
+            |@Composable
+            |@ReadOnlyComposable"""
+        } else ""
+        val inline = if (composeExtensions) "" else "inline "
+        val methodName = if (composeExtensions) {
+            "stringArrayResource"
+        } else {
+            "resources.getStringArray"
+        }
         return """
-            |${generateDocs()}context($methodReceiver)
-            |inline fun StringArrays.${name.toCamelCase()}(): Array<String> {
-            |  return resources.getStringArray(R.array.$name)
+            |${generateDocs()}context($methodReceiver)$composeAnnotations
+            |${inline}fun StringArrays.${name.toCamelCase()}(): Array<String> {
+            |  return $methodName(R.array.$name)
             |}
             """.trimMargin()
     }

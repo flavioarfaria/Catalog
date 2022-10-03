@@ -1,30 +1,35 @@
 package com.flaviofaria.catalog
 
 import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material.Text
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
 import com.flaviofaria.catalog.library.libraryName
 import com.flaviofaria.catalog.library.libraryStringArray
+import com.flaviofaria.catalog.runtime.Plurals
 import com.flaviofaria.catalog.runtime.StringArrays
 import com.flaviofaria.catalog.runtime.Strings
-import com.flaviofaria.catalog.sample.appName
-import com.flaviofaria.catalog.sample.someOtherStringResource
-import com.flaviofaria.catalog.sample.someStringArray
+import com.flaviofaria.catalog.sample.*
+import com.flaviofaria.catalog.sample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(TextView(this).apply {
-      //text = Strings.stringWithNonPositionedArgs(1, 2)
-      text = Strings.someOtherStringResource()
-      //com.flaviofaria.catalog.library.Strings.libraryName()
-      //text = Plurals.somePlural(2, 1, 2)
-    })
+    val binding = ActivityMainBinding.inflate(layoutInflater, null, false)
+    setContentView(binding.root)
+    binding.regularTextView.text = Strings.someOtherStringResource()
+    binding.composeView.apply {
+      setViewCompositionStrategy(DisposeOnViewTreeLifecycleDestroyed)
+      setContent {
+        Text(text = Strings.composable().toString())
+      }
+    }
     Strings.appName()
     StringArrays.someStringArray()
     Strings.libraryName()
     StringArrays.libraryStringArray()
-    //stringResource(id = )
+    Plurals.somePlural(3, 1, 2)
   }
 }

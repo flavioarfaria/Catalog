@@ -10,8 +10,15 @@ buildscript {
     dependencies {
         classpath(kotlin("gradle-plugin", version = "1.7.10"))
     }
+    repositories {
+        google()
+    }
 }
 
 subprojects {
     apply(plugin = "com.flaviofaria.catalog")
+}
+
+repositories {
+    google()
 }

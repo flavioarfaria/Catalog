@@ -7,6 +7,7 @@ import com.google.devtools.ksp.processing.Dependencies
 
 class PluralCatalogWriter(
     private val packageName: String,
+    private val composeExtensions: Boolean,
 ) : CatalogWriter<ResourceEntry.Plural> {
     override fun write(codeGenerator: CodeGenerator, resources: Iterable<ResourceEntry.Plural>) {
         codeGenerator.createNewFile(
@@ -14,9 +15,16 @@ class PluralCatalogWriter(
             packageName = packageName,
             fileName = "Plurals",
         ).use { stream ->
+            val composeImports = if (composeExtensions) {
+                """
+                |import androidx.compose.ui.ExperimentalComposeUiApi
+                |import androidx.compose.ui.res.pluralStringResource
+                |import androidx.compose.runtime.Composable
+                |import androidx.compose.runtime.ReadOnlyComposable"""
+            } else ""
             val fileContent = """
                 |package $packageName
-                |
+                |$composeImports
                 |import android.content.Context
                 |import android.view.View
                 |import androidx.fragment.app.Fragment
@@ -53,6 +61,13 @@ class PluralCatalogWriter(
 
     // TODO reuse it with StringCatalogWriter
     private fun ResourceEntry.Plural.generateExtensionMethod(methodReceiver: String): String {
+        val composeAnnotations = if (composeExtensions) {
+            """
+            |@OptIn(ExperimentalComposeUiApi::class)
+            |@Composable
+            |@ReadOnlyComposable"""
+        } else ""
+        val inline = if (composeExtensions) "" else "inline "
         val sortedArgs = args.sortedBy { it.position }
         val typedArgs = sortedArgs.mapIndexed { i, arg ->
             val primitiveType = when (arg.type) {
@@ -69,13 +84,17 @@ class PluralCatalogWriter(
         }.filterNotNull()
 
         val varargs = if (sortedArgs.isNotEmpty()) {
-            ", " + sortedArgs.mapIndexed { i, _ -> "arg${i + 1}" }.joinToString()
+            ", " + List(sortedArgs.size) { i -> "arg${i + 1}" }.joinToString()
         } else ""
-
+        val methodName = if (composeExtensions) {
+            "pluralStringResource"
+        } else {
+            "resources.getQuantityString"
+        }
         return """
-            |${generateDocs()}context($methodReceiver)
-            |inline fun Plurals.${name.toCamelCase()}(quantity: Int, ${typedArgs.joinToString()}): String {
-            |  return resources.getQuantityString(R.plurals.$name, quantity$varargs)
+            |${generateDocs()}context($methodReceiver)$composeAnnotations
+            |${inline}fun Plurals.${name.toCamelCase()}(quantity: Int, ${typedArgs.joinToString()}): String {
+            |  return $methodName(R.plurals.$name, quantity$varargs)
             |}
             """.trimMargin()
     }

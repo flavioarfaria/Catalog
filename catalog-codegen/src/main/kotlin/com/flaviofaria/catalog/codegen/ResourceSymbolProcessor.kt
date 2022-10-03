@@ -13,13 +13,14 @@ class ResourceSymbolProcessor(
     private val codeGenerator: CodeGenerator,
     private val resourcesPath: String,
     pkg: String,
+    composeExtensions: Boolean,
     private val xmlResourceParser: XmlResourceParser,
 ) : SymbolProcessor {
 
     private val resourceReducer = ResourceReducer()
-    private val stringCatalogWriter = StringCatalogWriter(pkg)
-    private val pluralCatalogWriter = PluralCatalogWriter(pkg)
-    private val stringArrayCatalogWriter = StringArrayCatalogWriter(pkg)
+    private val stringCatalogWriter = StringCatalogWriter(pkg, composeExtensions)
+    private val pluralCatalogWriter = PluralCatalogWriter(pkg, composeExtensions)
+    private val stringArrayCatalogWriter = StringArrayCatalogWriter(pkg, composeExtensions)
     private var invoked = false
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
