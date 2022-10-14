@@ -30,7 +30,7 @@ publishing {
 }
 
 dependencies {
+    implementation(project(":catalog-codegen"))
     implementation("com.android.tools.build:gradle:7.2.0")
-    implementation("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:1.7.10-1.0.6")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
 }

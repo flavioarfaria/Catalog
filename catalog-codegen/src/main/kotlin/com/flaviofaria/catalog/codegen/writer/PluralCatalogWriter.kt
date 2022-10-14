@@ -2,19 +2,19 @@ package com.flaviofaria.catalog.codegen.writer
 
 import com.flaviofaria.catalog.codegen.ResourceEntry
 import com.flaviofaria.catalog.codegen.toCamelCase
-import com.google.devtools.ksp.processing.CodeGenerator
-import com.google.devtools.ksp.processing.Dependencies
+import java.io.File
 
 class PluralCatalogWriter(
     private val packageName: String,
     private val composeExtensions: Boolean,
+    private val codegenDestination: File,
 ) : CatalogWriter<ResourceEntry.Plural> {
-    override fun write(codeGenerator: CodeGenerator, resources: Iterable<ResourceEntry.Plural>) {
-        codeGenerator.createNewFile(
-            dependencies = Dependencies(aggregating = true), // TODO add sources for incremental builds
-            packageName = packageName,
-            fileName = "Plurals",
-        ).use { stream ->
+
+    override fun write(
+        resources: Iterable<ResourceEntry.Plural>,
+    ) {
+        with(File(codegenDestination, "Plurals.kt")) {
+            createNewFile()
             val composeImports = if (composeExtensions) {
                 """
                 |import androidx.compose.ui.ExperimentalComposeUiApi
@@ -38,8 +38,8 @@ class PluralCatalogWriter(
                 |
                 |${resources.joinToString("\n\n") { it.generateFragmentMethod() }}
                 |
-                """.trimMargin().toByteArray()
-            stream.write(fileContent)
+                """.trimMargin()
+            writeText(fileContent)
         }
     }
 

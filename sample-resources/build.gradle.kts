@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("com.flaviofaria.catalog")
 }
 
 catalog {
@@ -20,6 +21,16 @@ android {
     }
     buildFeatures {
         viewBinding = true
+    }
+
+    applicationVariants.all {
+        kotlin {
+            sourceSets {
+                getByName(name) {
+                    kotlin.srcDir("build/generated/catalog/$name/kotlin")
+                }
+            }
+        }
     }
 
     compileOptions {

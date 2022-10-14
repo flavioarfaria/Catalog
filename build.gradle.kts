@@ -15,10 +15,6 @@ buildscript {
     }
 }
 
-subprojects {
-    apply(plugin = "com.flaviofaria.catalog")
-}
-
 repositories {
     google()
 }

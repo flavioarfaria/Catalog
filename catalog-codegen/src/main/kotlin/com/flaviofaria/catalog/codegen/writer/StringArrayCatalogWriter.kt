@@ -2,22 +2,19 @@ package com.flaviofaria.catalog.codegen.writer
 
 import com.flaviofaria.catalog.codegen.ResourceEntry
 import com.flaviofaria.catalog.codegen.toCamelCase
-import com.google.devtools.ksp.processing.CodeGenerator
-import com.google.devtools.ksp.processing.Dependencies
+import java.io.File
 
 class StringArrayCatalogWriter(
     private val packageName: String,
     private val composeExtensions: Boolean,
+    private val codegenDestination: File,
 ) : CatalogWriter<ResourceEntry.StringArray> {
+
     override fun write(
-        codeGenerator: CodeGenerator,
         resources: Iterable<ResourceEntry.StringArray>,
     ) {
-        codeGenerator.createNewFile(
-            dependencies = Dependencies(aggregating = true), // TODO add sources for incremental builds
-            packageName = packageName,
-            fileName = "StringArrays",
-        ).use { stream ->
+        with(File(codegenDestination, "StringArrays.kt")) {
+            createNewFile()
             val composeImports = if (composeExtensions) {
                 """
                 |import androidx.compose.runtime.Composable
@@ -40,8 +37,8 @@ class StringArrayCatalogWriter(
                 |
                 |${resources.joinToString("\n\n") { it.generateFragmentMethod() }}
                 |
-                """.trimMargin().toByteArray()
-            stream.write(fileContent)
+                """.trimMargin()
+            writeText(fileContent)
         }
     }
 
