@@ -23,6 +23,11 @@ class CatalogPlugin : Plugin<Project> {
             project.addRuntimeDependency()
             androidComponents.beforeVariants { variantBuilder ->
                 commonExtension.addGeneratedFilesToSourceSet(variantBuilder.name)
+                variantBuilder.flavorName?.takeIf { it.isNotEmpty() }?.let {
+                    commonExtension.addGeneratedFilesToSourceSet(it)
+                }
+                variantBuilder.buildType?.let { commonExtension.addGeneratedFilesToSourceSet(it) }
+                commonExtension.addGeneratedFilesToSourceSet("main")
             }
         }
         androidComponents.onVariants { variant ->
@@ -53,11 +58,11 @@ class CatalogPlugin : Plugin<Project> {
         )
     }
 
-    private fun CommonExtension<*, *, *, *>.addGeneratedFilesToSourceSet(variantName: String) {
+    private fun CommonExtension<*, *, *, *>.addGeneratedFilesToSourceSet(sourceSetName: String) {
         sourceSets {
-            getByName(variantName) { sourceSet ->
-                sourceSet.kotlin.srcDir("build/generated/catalog/$variantName/kotlin")
-            }
+            findByName(sourceSetName)?.kotlin?.srcDir(
+                "build/generated/catalog/$sourceSetName/kotlin",
+            )
         }
     }
 }

@@ -7,11 +7,12 @@ import java.io.File
 class PluralCatalogWriter(
     private val packageName: String,
     private val composeExtensions: Boolean,
-    private val codegenDestination: File,
 ) : CatalogWriter<ResourceEntry.Plural> {
 
     override fun write(
         resources: Iterable<ResourceEntry.Plural>,
+        sourceSetName: String,
+        codegenDestination: File,
     ) {
         with(File(codegenDestination, "Plurals.kt")) {
             createNewFile()
@@ -23,7 +24,7 @@ class PluralCatalogWriter(
                 |import androidx.compose.runtime.ReadOnlyComposable"""
             } else ""
             val fileContent = """
-                |package $packageName
+                |package $packageName.$sourceSetName
                 |$composeImports
                 |import android.content.Context
                 |import android.view.View

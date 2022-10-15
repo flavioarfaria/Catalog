@@ -9,40 +9,54 @@ class Codegen(
     private val xmlResourceParser: XmlResourceParser = XmlResourceParser(),
     packageName: String,
     composeExtensions: Boolean,
-    codegenDestination: File,
+    private val projectDir: File,
 ) {
 
     private val resourceReducer = ResourceReducer()
     private val stringCatalogWriter = StringCatalogWriter(
         packageName,
         composeExtensions,
-        codegenDestination,
     )
     private val pluralCatalogWriter = PluralCatalogWriter(
         packageName,
         composeExtensions,
-        codegenDestination,
     )
     private val stringArrayCatalogWriter = StringArrayCatalogWriter(
         packageName,
         composeExtensions,
-        codegenDestination,
     )
 
-    init {
-        codegenDestination.mkdirs()
+    fun start(
+        resourcesDirs: Set<Pair<File, String>>,
+    ) {
+        resourcesDirs
+            .asSequence()
+            .flatMap { (file, sourceSetName) ->
+                file.walk().associateWith { sourceSetName }.toList()
+            }
+            .filter { (file, _) ->
+                file.parentFile.name.startsWith("values") && file.extension == "xml" }
+            .flatMap { (file, sourceSetName) ->
+                xmlResourceParser
+                    .parseFile(file)
+                    .groupBy { sourceSetName }
+                    .toList()
+            }
+            .forEach { (sourceSetName, resourceEntries) ->
+                generateExtensionFilesForSourceSet(
+                    sourceSetName,
+                    resourceEntries,
+                )
+            }
     }
 
-    fun start(
-        resourcesDirs: List<File>
+    private fun generateExtensionFilesForSourceSet(
+        sourceSetName: String,
+        resourceEntries: List<ResourceEntry>,
     ) {
-        val resourcesPath = resourcesDirs.first { it.absolutePath.contains("main") } // TODO
-        resourcesPath
-            .walk()
-            .asSequence()
-            .filter { it.parentFile.name.startsWith("values") && it.extension == "xml" }
-            .flatMap(xmlResourceParser::parseFile)
-            .groupBy { it::class } // groups by type
+        val codegenDir = File(projectDir, "build/generated/catalog/${sourceSetName}/kotlin")
+        codegenDir.mkdirs()
+        resourceEntries.groupBy { it::class } // groups by type
             .map { it.value }
             .flatMap { groupedByType ->
                 // groups by resource name
@@ -56,18 +70,24 @@ class Codegen(
                         @Suppress("UNCHECKED_CAST")
                         stringCatalogWriter.write(
                             resources as List<ResourceEntry.String>, // TODO unchecked cast
+                            sourceSetName,
+                            codegenDir,
                         )
                     }
                     ResourceEntry.Plural::class -> {
                         @Suppress("UNCHECKED_CAST")
                         pluralCatalogWriter.write(
                             resources as List<ResourceEntry.Plural>, // TODO
+                            sourceSetName,
+                            codegenDir,
                         )
                     }
                     ResourceEntry.StringArray::class -> {
                         @Suppress("UNCHECKED_CAST")
                         stringArrayCatalogWriter.write(
                             resources as List<ResourceEntry.StringArray>, // TODO
+                            sourceSetName,
+                            codegenDir,
                         )
                     }
                 }

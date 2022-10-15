@@ -22,17 +22,19 @@ android {
     buildFeatures {
         viewBinding = true
     }
-
-    applicationVariants.all {
-        kotlin {
-            sourceSets {
-                getByName(name) {
-                    kotlin.srcDir("build/generated/catalog/$name/kotlin")
-                }
-            }
+    flavorDimensions += "version"
+    productFlavors {
+        create("demo") {
+            dimension = "version"
+            applicationIdSuffix = ".demo"
+            versionNameSuffix = "-demo"
+        }
+        create("full") {
+            dimension = "version"
+            applicationIdSuffix = ".full"
+            versionNameSuffix = "-full"
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8

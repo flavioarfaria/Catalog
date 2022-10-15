@@ -3,6 +3,8 @@ package com.flaviofaria.catalog.gradle
 import com.android.build.api.dsl.AndroidSourceSet
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.variant.Variant
+import com.android.build.gradle.AppExtension
+import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet
 import com.android.build.gradle.internal.api.DefaultAndroidSourceFile
 import com.flaviofaria.catalog.codegen.Codegen
@@ -23,13 +25,47 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() { // TODO consider
     @Input
     lateinit var catalogExtension: CatalogExtension
 
+    private val CommonExtension<*, *, *, *>.androidSourceSets
+        get() = when (this) {
+            is AppExtension -> {
+                sourceSets
+            }
+            is LibraryExtension -> {
+                sourceSets
+            }
+            // TODO add other types like instant app
+            else -> null
+        }
+
     @TaskAction
     fun generateResourceExtensions() {
-        val codegenDestination = "build/generated/catalog/${variant.name}/kotlin"
         val commonExtension = project.extensions.getByType(CommonExtension::class.java)
 
-        val resourcesDirs = commonExtension.sourceSets.flatMap { androidSourceSet ->
-            (androidSourceSet.res as DefaultAndroidSourceDirectorySet).srcDirs
+        val sourceSetMap = mutableSetOf<Pair<File, String>>()
+
+        commonExtension.androidSourceSets?.getByName(variant.name)?.res?.let { variantRes ->
+            sourceSetMap += (variantRes as DefaultAndroidSourceDirectorySet).srcDirs.map {
+                it to variant.name
+            }
+        }
+        variant.buildType?.let { buildType ->
+            commonExtension.androidSourceSets?.getByName(buildType)?.res?.let { buildTypeRes ->
+                sourceSetMap += (buildTypeRes as DefaultAndroidSourceDirectorySet).srcDirs.map {
+                    it to buildType
+                }
+            }
+        }
+        variant.flavorName?.takeIf { it.isNotEmpty() }?.let { flavorName ->
+            commonExtension.androidSourceSets?.getByName(flavorName)?.res?.let { flavorRes ->
+                sourceSetMap += (flavorRes as DefaultAndroidSourceDirectorySet).srcDirs.map {
+                    it to flavorName
+                }
+            }
+        }
+        commonExtension.androidSourceSets?.getByName("main")?.res?.let { mainRes ->
+            sourceSetMap += (mainRes as DefaultAndroidSourceDirectorySet).srcDirs.map {
+                it to "main"
+            }
         }
 
         val packageName = commonExtension.namespace
@@ -42,8 +78,8 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() { // TODO consider
             xmlResourceParser = XmlResourceParser(),
             packageName = packageName,
             composeExtensions = composeExtensions,
-            codegenDestination = File(project.projectDir, codegenDestination),
-        ).start(resourcesDirs)
+            projectDir = project.projectDir,
+        ).start(sourceSetMap)
     }
 
     // TODO verify buildVariant.mergeResources

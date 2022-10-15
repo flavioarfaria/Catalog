@@ -7,11 +7,12 @@ import java.io.File
 class StringCatalogWriter(
     private val packageName: String,
     private val composeExtensions: Boolean,
-    private val codegenDestination: File,
 ) : CatalogWriter<ResourceEntry.String> {
 
     override fun write(
         resources: Iterable<ResourceEntry.String>,
+        sourceSetName: String,
+        codegenDestination: File,
     ) {
         with(File(codegenDestination, "Strings.kt")) {
             createNewFile()
@@ -22,7 +23,7 @@ class StringCatalogWriter(
                 |import androidx.compose.ui.res.stringResource"""
             } else ""
             val fileContent = """
-                |package $packageName
+                |package $packageName.$sourceSetName
                 |$composeImports
                 |import android.content.Context
                 |import android.view.View
