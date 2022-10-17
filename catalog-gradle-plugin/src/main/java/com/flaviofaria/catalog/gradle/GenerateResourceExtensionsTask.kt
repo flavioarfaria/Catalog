@@ -91,20 +91,12 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() { // TODO consider
     // TODO verify buildVariant.mergeResources
     private fun NamedDomainObjectContainer<out AndroidSourceSet>.findPackageNameInManifest(): String? {
         // https://developer.android.com/studio/build/manage-manifests#merge_priorities
-        return findSourceSetByName(variant.name)?.readManifestPackageName()
-            ?: findSourceSetByName(variant.buildType!!)?.readManifestPackageName() // TODO buildtype!!
+        return findByName(variant.name)?.readManifestPackageName()
+            ?: findByName(variant.buildType!!)?.readManifestPackageName() // TODO buildtype!!
             ?: variant.productFlavors.asSequence().mapNotNull { flavor ->
-                findSourceSetByName(flavor.first)?.readManifestPackageName() // TODO first?
+                findByName(flavor.first)?.readManifestPackageName() // TODO first?
             }.firstOrNull()
-            ?: findSourceSetByName("main")?.readManifestPackageName()
-    }
-
-    private fun NamedDomainObjectContainer<out AndroidSourceSet>.findSourceSetByName(
-        name: String,
-    ): AndroidSourceSet? {
-        return firstOrNull { androidSourceSet ->
-            (androidSourceSet.res as DefaultAndroidSourceDirectorySet).name == name
-        }
+            ?: findByName("main")?.readManifestPackageName()
     }
 
     private fun Project.dependsOnCompose(): Boolean {
@@ -122,9 +114,11 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() { // TODO consider
 
     private fun AndroidSourceSet.readManifestPackageName(): String? {
         val manifestFile = (manifest as DefaultAndroidSourceFile).srcFile
-        val docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-        val doc = docBuilder.parse(manifestFile)
-        val manifestRoot = doc.getElementsByTagName("manifest").item(0)
-        return manifestRoot.attributes.getNamedItem("package").nodeValue
+        return if (manifestFile.exists()) {
+            val docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+            val doc = docBuilder.parse(manifestFile)
+            val manifestRoot = doc.getElementsByTagName("manifest").item(0)
+            manifestRoot.attributes.getNamedItem("package").nodeValue
+        } else null
     }
 }
