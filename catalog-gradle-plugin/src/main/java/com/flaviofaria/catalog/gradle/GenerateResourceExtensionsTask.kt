@@ -118,7 +118,7 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() { // TODO consider
             val docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
             val doc = docBuilder.parse(manifestFile)
             val manifestRoot = doc.getElementsByTagName("manifest").item(0)
-            manifestRoot.attributes.getNamedItem("package").nodeValue
+            manifestRoot.attributes.getNamedItem("package")?.nodeValue
         } else null
     }
 }
