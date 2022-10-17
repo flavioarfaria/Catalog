@@ -27,7 +27,7 @@ class Codegen(
     )
 
     fun start(
-        resourcesDirs: Set<Pair<File, String>>,
+        resourcesDirs: Set<Pair<File, SourceSetQualifier>>,
     ) {
         resourcesDirs
             .asSequence()
@@ -35,12 +35,26 @@ class Codegen(
                 file.walk().associateWith { sourceSetName }.toList()
             }
             .filter { (file, _) ->
-                file.parentFile.name.startsWith("values") && file.extension == "xml" }
+                file.parentFile.name.startsWith("values") && file.extension == "xml"
+            }
             .flatMap { (file, sourceSetName) ->
                 xmlResourceParser
                     .parseFile(file)
-                    .groupBy { sourceSetName }
-                    .toList()
+                    .map { it to sourceSetName }
+            }
+            .groupBy { (resourceEntry, _) -> // groups resources by name to eliminate duplicates by priority
+                resourceEntry.name
+            }
+            .map { (_, qualifiedResourceEntries) -> // selects only the resource of highest priority among duplicates
+                qualifiedResourceEntries.minByOrNull { (_, qualifier) -> qualifier.type.ordinal }!!
+            }
+            .groupBy { (_, sourceSetQualifier) ->
+                sourceSetQualifier
+            }
+            .map { (sourceSetQualifier, qualifiedEntries) ->
+                sourceSetQualifier.name to qualifiedEntries.map {
+                        (resourceEntry, _) -> resourceEntry
+                }
             }
             .forEach { (sourceSetName, resourceEntries) ->
                 generateExtensionFilesForSourceSet(

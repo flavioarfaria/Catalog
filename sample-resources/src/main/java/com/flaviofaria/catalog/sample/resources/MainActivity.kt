@@ -8,7 +8,7 @@ import com.flaviofaria.catalog.library.main.libraryStringArray
 import com.flaviofaria.catalog.runtime.Plurals
 import com.flaviofaria.catalog.runtime.StringArrays
 import com.flaviofaria.catalog.runtime.Strings
-import com.flaviofaria.catalog.sample.resources.main.appName
+import com.flaviofaria.catalog.sample.resources.demo.appName
 import com.flaviofaria.catalog.sample.resources.main.someOtherStringResource
 import com.flaviofaria.catalog.sample.resources.main.somePlural
 import com.flaviofaria.catalog.sample.resources.main.someStringArray
