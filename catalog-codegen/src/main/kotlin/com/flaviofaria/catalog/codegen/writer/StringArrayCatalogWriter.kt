@@ -14,6 +14,9 @@ class StringArrayCatalogWriter(
         sourceSetName: String,
         codegenDestination: File,
     ) {
+        val capitalizedSourceSetName = sourceSetName.replaceFirstChar {
+            it.titlecase()
+        }
         with(File(codegenDestination, "StringArrays.kt")) {
             createNewFile()
             val composeImports = if (composeExtensions) {
@@ -23,7 +26,8 @@ class StringArrayCatalogWriter(
                 |import androidx.compose.ui.res.stringArrayResource"""
             } else ""
             val fileContent = """
-                |package $packageName.$sourceSetName
+                |@file:JvmName("StringArrays$capitalizedSourceSetName")
+                |package $packageName
                 |$composeImports
                 |import android.content.Context
                 |import android.view.View

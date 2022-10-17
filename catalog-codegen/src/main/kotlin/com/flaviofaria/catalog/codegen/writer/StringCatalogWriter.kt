@@ -14,6 +14,9 @@ class StringCatalogWriter(
         sourceSetName: String,
         codegenDestination: File,
     ) {
+        val capitalizedSourceSetName = sourceSetName.replaceFirstChar {
+            it.titlecase()
+        }
         with(File(codegenDestination, "Strings.kt")) {
             createNewFile()
             val composeImports = if (composeExtensions) {
@@ -23,7 +26,8 @@ class StringCatalogWriter(
                 |import androidx.compose.ui.res.stringResource"""
             } else ""
             val fileContent = """
-                |package $packageName.$sourceSetName
+                |@file:JvmName("Strings$capitalizedSourceSetName")
+                |package $packageName
                 |$composeImports
                 |import android.content.Context
                 |import android.view.View

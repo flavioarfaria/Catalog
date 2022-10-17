@@ -14,6 +14,9 @@ class PluralCatalogWriter(
         sourceSetName: String,
         codegenDestination: File,
     ) {
+        val capitalizedSourceSetName = sourceSetName.replaceFirstChar {
+            it.titlecase()
+        }
         with(File(codegenDestination, "Plurals.kt")) {
             createNewFile()
             val composeImports = if (composeExtensions) {
@@ -24,7 +27,8 @@ class PluralCatalogWriter(
                 |import androidx.compose.runtime.ReadOnlyComposable"""
             } else ""
             val fileContent = """
-                |package $packageName.$sourceSetName
+                |@file:JvmName("Plurals$capitalizedSourceSetName")
+                |package $packageName
                 |$composeImports
                 |import android.content.Context
                 |import android.view.View
