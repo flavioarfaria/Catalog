@@ -1,7 +1,6 @@
 package com.flaviofaria.catalog.codegen
 
-import com.google.common.truth.Truth
-import com.google.common.truth.Truth.*
+import com.google.common.truth.Truth.assertThat
 import org.intellij.lang.annotations.Language
 import org.junit.Rule
 import org.junit.Test
@@ -64,8 +63,8 @@ class XmlResourceParserTest {
                 name = "string_with_non_positioned_args",
                 docs = null,
                 args = listOf(
-                    StringArg(0, 'd', false),
                     StringArg(1, 'd', false),
+                    StringArg(2, 'd', false),
                 ),
             ),
             ResourceEntry.String(

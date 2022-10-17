@@ -120,7 +120,7 @@ class XmlResourceParser {
     private fun String.extractArgs(): List<StringArg> {
         val args = mutableListOf<StringArg>()
         val matcher = fsPattern.matcher(this)
-        var implicitPosition = -1 // TODO make sure implicit and explicit indexes are both 1-based
+        var implicitPosition = 0
         var hasPositionalArgs = false
         while (matcher.find()) {
             if (matcher.groupCount() == 1) {
@@ -151,7 +151,7 @@ class XmlResourceParser {
             }
         }
         // TODO improve error message for debugging
-        require(!hasPositionalArgs || implicitPosition == -1) {
+        require(!hasPositionalArgs || implicitPosition == 0) {
             "Argument positions should be either all explicit or all implicit"
         }
         return args
