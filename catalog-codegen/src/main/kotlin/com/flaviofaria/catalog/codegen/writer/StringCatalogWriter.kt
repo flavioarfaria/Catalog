@@ -27,6 +27,7 @@ class StringCatalogWriter(
             } else ""
             val fileContent = """
                 |@file:JvmName("Strings$capitalizedSourceSetName")
+                |@file:Suppress("NOTHING_TO_INLINE")
                 |package $packageName
                 |$composeImports
                 |import android.content.Context

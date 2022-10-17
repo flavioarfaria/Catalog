@@ -27,6 +27,7 @@ class StringArrayCatalogWriter(
             } else ""
             val fileContent = """
                 |@file:JvmName("StringArrays$capitalizedSourceSetName")
+                |@file:Suppress("NOTHING_TO_INLINE")
                 |package $packageName
                 |$composeImports
                 |import android.content.Context

@@ -28,6 +28,7 @@ class PluralCatalogWriter(
             } else ""
             val fileContent = """
                 |@file:JvmName("Plurals$capitalizedSourceSetName")
+                |@file:Suppress("NOTHING_TO_INLINE")
                 |package $packageName
                 |$composeImports
                 |import android.content.Context
