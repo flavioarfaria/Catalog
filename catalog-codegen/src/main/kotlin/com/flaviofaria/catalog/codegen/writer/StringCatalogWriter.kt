@@ -80,7 +80,10 @@ class StringCatalogWriter(
                 's' -> "String"
                 'c' -> "Char"
                 'n' -> null
-                else -> error("Unexpected string resource argument type: ${arg.type}")
+                else -> error(
+                    "Unexpected argument type \"${arg.type}\" " +
+                            "for string resource $name in file $file",
+                )
             }
             val nullability = if (!composeExtensions && arg.isOptional) "?" else ""
             primitiveType?.let { "arg${i + 1}: $primitiveType$nullability" }
