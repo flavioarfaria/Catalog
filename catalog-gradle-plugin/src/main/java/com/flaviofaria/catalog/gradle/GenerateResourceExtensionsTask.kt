@@ -8,16 +8,12 @@ import com.flaviofaria.catalog.codegen.SourceSetQualifier
 import com.flaviofaria.catalog.codegen.XmlResourceParser
 import org.gradle.api.DefaultTask
 import org.gradle.api.NamedDomainObjectContainer
-import org.gradle.api.tasks.CacheableTask
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Internal
-import org.gradle.api.tasks.Nested
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.*
 import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
 
 @CacheableTask
-abstract class GenerateResourceExtensionsTask : DefaultTask() { // TODO consider SourceTask
+abstract class GenerateResourceExtensionsTask : DefaultTask() {
 
     @Nested
     lateinit var input: TaskInput
@@ -53,13 +49,12 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() { // TODO consider
         ).start(input.qualifiedSourceSets)
     }
 
-    // TODO verify buildVariant.mergeResources
     private fun NamedDomainObjectContainer<out AndroidSourceSet>.findPackageNameInManifest(): String? {
         // https://developer.android.com/studio/build/manage-manifests#merge_priorities
         return findByName(input.variantName)?.readManifestPackageName()
-            ?: findByName(input.buildType)?.readManifestPackageName() // TODO buildtype!!
+            ?: input.buildType?.let { findByName(it) }?.readManifestPackageName()
             ?: input.productFlavors.asSequence().mapNotNull { flavor ->
-                findByName(flavor)?.readManifestPackageName() // TODO first?
+                findByName(flavor)?.readManifestPackageName()
             }.firstOrNull()
             ?: findByName("main")?.readManifestPackageName()
     }
@@ -76,7 +71,7 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() { // TODO consider
 
     data class TaskInput(
         @Input val variantName: String,
-        @Input val buildType: String,
+        @Input val buildType: String?,
         @Input val productFlavors: List<String>,
         @Input val composeExtensions: Boolean = false,
         @Internal val qualifiedSourceSets: Set<Pair<File, SourceSetQualifier>>

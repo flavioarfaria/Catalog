@@ -66,7 +66,7 @@ class CatalogPlugin : Plugin<Project> {
                     task.initialize(
                         GenerateResourceExtensionsTask.TaskInput(
                             variantName = variant.name,
-                            buildType = variant.buildType!!, // TODO !!
+                            buildType = variant.buildType,
                             productFlavors = variant.productFlavors.map { it.first },
                             composeExtensions = catalogExtension.composeExtensions
                                 ?: project.dependsOnCompose(),
