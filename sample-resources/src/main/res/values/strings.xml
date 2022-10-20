@@ -7,7 +7,7 @@
     <string name="string_with_positioned_args">Args %3$d are %1$f out %4$s of %2$c order</string>
     <string name="double_percent_symbol">Double %% symbol</string>
     <string name="escaped_percent_symbol">Escaped \% symbol</string>
-    <string name="composable">Composable string</string>
+    <string name="duplicate_arg">This %1$s is a duplicate arg %1$s</string>
 
     <plurals name="some_plural">
         <item quantity="one">Single %1$d argument</item>

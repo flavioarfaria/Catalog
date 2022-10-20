@@ -7,7 +7,6 @@
     <string name="string_with_positioned_args">Argumentos %3$d estão %1$f fora %4$s de %2$c ordem %5$s</string>
     <string name="double_percent_symbol">Símbolo %% duplo</string>
     <string name="escaped_percent_symbol">\% escapado</string>
-    <string name="composable">Composable string</string>
 
     <!-- there's no arg count validation, the only risk is going out of bounds -->
     <plurals name="some_plural">

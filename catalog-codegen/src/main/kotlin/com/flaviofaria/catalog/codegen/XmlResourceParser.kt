@@ -38,7 +38,7 @@ class XmlResourceParser {
                                 file,
                                 name,
                                 preceedingComment,
-                                if (formatted) node.textContent.extractArgs() else emptyList(),
+                                if (formatted) node.textContent.extractArgs(name) else emptyList(),
                             )
                         }
                         "plurals" -> {
@@ -83,7 +83,7 @@ class XmlResourceParser {
                 if (childElement.tagName == "item") {
                     val quantityArgs = childElement
                         .textContent
-                        .extractArgs()
+                        .extractArgs(pluralName)
                         .associateBy { it.position }
                     if (quantityArgs.isNotEmpty()) { // plurals with no argument
                         highestArgPosition = max(
@@ -117,8 +117,8 @@ class XmlResourceParser {
         return sharedArgs
     }
 
-    private fun String.extractArgs(): List<StringArg> {
-        val args = mutableListOf<StringArg>()
+    private fun String.extractArgs(resourceName: String): List<StringArg> {
+        val args = mutableMapOf<Int, StringArg>()
         val matcher = fsPattern.matcher(this)
         var implicitPosition = 0
         var hasPositionalArgs = false
@@ -139,21 +139,27 @@ class XmlResourceParser {
             }
             val type = matcher.group(6).first().lowercase().first()
             val positionGroup = matcher.group(1)
-            args += if (positionGroup != null) {
+            val arg = if (positionGroup != null) {
                 require(positionGroup.endsWith("$")) { // TODO improve error message for debugging
                     "Unexpected position placeholder: $positionGroup"
                 }
                 hasPositionalArgs = true
                 val position = positionGroup.substring(0, positionGroup.lastIndex).toInt()
-                StringArg(position, type)
+                position to StringArg(position, type)
             } else {
-                StringArg(++implicitPosition, type)
+                val position = ++implicitPosition
+                position to StringArg(position, type)
             }
+            val existingArg = args[arg.first]
+            require(existingArg == null || existingArg.type == arg.second.type) {
+                "Argument #${arg.first} appears multiple times in $resourceName with different types (%${existingArg!!.type}, %${arg.second.type})"
+            }
+            args += arg
         }
         // TODO improve error message for debugging
         require(!hasPositionalArgs || implicitPosition == 0) {
             "Argument positions should be either all explicit or all implicit"
         }
-        return args
+        return args.values.toList()
     }
 }
