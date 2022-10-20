@@ -16,7 +16,10 @@ class ResourceReducer {
                     is ResourceEntry.Plural -> resource.args.size
                     else -> return resource // non-reducable resource type
                 }
-            }!!
+            }!!.apply {
+                // they all have the same name, it doesn't matter
+                resources.first().verifyIfNoArgHasBeenSkipped(typedArgs)
+            }
     }
 
     private fun ResourceEntry.validateArgumentTypes(
@@ -38,6 +41,22 @@ class ResourceReducer {
                       |$file
                     """.trimMargin()
                 }
+            }
+        }
+    }
+
+    private fun ResourceEntry.verifyIfNoArgHasBeenSkipped(
+        typedArgs: MutableMap<Int, Pair<StringArg, File>>,
+    ) {
+        val keys = typedArgs.keys
+        if (keys.isNotEmpty()) {
+            val missingArgs = (1..keys.maxOrNull()!!).mapNotNull { position ->
+                position.takeIf { it !in typedArgs }
+            }.toList()
+            require(missingArgs.isEmpty()) {
+                val formattedArgs = missingArgs.joinToString { "#$it" }
+                val plural = if (missingArgs.size > 1) "s" else ""
+                "Missing arg$plural $formattedArgs for resource $name"
             }
         }
     }

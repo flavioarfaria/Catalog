@@ -9,7 +9,6 @@
     <string name="escaped_percent_symbol">Escaped \% symbol</string>
     <string name="composable">Composable string</string>
 
-    <!-- there's no arg count validation, the only risk is going out of bounds -->
     <plurals name="some_plural">
         <item quantity="one">Single %1$d argument</item>
         <item quantity="other">Double %2$d arguments %1$d</item>
