@@ -2,7 +2,7 @@
 android-sdk-compile = "33"
 android-sdk-min = "21"
 android-sdk-target = "33"
-android-plugin = "7.2.2"
+android-plugin = "7.3.0"
 catalog = "0.1"
 compose = "1.2.1"
 kotlin = "1.7.10"
