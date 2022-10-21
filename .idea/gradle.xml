@@ -14,9 +14,9 @@
             <option value="$PROJECT_DIR$/catalog-codegen" />
             <option value="$PROJECT_DIR$/catalog-gradle-plugin" />
             <option value="$PROJECT_DIR$/catalog-runtime" />
-            <option value="$PROJECT_DIR$/library" />
-            <option value="$PROJECT_DIR$/sample-compose" />
-            <option value="$PROJECT_DIR$/sample-resources" />
+            <option value="$PROJECT_DIR$/sample-app-compose" />
+            <option value="$PROJECT_DIR$/sample-app-resources" />
+            <option value="$PROJECT_DIR$/sample-library" />
           </set>
         </option>
       </GradleProjectSettings>

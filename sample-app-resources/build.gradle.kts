@@ -38,7 +38,7 @@ android {
 }
 
 dependencies {
-  implementation(project(":library"))
+  implementation(project(":sample-library"))
   implementation(libs.androidx.appcompat)
   implementation(libs.android.material)
 }

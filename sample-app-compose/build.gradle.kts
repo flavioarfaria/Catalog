@@ -25,7 +25,7 @@ android {
 }
 
 dependencies {
-  implementation(project(":library"))
+  implementation(project(":sample-library"))
   implementation(libs.android.material)
   implementation(libs.androidx.compose.material)
   implementation(libs.androidx.compose.ui)
