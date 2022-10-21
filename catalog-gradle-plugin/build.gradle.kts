@@ -1,28 +1,31 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm")
+    id(libs.plugins.kotlin.jvm.get().pluginId)
     `java-library`
     `java-gradle-plugin`
     `maven-publish`
 }
 
+val catalogPluginId = libs.plugins.catalog.get().pluginId
+val catalogVersion = libs.versions.catalog.get()
+
 gradlePlugin {
     plugins {
         create("catalog") {
-            id = "com.flaviofaria.catalog"
-            implementationClass = "com.flaviofaria.catalog.gradle.CatalogPlugin"
+            id = catalogPluginId
+            implementationClass = "$catalogPluginId.gradle.CatalogPlugin"
         }
     }
 }
 
-group = "com.flaviofaria.catalog"
-version = "0.1"
+group = catalogPluginId
+version = catalogVersion
 
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            groupId = "com.flaviofaria.catalog"
+            groupId = catalogPluginId
             artifactId = "catalog-gradle-plugin"
-            version = "0.1"
+            version = catalogVersion
 
             from(components["java"])
         }
@@ -31,6 +34,6 @@ publishing {
 
 dependencies {
     implementation(project(":catalog-codegen"))
-    implementation("com.android.tools.build:gradle:7.2.0")
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
+    implementation(libs.android.gradle)
+    implementation(libs.kotlin.gradle.plugin)
 }

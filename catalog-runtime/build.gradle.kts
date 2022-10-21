@@ -1,36 +1,31 @@
 plugins {
-    id("com.android.library")
-    kotlin("android")
+    id(libs.plugins.android.library.get().pluginId)
+    id(libs.plugins.kotlin.android.get().pluginId)
     `maven-publish`
 }
 
 android {
     namespace = "com.flaviofaria.catalog.runtime"
-    compileSdk = 33
+    compileSdk = libs.versions.android.sdk.compile.get().toInt()
 
     defaultConfig {
-        minSdk = 24
-        targetSdk = 33
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        minSdk = libs.versions.android.sdk.min.get().toInt()
+        targetSdk = libs.versions.android.sdk.target.get().toInt()
     }
 }
 
-group = "com.flaviofaria.catalog"
-version = "0.1"
+val catalogPluginId = libs.plugins.catalog.get().pluginId
+val catalogVersion = libs.versions.catalog.get()
+
+group = catalogPluginId
+version = catalogVersion
 
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            groupId = "com.flaviofaria.catalog"
+            groupId = catalogPluginId
             artifactId = "catalog-runtime"
-            version = "0.1"
+            version = catalogVersion
 
             artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
         }

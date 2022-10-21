@@ -15,6 +15,7 @@ dependencyResolutionManagement {
     mavenLocal()
   }
 }
+enableFeaturePreview("VERSION_CATALOGS")
 rootProject.name = "Catalog"
 include(":sample-resources")
 include(":sample-compose")

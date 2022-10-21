@@ -1,25 +1,19 @@
 plugins {
-    id("com.android.library")
-    kotlin("android")
-    id("com.flaviofaria.catalog")
+    id(libs.plugins.android.library.get().pluginId)
+    id(libs.plugins.kotlin.android.get().pluginId)
+    id(libs.plugins.catalog.get().pluginId)
 }
 
 android {
     namespace = "com.flaviofaria.catalog.library"
-    compileSdk = 33
+    compileSdk = libs.versions.android.sdk.compile.get().toInt()
 
     defaultConfig {
-        minSdk = 24
-        targetSdk = 33
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        minSdk = libs.versions.android.sdk.min.get().toInt()
+        targetSdk = libs.versions.android.sdk.target.get().toInt()
     }
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.1")
+    implementation(libs.androidx.appcompat)
 }
