@@ -103,7 +103,7 @@ class CatalogPlugin : Plugin<Project> {
         sourceSetName: String,
         sourceSetType: SourceSetType,
     ): List<Pair<File, SourceSetQualifier>>? {
-        return sourceSets?.getByName(sourceSetName)?.res?.let { res ->
+        return sourceSets.getByName(sourceSetName)?.res?.let { res ->
             (res as DefaultAndroidSourceDirectorySet).srcDirs.map {
                 it to SourceSetQualifier(sourceSetName, sourceSetType)
             }
