@@ -2,5 +2,5 @@ package com.flaviofaria.catalog.gradle
 
 open class CatalogExtension {
 
-    var composeExtensions: Boolean? = null
+  var composeExtensions: Boolean? = null
 }

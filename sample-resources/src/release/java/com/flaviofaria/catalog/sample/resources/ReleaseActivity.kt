@@ -11,4 +11,3 @@ class ReleaseActivity : AppCompatActivity() {
     Strings.releaseString()
   }
 }
-q

@@ -11,112 +11,112 @@ import java.nio.charset.Charset
 
 class PluralCatalogWriterTest {
 
-    @get:Rule
-    var folder = TemporaryFolder()
+  @get:Rule
+  var folder = TemporaryFolder()
 
-    private val resources = listOf(
-        ResourceEntry.Plural(
-            file = File("."),
-            name = "plural_1",
-            docs = "Plural 1 docs",
-            args = emptyList(),
+  private val resources = listOf(
+    ResourceEntry.Plural(
+      file = File("."),
+      name = "plural_1",
+      docs = "Plural 1 docs",
+      args = emptyList(),
+    ),
+    ResourceEntry.Plural(
+      file = File("."),
+      name = "plural_2",
+      docs = null,
+      args = listOf(
+        StringArg(
+          position = 1,
+          type = 'd',
+          isOptional = false,
         ),
-        ResourceEntry.Plural(
-            file = File("."),
-            name = "plural_2",
-            docs = null,
-            args = listOf(
-                StringArg(
-                    position = 1,
-                    type = 'd',
-                    isOptional = false,
-                ),
-                StringArg(
-                    position = 2,
-                    type = 'i',
-                    isOptional = false,
-                ),
-                StringArg(
-                    position = 3,
-                    type = 'u',
-                    isOptional = true,
-                ),
-                StringArg(
-                    position = 4,
-                    type = 'x',
-                    isOptional = false,
-                ),
-                StringArg(
-                    position = 5,
-                    type = 'o',
-                    isOptional = false,
-                ),
-            ),
+        StringArg(
+          position = 2,
+          type = 'i',
+          isOptional = false,
         ),
-        ResourceEntry.Plural(
-            file = File("."),
-            name = "plural_3",
-            docs = null,
-            args = listOf(
-                StringArg(
-                    position = 1,
-                    type = 'f',
-                    isOptional = true,
-                ),
-                StringArg(
-                    position = 2,
-                    type = 'e',
-                    isOptional = false,
-                ),
-                StringArg(
-                    position = 3,
-                    type = 'g',
-                    isOptional = false,
-                ),
-                StringArg(
-                    position = 4,
-                    type = 'a',
-                    isOptional = true,
-                ),
-                StringArg(
-                    position = 5,
-                    type = 's',
-                    isOptional = true,
-                ),
-            ),
+        StringArg(
+          position = 3,
+          type = 'u',
+          isOptional = true,
         ),
-        ResourceEntry.Plural(
-            file = File("."),
-            name = "plural_4",
-            docs = null,
-            args = listOf(
-                StringArg(
-                    position = 1,
-                    type = 'c',
-                    isOptional = true,
-                ),
-                StringArg(
-                    position = 2,
-                    type = 'n',
-                    isOptional = false,
-                ),
-            ),
+        StringArg(
+          position = 4,
+          type = 'x',
+          isOptional = false,
         ),
+        StringArg(
+          position = 5,
+          type = 'o',
+          isOptional = false,
+        ),
+      ),
+    ),
+    ResourceEntry.Plural(
+      file = File("."),
+      name = "plural_3",
+      docs = null,
+      args = listOf(
+        StringArg(
+          position = 1,
+          type = 'f',
+          isOptional = true,
+        ),
+        StringArg(
+          position = 2,
+          type = 'e',
+          isOptional = false,
+        ),
+        StringArg(
+          position = 3,
+          type = 'g',
+          isOptional = false,
+        ),
+        StringArg(
+          position = 4,
+          type = 'a',
+          isOptional = true,
+        ),
+        StringArg(
+          position = 5,
+          type = 's',
+          isOptional = true,
+        ),
+      ),
+    ),
+    ResourceEntry.Plural(
+      file = File("."),
+      name = "plural_4",
+      docs = null,
+      args = listOf(
+        StringArg(
+          position = 1,
+          type = 'c',
+          isOptional = true,
+        ),
+        StringArg(
+          position = 2,
+          type = 'n',
+          isOptional = false,
+        ),
+      ),
+    ),
+  )
+
+  @Test
+  fun `GIVEN composeExtensions disabled THEN generate standard extensions`() {
+    val writer = PluralCatalogWriter(
+      packageName = "com.example",
+      composeExtensions = false,
     )
-
-    @Test
-    fun `GIVEN composeExtensions disabled THEN generate standard extensions`() {
-        val writer = PluralCatalogWriter(
-            packageName = "com.example",
-            composeExtensions = false,
-        )
-        val codegenDestination = folder.newFolder()
-        val codegenFile = File(codegenDestination, "Plurals.kt")
-        writer.write(resources, "main", codegenDestination = codegenDestination)
-        assertThat(
-            codegenFile.readBytes().toString(Charset.defaultCharset()),
-        ).isEqualTo(
-            """
+    val codegenDestination = folder.newFolder()
+    val codegenFile = File(codegenDestination, "Plurals.kt")
+    writer.write(resources, "main", codegenDestination = codegenDestination)
+    assertThat(
+      codegenFile.readBytes().toString(Charset.defaultCharset()),
+    ).isEqualTo(
+      """
             |@file:JvmName("PluralsMain")
             |@file:Suppress("NOTHING_TO_INLINE")
             |package com.example
@@ -189,22 +189,22 @@ class PluralCatalogWriterTest {
             |  return resources.getQuantityString(R.plurals.plural_4, quantity, arg1, arg2)
             |}
             |""".trimMargin(),
-        )
-    }
+    )
+  }
 
-    @Test
-    fun `GIVEN composeExtensions enabled THEN generate standard extensions`() {
-        val writer = PluralCatalogWriter(
-            packageName = "com.example",
-            composeExtensions = true,
-        )
-        val codegenDestination = folder.newFolder()
-        val codegenFile = File(codegenDestination, "Plurals.kt")
-        writer.write(resources, "main", codegenDestination = codegenDestination)
-        assertThat(
-            codegenFile.readBytes().toString(Charset.defaultCharset()),
-        ).isEqualTo(
-            """
+  @Test
+  fun `GIVEN composeExtensions enabled THEN generate standard extensions`() {
+    val writer = PluralCatalogWriter(
+      packageName = "com.example",
+      composeExtensions = true,
+    )
+    val codegenDestination = folder.newFolder()
+    val codegenFile = File(codegenDestination, "Plurals.kt")
+    writer.write(resources, "main", codegenDestination = codegenDestination)
+    assertThat(
+      codegenFile.readBytes().toString(Charset.defaultCharset()),
+    ).isEqualTo(
+      """
             |@file:JvmName("PluralsMain")
             |@file:Suppress("NOTHING_TO_INLINE")
             |package com.example
@@ -305,6 +305,6 @@ class PluralCatalogWriterTest {
             |  return pluralStringResource(R.plurals.plural_4, quantity, arg1, arg2)
             |}
             |""".trimMargin(),
-        )
-    }
+    )
+  }
 }

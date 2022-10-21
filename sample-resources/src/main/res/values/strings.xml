@@ -1,22 +1,22 @@
 <resources>
-    <!-- Some test doc -->
-    <string name="app_name">Catalog</string>
-    <!-- Some test doc 2 -->
-    <string name="some_other_string_resource">Some other string resource</string>
-    <string name="string_with_non_positioned_args">Args %d are %d out of order</string>
-    <string name="string_with_positioned_args">Args %3$d are %1$f out %4$s of %2$c order</string>
-    <string name="double_percent_symbol">Double %% symbol</string>
-    <string name="escaped_percent_symbol">Escaped \% symbol</string>
-    <string name="duplicate_arg">This %1$s is a duplicate arg %1$s</string>
+  <!-- Some test doc -->
+  <string name="app_name">Catalog</string>
+  <!-- Some test doc 2 -->
+  <string name="some_other_string_resource">Some other string resource</string>
+  <string name="string_with_non_positioned_args">Args %d are %d out of order</string>
+  <string name="string_with_positioned_args">Args %3$d are %1$f out %4$s of %2$c order</string>
+  <string name="double_percent_symbol">Double %% symbol</string>
+  <string name="escaped_percent_symbol">Escaped \% symbol</string>
+  <string name="duplicate_arg">This %1$s is a duplicate arg %1$s</string>
 
-    <plurals name="some_plural">
-        <item quantity="one">Single %1$d argument</item>
-        <item quantity="other">Double %2$d arguments %1$d</item>
-    </plurals>
+  <plurals name="some_plural">
+    <item quantity="one">Single %1$d argument</item>
+    <item quantity="other">Double %2$d arguments %1$d</item>
+  </plurals>
 
-    <string-array name="some_string_array">
-        <item>Item 1</item>
-        <item>Item 2</item>
-        <item>Item 3</item>
-    </string-array>
+  <string-array name="some_string_array">
+    <item>Item 1</item>
+    <item>Item 2</item>
+    <item>Item 3</item>
+  </string-array>
 </resources>

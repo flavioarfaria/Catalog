@@ -5,27 +5,27 @@ import com.flaviofaria.catalog.codegen.toCamelCase
 import java.io.File
 
 class StringCatalogWriter(
-    private val packageName: String,
-    private val composeExtensions: Boolean,
+  private val packageName: String,
+  private val composeExtensions: Boolean,
 ) : CatalogWriter<ResourceEntry.String> {
 
-    override fun write(
-        resources: Iterable<ResourceEntry.String>,
-        sourceSetName: String,
-        codegenDestination: File,
-    ) {
-        val capitalizedSourceSetName = sourceSetName.replaceFirstChar {
-            it.titlecase()
-        }
-        with(File(codegenDestination, "Strings.kt")) {
-            createNewFile()
-            val composeImports = if (composeExtensions) {
-                """
+  override fun write(
+    resources: Iterable<ResourceEntry.String>,
+    sourceSetName: String,
+    codegenDestination: File,
+  ) {
+    val capitalizedSourceSetName = sourceSetName.replaceFirstChar {
+      it.titlecase()
+    }
+    with(File(codegenDestination, "Strings.kt")) {
+      createNewFile()
+      val composeImports = if (composeExtensions) {
+        """
                 |import androidx.compose.runtime.Composable
                 |import androidx.compose.runtime.ReadOnlyComposable
                 |import androidx.compose.ui.res.stringResource"""
-            } else ""
-            val fileContent = """
+      } else ""
+      val fileContent = """
                 |@file:JvmName("Strings$capitalizedSourceSetName")
                 |@file:Suppress("NOTHING_TO_INLINE")
                 |package $packageName
@@ -44,71 +44,71 @@ class StringCatalogWriter(
                 |${resources.joinToString("\n\n") { it.generateFragmentMethod() }}
                 |
                 """.trimMargin()
-            writeText(fileContent)
-        }
+      writeText(fileContent)
     }
+  }
 
-    // TODO avoid calling toCamelCase() frequently
-    private fun ResourceEntry.String.generateProperty(): String {
-        return """
+  // TODO avoid calling toCamelCase() frequently
+  private fun ResourceEntry.String.generateProperty(): String {
+    return """
             |${generateDocs()}inline val Strings.${name.toCamelCase()}: Int
             |  get() = R.string.$name
             """.trimMargin()
-    }
+  }
 
-    private fun ResourceEntry.String.generateContextMethod(): String {
-        return generateExtensionMethod("Context")
-    }
+  private fun ResourceEntry.String.generateContextMethod(): String {
+    return generateExtensionMethod("Context")
+  }
 
-    private fun ResourceEntry.String.generateFragmentMethod(): String {
-        return generateExtensionMethod("Fragment")
-    }
+  private fun ResourceEntry.String.generateFragmentMethod(): String {
+    return generateExtensionMethod("Fragment")
+  }
 
-    private fun ResourceEntry.String.generateExtensionMethod(methodReceiver: String): String {
-        val composeAnnotations = if (composeExtensions) {
-            """
+  private fun ResourceEntry.String.generateExtensionMethod(methodReceiver: String): String {
+    val composeAnnotations = if (composeExtensions) {
+      """
             |@Composable
             |@ReadOnlyComposable"""
-        } else ""
-        val inline = if (composeExtensions) "" else "inline "
-        val sortedArgs = args.sortedBy { it.position }
-        val typedArgs = sortedArgs.mapIndexed { i, arg ->
-            val primitiveType = when (arg.type) {
-                'd', 'i' -> "Int"
-                'u', 'x', 'o' -> "UInt"
-                'f', 'e', 'g', 'a' -> "Double"
-                's' -> "String"
-                'c' -> "Char"
-                'n' -> null
-                else -> error(
-                    "Unexpected argument type \"${arg.type}\" " +
-                            "for string resource $name in file $file",
-                )
-            }
-            val nullability = if (!composeExtensions && arg.isOptional) "?" else ""
-            primitiveType?.let { "arg${i + 1}: $primitiveType$nullability" }
-        }.filterNotNull()
+    } else ""
+    val inline = if (composeExtensions) "" else "inline "
+    val sortedArgs = args.sortedBy { it.position }
+    val typedArgs = sortedArgs.mapIndexed { i, arg ->
+      val primitiveType = when (arg.type) {
+        'd', 'i' -> "Int"
+        'u', 'x', 'o' -> "UInt"
+        'f', 'e', 'g', 'a' -> "Double"
+        's' -> "String"
+        'c' -> "Char"
+        'n' -> null
+        else -> error(
+          "Unexpected argument type \"${arg.type}\" " +
+            "for string resource $name in file $file",
+        )
+      }
+      val nullability = if (!composeExtensions && arg.isOptional) "?" else ""
+      primitiveType?.let { "arg${i + 1}: $primitiveType$nullability" }
+    }.filterNotNull()
 
-        val varargs = if (sortedArgs.isNotEmpty()) {
-            ", " + List(sortedArgs.size) { i -> "arg${i + 1}" }.joinToString()
-        } else ""
+    val varargs = if (sortedArgs.isNotEmpty()) {
+      ", " + List(sortedArgs.size) { i -> "arg${i + 1}" }.joinToString()
+    } else ""
 
-        val styledByDefault = varargs.isEmpty()
-        val returnType = if (styledByDefault) "CharSequence" else "String"
-        val methodName = when {
-            composeExtensions -> "stringResource"
-            styledByDefault -> "getText"
-            else -> "getString"
-        }
-        return """
+    val styledByDefault = varargs.isEmpty()
+    val returnType = if (styledByDefault) "CharSequence" else "String"
+    val methodName = when {
+      composeExtensions -> "stringResource"
+      styledByDefault -> "getText"
+      else -> "getString"
+    }
+    return """
             |${generateDocs()}context($methodReceiver)$composeAnnotations
             |${inline}fun Strings.${name.toCamelCase()}(${typedArgs.joinToString()}): $returnType {
             |  return $methodName(R.string.$name$varargs)
             |}
             """.trimMargin()
-    }
+  }
 
-    private fun ResourceEntry.String.generateDocs(): String {
-        return docs?.let { "/**\n${it.trim().prependIndent(" * ")}\n */\n" } ?: ""
-    }
+  private fun ResourceEntry.String.generateDocs(): String {
+    return docs?.let { "/**\n${it.trim().prependIndent(" * ")}\n */\n" } ?: ""
+  }
 }

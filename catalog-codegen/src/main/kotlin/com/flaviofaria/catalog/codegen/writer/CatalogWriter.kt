@@ -4,5 +4,5 @@ import com.flaviofaria.catalog.codegen.ResourceEntry
 import java.io.File
 
 interface CatalogWriter<T : ResourceEntry> {
-    fun write(resources: Iterable<T>, sourceSetName: String, codegenDestination: File)
+  fun write(resources: Iterable<T>, sourceSetName: String, codegenDestination: File)
 }

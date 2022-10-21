@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name" translatable="false">Demo app name</string>
-    <string name="demo_string" translatable="false">Demo string</string>
+  <string name="app_name" translatable="false">Demo app name</string>
+  <string name="demo_string" translatable="false">Demo string</string>
 </resources>

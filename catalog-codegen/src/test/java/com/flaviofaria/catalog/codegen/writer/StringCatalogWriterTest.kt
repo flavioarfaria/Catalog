@@ -11,112 +11,112 @@ import java.nio.charset.Charset
 
 class StringCatalogWriterTest {
 
-    @get:Rule
-    var folder = TemporaryFolder()
+  @get:Rule
+  var folder = TemporaryFolder()
 
-    private val resources = listOf(
-        ResourceEntry.String(
-            file = File("."),
-            name = "string_1",
-            docs = "String 1 docs",
-            args = emptyList(),
+  private val resources = listOf(
+    ResourceEntry.String(
+      file = File("."),
+      name = "string_1",
+      docs = "String 1 docs",
+      args = emptyList(),
+    ),
+    ResourceEntry.String(
+      file = File("."),
+      name = "string_2",
+      docs = null,
+      args = listOf(
+        StringArg(
+          position = 1,
+          type = 'd',
+          isOptional = false,
         ),
-        ResourceEntry.String(
-            file = File("."),
-            name = "string_2",
-            docs = null,
-            args = listOf(
-                StringArg(
-                    position = 1,
-                    type = 'd',
-                    isOptional = false,
-                ),
-                StringArg(
-                    position = 2,
-                    type = 'i',
-                    isOptional = false,
-                ),
-                StringArg(
-                    position = 3,
-                    type = 'u',
-                    isOptional = true,
-                ),
-                StringArg(
-                    position = 4,
-                    type = 'x',
-                    isOptional = false,
-                ),
-                StringArg(
-                    position = 5,
-                    type = 'o',
-                    isOptional = false,
-                ),
-            ),
+        StringArg(
+          position = 2,
+          type = 'i',
+          isOptional = false,
         ),
-        ResourceEntry.String(
-            file = File("."),
-            name = "string_3",
-            docs = null,
-            args = listOf(
-                StringArg(
-                    position = 1,
-                    type = 'f',
-                    isOptional = true,
-                ),
-                StringArg(
-                    position = 2,
-                    type = 'e',
-                    isOptional = false,
-                ),
-                StringArg(
-                    position = 3,
-                    type = 'g',
-                    isOptional = false,
-                ),
-                StringArg(
-                    position = 4,
-                    type = 'a',
-                    isOptional = true,
-                ),
-                StringArg(
-                    position = 5,
-                    type = 's',
-                    isOptional = true,
-                ),
-            ),
+        StringArg(
+          position = 3,
+          type = 'u',
+          isOptional = true,
         ),
-        ResourceEntry.String(
-            file = File("."),
-            name = "string_4",
-            docs = null,
-            args = listOf(
-                StringArg(
-                    position = 1,
-                    type = 'c',
-                    isOptional = true,
-                ),
-                StringArg(
-                    position = 2,
-                    type = 'n',
-                    isOptional = false,
-                ),
-            ),
+        StringArg(
+          position = 4,
+          type = 'x',
+          isOptional = false,
         ),
+        StringArg(
+          position = 5,
+          type = 'o',
+          isOptional = false,
+        ),
+      ),
+    ),
+    ResourceEntry.String(
+      file = File("."),
+      name = "string_3",
+      docs = null,
+      args = listOf(
+        StringArg(
+          position = 1,
+          type = 'f',
+          isOptional = true,
+        ),
+        StringArg(
+          position = 2,
+          type = 'e',
+          isOptional = false,
+        ),
+        StringArg(
+          position = 3,
+          type = 'g',
+          isOptional = false,
+        ),
+        StringArg(
+          position = 4,
+          type = 'a',
+          isOptional = true,
+        ),
+        StringArg(
+          position = 5,
+          type = 's',
+          isOptional = true,
+        ),
+      ),
+    ),
+    ResourceEntry.String(
+      file = File("."),
+      name = "string_4",
+      docs = null,
+      args = listOf(
+        StringArg(
+          position = 1,
+          type = 'c',
+          isOptional = true,
+        ),
+        StringArg(
+          position = 2,
+          type = 'n',
+          isOptional = false,
+        ),
+      ),
+    ),
+  )
+
+  @Test
+  fun `GIVEN composeExtensions disabled THEN generate standard extensions`() {
+    val writer = StringCatalogWriter(
+      packageName = "com.example",
+      composeExtensions = false,
     )
-
-    @Test
-    fun `GIVEN composeExtensions disabled THEN generate standard extensions`() {
-        val writer = StringCatalogWriter(
-            packageName = "com.example",
-            composeExtensions = false,
-        )
-        val codegenDestination = folder.newFolder()
-        val codegenFile = File(codegenDestination, "Strings.kt")
-        writer.write(resources, "main", codegenDestination = codegenDestination)
-        assertThat(
-            codegenFile.readBytes().toString(Charset.defaultCharset()),
-        ).isEqualTo(
-            """
+    val codegenDestination = folder.newFolder()
+    val codegenFile = File(codegenDestination, "Strings.kt")
+    writer.write(resources, "main", codegenDestination = codegenDestination)
+    assertThat(
+      codegenFile.readBytes().toString(Charset.defaultCharset()),
+    ).isEqualTo(
+      """
             |@file:JvmName("StringsMain")
             |@file:Suppress("NOTHING_TO_INLINE")
             |package com.example
@@ -189,22 +189,22 @@ class StringCatalogWriterTest {
             |  return getString(R.string.string_4, arg1, arg2)
             |}
             |""".trimMargin(),
-        )
-    }
+    )
+  }
 
-    @Test
-    fun `GIVEN composeExtensions enabled THEN generate standard extensions`() {
-        val writer = StringCatalogWriter(
-            packageName = "com.example",
-            composeExtensions = true,
-        )
-        val codegenDestination = folder.newFolder()
-        val codegenFile = File(codegenDestination, "Strings.kt")
-        writer.write(resources, "main", codegenDestination = codegenDestination)
-        assertThat(
-            codegenFile.readBytes().toString(Charset.defaultCharset()),
-        ).isEqualTo(
-            """
+  @Test
+  fun `GIVEN composeExtensions enabled THEN generate standard extensions`() {
+    val writer = StringCatalogWriter(
+      packageName = "com.example",
+      composeExtensions = true,
+    )
+    val codegenDestination = folder.newFolder()
+    val codegenFile = File(codegenDestination, "Strings.kt")
+    writer.write(resources, "main", codegenDestination = codegenDestination)
+    assertThat(
+      codegenFile.readBytes().toString(Charset.defaultCharset()),
+    ).isEqualTo(
+      """
             |@file:JvmName("StringsMain")
             |@file:Suppress("NOTHING_TO_INLINE")
             |package com.example
@@ -296,6 +296,6 @@ class StringCatalogWriterTest {
             |  return stringResource(R.string.string_4, arg1, arg2)
             |}
             |""".trimMargin(),
-        )
-    }
+    )
+  }
 }

@@ -10,35 +10,35 @@ import java.nio.charset.Charset
 
 class StringArrayCatalogWriterTest {
 
-    @get:Rule
-    var folder = TemporaryFolder()
+  @get:Rule
+  var folder = TemporaryFolder()
 
-    private val resources = listOf(
-        ResourceEntry.StringArray(
-            file = File("."),
-            name = "string_array_1",
-            docs = "String array 1 docs",
-        ),
-        ResourceEntry.StringArray(
-            file = File("."),
-            name = "string_array_2",
-            docs = null,
-        ),
+  private val resources = listOf(
+    ResourceEntry.StringArray(
+      file = File("."),
+      name = "string_array_1",
+      docs = "String array 1 docs",
+    ),
+    ResourceEntry.StringArray(
+      file = File("."),
+      name = "string_array_2",
+      docs = null,
+    ),
+  )
+
+  @Test
+  fun `GIVEN composeExtensions disabled THEN generate standard extensions`() {
+    val writer = StringArrayCatalogWriter(
+      packageName = "com.example",
+      composeExtensions = false,
     )
-
-    @Test
-    fun `GIVEN composeExtensions disabled THEN generate standard extensions`() {
-        val writer = StringArrayCatalogWriter(
-            packageName = "com.example",
-            composeExtensions = false,
-        )
-        val codegenDestination = folder.newFolder()
-        val codegenFile = File(codegenDestination, "StringArrays.kt")
-        writer.write(resources, "main", codegenDestination = codegenDestination)
-        assertThat(
-            codegenFile.readBytes().toString(Charset.defaultCharset()),
-        ).isEqualTo(
-            """
+    val codegenDestination = folder.newFolder()
+    val codegenFile = File(codegenDestination, "StringArrays.kt")
+    writer.write(resources, "main", codegenDestination = codegenDestination)
+    assertThat(
+      codegenFile.readBytes().toString(Charset.defaultCharset()),
+    ).isEqualTo(
+      """
             |@file:JvmName("StringArraysMain")
             |@file:Suppress("NOTHING_TO_INLINE")
             |package com.example
@@ -85,22 +85,22 @@ class StringArrayCatalogWriterTest {
             |  return resources.getStringArray(R.array.string_array_2)
             |}
             |""".trimMargin(),
-        )
-    }
+    )
+  }
 
-    @Test
-    fun `GIVEN composeExtensions enabled THEN generate standard extensions`() {
-        val writer = StringArrayCatalogWriter(
-            packageName = "com.example",
-            composeExtensions = true,
-        )
-        val codegenDestination = folder.newFolder()
-        val codegenFile = File(codegenDestination, "StringArrays.kt")
-        writer.write(resources, "main", codegenDestination = codegenDestination)
-        assertThat(
-            codegenFile.readBytes().toString(Charset.defaultCharset()),
-        ).isEqualTo(
-            """
+  @Test
+  fun `GIVEN composeExtensions enabled THEN generate standard extensions`() {
+    val writer = StringArrayCatalogWriter(
+      packageName = "com.example",
+      composeExtensions = true,
+    )
+    val codegenDestination = folder.newFolder()
+    val codegenFile = File(codegenDestination, "StringArrays.kt")
+    writer.write(resources, "main", codegenDestination = codegenDestination)
+    assertThat(
+      codegenFile.readBytes().toString(Charset.defaultCharset()),
+    ).isEqualTo(
+      """
             |@file:JvmName("StringArraysMain")
             |@file:Suppress("NOTHING_TO_INLINE")
             |package com.example
@@ -158,6 +158,6 @@ class StringArrayCatalogWriterTest {
             |  return stringArrayResource(R.array.string_array_2)
             |}
             |""".trimMargin(),
-        )
-    }
+    )
+  }
 }

@@ -8,16 +8,16 @@ import org.junit.rules.TemporaryFolder
 
 class XmlResourceParserTest {
 
-    @get:Rule
-    var folder = TemporaryFolder()
+  @get:Rule
+  var folder = TemporaryFolder()
 
-    private val parser = XmlResourceParser()
+  private val parser = XmlResourceParser()
 
-    @Test
-    fun `parseFile()`() {
-        @Language("XML")
-        val xmlContent =
-            """
+  @Test
+  fun `parseFile()`() {
+    @Language("XML")
+    val xmlContent =
+      """
             |<resources>
             |   <string name="string_no_args_wo_docs">String no args w/o docs</string>
             |   <!-- Some test doc -->
@@ -40,76 +40,76 @@ class XmlResourceParserTest {
             |</resources>
             """.trimMargin()
 
-        val file = folder.newFile()
-        file.writeText(xmlContent)
+    val file = folder.newFile()
+    file.writeText(xmlContent)
 
-        val resourceEntries = parser.parseFile(file)
+    val resourceEntries = parser.parseFile(file)
 
-        assertThat(resourceEntries).containsExactly(
-            ResourceEntry.String(
-                file = file,
-                name = "string_no_args_wo_docs",
-                docs = null,
-                args = emptyList(),
-            ),
-            ResourceEntry.String(
-                file = file,
-                name = "string_no_args_with_docs",
-                docs = "Some test doc",
-                args = emptyList(),
-            ),
-            ResourceEntry.String(
-                file = file,
-                name = "string_with_non_positioned_args",
-                docs = null,
-                args = listOf(
-                    StringArg(1, 'd', false),
-                    StringArg(2, 'd', false),
-                ),
-            ),
-            ResourceEntry.String(
-                file = file,
-                name = "string_with_positioned_args",
-                docs = null,
-                args = listOf(
-                    StringArg(3, 'd', false),
-                    StringArg(1, 'f', false),
-                    StringArg(4, 's', false),
-                    StringArg(2, 'c', false),
-                ),
-            ),
-            ResourceEntry.String(
-                file = file,
-                name = "unformatted_string",
-                docs = null,
-                args = emptyList(),
-            ),
-            ResourceEntry.String(
-                file = file,
-                name = "double_percent_symbol",
-                docs = null,
-                args = emptyList(),
-            ),
-            ResourceEntry.String(
-                file = file,
-                name = "escaped_percent_symbol",
-                docs = null,
-                args = emptyList(),
-            ),
-            ResourceEntry.Plural(
-                file = file,
-                name = "some_plural",
-                docs = "there's no arg count validation, the only risk is going out of bounds",
-                args = listOf(
-                    StringArg(1, 'd', false),
-                    StringArg(2, 'd', true),
-                ),
-            ),
-            ResourceEntry.StringArray(
-                file = file,
-                name = "some_string_array",
-                docs = null,
-            ),
-        )
-    }
+    assertThat(resourceEntries).containsExactly(
+      ResourceEntry.String(
+        file = file,
+        name = "string_no_args_wo_docs",
+        docs = null,
+        args = emptyList(),
+      ),
+      ResourceEntry.String(
+        file = file,
+        name = "string_no_args_with_docs",
+        docs = "Some test doc",
+        args = emptyList(),
+      ),
+      ResourceEntry.String(
+        file = file,
+        name = "string_with_non_positioned_args",
+        docs = null,
+        args = listOf(
+          StringArg(1, 'd', false),
+          StringArg(2, 'd', false),
+        ),
+      ),
+      ResourceEntry.String(
+        file = file,
+        name = "string_with_positioned_args",
+        docs = null,
+        args = listOf(
+          StringArg(3, 'd', false),
+          StringArg(1, 'f', false),
+          StringArg(4, 's', false),
+          StringArg(2, 'c', false),
+        ),
+      ),
+      ResourceEntry.String(
+        file = file,
+        name = "unformatted_string",
+        docs = null,
+        args = emptyList(),
+      ),
+      ResourceEntry.String(
+        file = file,
+        name = "double_percent_symbol",
+        docs = null,
+        args = emptyList(),
+      ),
+      ResourceEntry.String(
+        file = file,
+        name = "escaped_percent_symbol",
+        docs = null,
+        args = emptyList(),
+      ),
+      ResourceEntry.Plural(
+        file = file,
+        name = "some_plural",
+        docs = "there's no arg count validation, the only risk is going out of bounds",
+        args = listOf(
+          StringArg(1, 'd', false),
+          StringArg(2, 'd', true),
+        ),
+      ),
+      ResourceEntry.StringArray(
+        file = file,
+        name = "some_string_array",
+        docs = null,
+      ),
+    )
+  }
 }

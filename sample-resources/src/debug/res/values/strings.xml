@@ -1,3 +1,3 @@
 <resources>
-    <string name="debug_string" translatable="false">Debug string</string>
+  <string name="debug_string" translatable="false">Debug string</string>
 </resources>

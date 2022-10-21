@@ -5,27 +5,27 @@ import com.flaviofaria.catalog.codegen.toCamelCase
 import java.io.File
 
 class StringArrayCatalogWriter(
-    private val packageName: String,
-    private val composeExtensions: Boolean,
+  private val packageName: String,
+  private val composeExtensions: Boolean,
 ) : CatalogWriter<ResourceEntry.StringArray> {
 
-    override fun write(
-        resources: Iterable<ResourceEntry.StringArray>,
-        sourceSetName: String,
-        codegenDestination: File,
-    ) {
-        val capitalizedSourceSetName = sourceSetName.replaceFirstChar {
-            it.titlecase()
-        }
-        with(File(codegenDestination, "StringArrays.kt")) {
-            createNewFile()
-            val composeImports = if (composeExtensions) {
-                """
+  override fun write(
+    resources: Iterable<ResourceEntry.StringArray>,
+    sourceSetName: String,
+    codegenDestination: File,
+  ) {
+    val capitalizedSourceSetName = sourceSetName.replaceFirstChar {
+      it.titlecase()
+    }
+    with(File(codegenDestination, "StringArrays.kt")) {
+      createNewFile()
+      val composeImports = if (composeExtensions) {
+        """
                 |import androidx.compose.runtime.Composable
                 |import androidx.compose.runtime.ReadOnlyComposable
                 |import androidx.compose.ui.res.stringArrayResource"""
-            } else ""
-            val fileContent = """
+      } else ""
+      val fileContent = """
                 |@file:JvmName("StringArrays$capitalizedSourceSetName")
                 |@file:Suppress("NOTHING_TO_INLINE")
                 |package $packageName
@@ -44,48 +44,48 @@ class StringArrayCatalogWriter(
                 |${resources.joinToString("\n\n") { it.generateFragmentMethod() }}
                 |
                 """.trimMargin()
-            writeText(fileContent)
-        }
+      writeText(fileContent)
     }
+  }
 
-    // TODO avoid calling toCamelCase() frequently
-    private fun ResourceEntry.StringArray.generateProperty(): String {
-        return """
+  // TODO avoid calling toCamelCase() frequently
+  private fun ResourceEntry.StringArray.generateProperty(): String {
+    return """
             |${generateDocs()}inline val StringArrays.${name.toCamelCase()}: Int
             |  get() = R.array.$name
             """.trimMargin()
-    }
+  }
 
-    private fun ResourceEntry.StringArray.generateContextMethod(): String {
-        return generateExtensionMethod("Context")
-    }
+  private fun ResourceEntry.StringArray.generateContextMethod(): String {
+    return generateExtensionMethod("Context")
+  }
 
-    private fun ResourceEntry.StringArray.generateFragmentMethod(): String {
-        return generateExtensionMethod("Fragment")
-    }
+  private fun ResourceEntry.StringArray.generateFragmentMethod(): String {
+    return generateExtensionMethod("Fragment")
+  }
 
-    private fun ResourceEntry.StringArray.generateExtensionMethod(methodReceiver: String): String {
-        val composeAnnotations = if (composeExtensions) {
-            """
+  private fun ResourceEntry.StringArray.generateExtensionMethod(methodReceiver: String): String {
+    val composeAnnotations = if (composeExtensions) {
+      """
             |@Composable
             |@ReadOnlyComposable"""
-        } else ""
-        val inline = if (composeExtensions) "" else "inline "
-        val methodName = if (composeExtensions) {
-            "stringArrayResource"
-        } else {
-            "resources.getStringArray"
-        }
-        return """
+    } else ""
+    val inline = if (composeExtensions) "" else "inline "
+    val methodName = if (composeExtensions) {
+      "stringArrayResource"
+    } else {
+      "resources.getStringArray"
+    }
+    return """
             |${generateDocs()}context($methodReceiver)$composeAnnotations
             |${inline}fun StringArrays.${name.toCamelCase()}(): Array<String> {
             |  return $methodName(R.array.$name)
             |}
             """.trimMargin()
-    }
+  }
 
-    // TODO reuse
-    private fun ResourceEntry.StringArray.generateDocs(): String {
-        return docs?.let { "/**\n${it.trim().prependIndent(" * ")}\n */\n" } ?: ""
-    }
+  // TODO reuse
+  private fun ResourceEntry.StringArray.generateDocs(): String {
+    return docs?.let { "/**\n${it.trim().prependIndent(" * ")}\n */\n" } ?: ""
+  }
 }
