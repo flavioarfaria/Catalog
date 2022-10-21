@@ -6,6 +6,9 @@ pluginManagement {
     mavenCentral()
   }
 }
+plugins {
+  id("de.fayard.refreshVersions") version "0.50.2"
+}
 dependencyResolutionManagement {
   repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
   repositories {
