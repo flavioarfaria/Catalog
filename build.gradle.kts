@@ -19,3 +19,11 @@ buildscript {
 repositories {
   google()
 }
+
+subprojects {
+  tasks.withType<Test> {
+    testLogging {
+      events("passed", "skipped", "failed")
+    }
+  }
+}
