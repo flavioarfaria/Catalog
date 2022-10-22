@@ -1,6 +1,6 @@
-package com.flaviofaria.catalog.codegen.writer
+package com.flaviofaria.catalog.gradle.codegen.writer
 
-import com.flaviofaria.catalog.codegen.ResourceEntry
+import com.flaviofaria.catalog.gradle.codegen.ResourceEntry
 import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test

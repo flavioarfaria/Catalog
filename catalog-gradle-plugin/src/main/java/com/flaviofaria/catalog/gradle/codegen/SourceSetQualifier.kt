@@ -1,4 +1,4 @@
-package com.flaviofaria.catalog.codegen
+package com.flaviofaria.catalog.gradle.codegen
 
 data class SourceSetQualifier(
   val name: String,

@@ -1,4 +1,4 @@
-package com.flaviofaria.catalog.codegen
+package com.flaviofaria.catalog.gradle.codegen
 
 import org.w3c.dom.Comment
 import org.w3c.dom.Element

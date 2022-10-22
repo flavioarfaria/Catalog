@@ -33,7 +33,9 @@ publishing {
 }
 
 dependencies {
-  implementation(project(":catalog-codegen"))
   implementation(libs.android.gradle)
   implementation(libs.kotlin.gradle.plugin)
+
+  testImplementation(libs.junit)
+  testImplementation(libs.google.truth)
 }

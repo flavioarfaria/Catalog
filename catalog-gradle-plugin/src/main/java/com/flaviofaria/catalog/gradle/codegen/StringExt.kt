@@ -1,4 +1,4 @@
-package com.flaviofaria.catalog.codegen
+package com.flaviofaria.catalog.gradle.codegen
 
 fun String.toCamelCase(): String {
   val camelCase = StringBuilder()

@@ -1,7 +1,7 @@
-package com.flaviofaria.catalog.codegen.writer
+package com.flaviofaria.catalog.gradle.codegen.writer
 
-import com.flaviofaria.catalog.codegen.ResourceEntry
-import com.flaviofaria.catalog.codegen.toCamelCase
+import com.flaviofaria.catalog.gradle.codegen.ResourceEntry
+import com.flaviofaria.catalog.gradle.codegen.toCamelCase
 import java.io.File
 
 class PluralCatalogWriter(

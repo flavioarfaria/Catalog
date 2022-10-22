@@ -3,9 +3,9 @@ package com.flaviofaria.catalog.gradle
 import com.android.build.api.dsl.AndroidSourceSet
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.gradle.internal.api.DefaultAndroidSourceFile
-import com.flaviofaria.catalog.codegen.Codegen
-import com.flaviofaria.catalog.codegen.SourceSetQualifier
-import com.flaviofaria.catalog.codegen.XmlResourceParser
+import com.flaviofaria.catalog.gradle.codegen.Codegen
+import com.flaviofaria.catalog.gradle.codegen.SourceSetQualifier
+import com.flaviofaria.catalog.gradle.codegen.XmlResourceParser
 import org.gradle.api.DefaultTask
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.tasks.*

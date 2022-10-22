@@ -22,7 +22,6 @@ enableFeaturePreview("VERSION_CATALOGS")
 rootProject.name = "Catalog"
 include(":sample-app-resources")
 include(":sample-app-compose")
-include(":catalog-codegen")
 include(":catalog-gradle-plugin")
 include(":sample-library")
 include(":catalog-runtime")

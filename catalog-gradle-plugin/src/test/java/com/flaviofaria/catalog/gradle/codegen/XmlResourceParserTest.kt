@@ -1,4 +1,4 @@
-package com.flaviofaria.catalog.codegen
+package com.flaviofaria.catalog.gradle.codegen
 
 import com.google.common.truth.Truth.assertThat
 import org.intellij.lang.annotations.Language

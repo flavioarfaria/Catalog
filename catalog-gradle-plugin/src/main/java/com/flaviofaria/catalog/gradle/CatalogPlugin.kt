@@ -3,8 +3,8 @@ package com.flaviofaria.catalog.gradle
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet
-import com.flaviofaria.catalog.codegen.SourceSetQualifier
-import com.flaviofaria.catalog.codegen.SourceSetType
+import com.flaviofaria.catalog.gradle.codegen.SourceSetQualifier
+import com.flaviofaria.catalog.gradle.codegen.SourceSetType
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile

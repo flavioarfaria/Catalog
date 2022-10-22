@@ -1,8 +1,8 @@
-package com.flaviofaria.catalog.codegen
+package com.flaviofaria.catalog.gradle.codegen
 
-import com.flaviofaria.catalog.codegen.writer.PluralCatalogWriter
-import com.flaviofaria.catalog.codegen.writer.StringArrayCatalogWriter
-import com.flaviofaria.catalog.codegen.writer.StringCatalogWriter
+import com.flaviofaria.catalog.gradle.codegen.writer.PluralCatalogWriter
+import com.flaviofaria.catalog.gradle.codegen.writer.StringArrayCatalogWriter
+import com.flaviofaria.catalog.gradle.codegen.writer.StringCatalogWriter
 import java.io.File
 
 class Codegen(
