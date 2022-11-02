@@ -6,25 +6,44 @@ import com.squareup.kotlinpoet.*
 import java.io.File
 
 @OptIn(ExperimentalKotlinPoetApi::class)
-class StringCatalogWriter(
+class WithArgsCatalogWriter(
   private val packageName: String,
-  private val composeExtensions: Boolean,
-) : CatalogWriter<ResourceEntry.String> {
+  private val asComposeExtensions: Boolean,
+  private val asPlurals: Boolean,
+) : CatalogWriter<ResourceEntry.WithArgs> {
 
+  private val receiverClass: ClassName
   private val contextClass = ClassName("android.content", "Context")
   private val fragmentClass = ClassName("androidx.fragment.app", "Fragment")
-  private val stringsClass = ClassName("com.flaviofaria.catalog.runtime", "Strings")
   private val rClass = ClassName(packageName, "R")
   private val composableClass = ClassName("androidx.compose.runtime", "Composable")
+  private val optInClass = ClassName("kotlin", "OptIn")
+  private val experimentalComposeUiApiClass = ClassName("androidx.compose.ui", "ExperimentalComposeUiApi")
   private val readOnlyComposableClass = ClassName("androidx.compose.runtime", "ReadOnlyComposable")
   private val stringResourceMember = MemberName("androidx.compose.ui.res", "stringResource")
+  private val pluralResourceMember = MemberName("androidx.compose.ui.res", "pluralStringResource")
+
+  private val fileName: String
+  private val resourceGroup: String
+
+  init {
+    if (asPlurals) {
+      fileName = "Plurals"
+      resourceGroup = "plurals"
+      receiverClass = ClassName("com.flaviofaria.catalog.runtime", "Plurals")
+    } else {
+      fileName = "Strings"
+      resourceGroup = "string"
+      receiverClass = ClassName("com.flaviofaria.catalog.runtime", "Strings")
+    }
+  }
 
   override fun write(
-    resources: Iterable<ResourceEntry.String>,
+    resources: Iterable<ResourceEntry.WithArgs>,
     sourceSetName: String,
     codegenDestination: File,
   ) {
-    val file = FileSpec.builder(packageName, "Strings")
+    val file = FileSpec.builder(packageName, fileName)
       .addFileHeaders(sourceSetName)
       .apply {
         resources.forEach { resource ->
@@ -45,7 +64,7 @@ class StringCatalogWriter(
       |https://github.com/flavioarfaria/Catalog""".trimMargin(),
     ).addAnnotation(
       AnnotationSpec.builder(JvmName::class)
-        .addMember("%S", "Strings$capitalizedSourceSetName")
+        .addMember("%S", "$fileName$capitalizedSourceSetName")
         .useSiteTarget(AnnotationSpec.UseSiteTarget.FILE)
         .build(),
     ).addAnnotation(
@@ -56,15 +75,15 @@ class StringCatalogWriter(
     )
   }
 
-  private fun FileSpec.Builder.addResourceProperty(resource: ResourceEntry.String) {
+  private fun FileSpec.Builder.addResourceProperty(resource: ResourceEntry.WithArgs) {
     addProperty(
       PropertySpec.builder(resource.name.toCamelCase(), Int::class)
         .apply { resource.docs?.let(::addKdoc) }
-        .receiver(stringsClass)
+        .receiver(receiverClass)
         .getter(
           FunSpec.getterBuilder()
             .addModifiers(KModifier.INLINE)
-            .addStatement("return %T.string.%L", rClass, resource.name)
+            .addStatement("return %T.$resourceGroup.%L", rClass, resource.name)
             .build()
         )
         .build()
@@ -72,7 +91,7 @@ class StringCatalogWriter(
   }
 
   private fun FileSpec.Builder.addResourceFunction(
-    resource: ResourceEntry.String,
+    resource: ResourceEntry.WithArgs,
     contextReceiver: TypeName,
   ) {
     val sortedArgs = resource.args.sortedBy { it.position }
@@ -80,9 +99,12 @@ class StringCatalogWriter(
     val statementArgs = mutableListOf<Any>()
     val methodName: String
     when {
-      composeExtensions -> {
-        statementArgs += stringResourceMember
+      asComposeExtensions -> {
+        statementArgs += if (asPlurals) pluralResourceMember else stringResourceMember
         methodName = "%M"
+      }
+      asPlurals -> {
+        methodName = "resources.getQuantityString"
       }
       sortedArgs.isEmpty() -> {
         methodName = "getText"
@@ -91,27 +113,47 @@ class StringCatalogWriter(
         methodName = "getString"
       }
     }
+    val quantityParamName = "quantity"
     statementArgs.apply {
       add(rClass)
       add(resource.name)
+      if (asPlurals) {
+        add(quantityParamName)
+      }
       addAll(resource.args.map { "arg${it.position}" })
     }
 
-    val functionCallParams = listOf("%T.string.%L") + resource.args.map { "%L" }
+    val functionCallParams = mutableListOf("%T.$resourceGroup.%L").apply {
+      if (asPlurals) {
+        add("%L")
+      }
+      addAll(resource.args.map { "%L" })
+    }
+
     val statementFormat = "return $methodName(${functionCallParams.joinToString()})"
     addFunction(
       FunSpec.builder(resource.name.toCamelCase())
         .apply { resource.docs?.let(::addKdoc) }
         .apply {
-          if (composeExtensions) {
+          if (asComposeExtensions) {
+            if (asPlurals) {
+              addAnnotation(
+                AnnotationSpec.builder(optInClass)
+                  .addMember("%T::class", experimentalComposeUiApiClass)
+                  .build(),
+              )
+            }
             addAnnotation(composableClass)
             addAnnotation(readOnlyComposableClass)
           }
         }
         .addModifiers(KModifier.INLINE)
         .contextReceivers(contextReceiver)
-        .receiver(stringsClass)
+        .receiver(receiverClass)
         .apply {
+          if (asPlurals) {
+            addParameter(name = quantityParamName, type = Int::class)
+          }
           sortedArgs.forEach { parameter ->
             addParameter(
               name = "arg${parameter.position}",

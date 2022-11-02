@@ -34,7 +34,7 @@ class XmlResourceParser {
             "string" -> {
               val formatted =
                 node.attributes.getNamedItem("formatted")?.nodeValue != "false"
-              ResourceEntry.String(
+              ResourceEntry.WithArgs.String(
                 file,
                 name,
                 preceedingComment,
@@ -42,7 +42,7 @@ class XmlResourceParser {
               )
             }
             "plurals" -> {
-              ResourceEntry.Plural(
+              ResourceEntry.WithArgs.Plural(
                 file,
                 name,
                 preceedingComment,

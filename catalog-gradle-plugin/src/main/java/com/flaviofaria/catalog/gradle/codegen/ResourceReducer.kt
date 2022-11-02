@@ -12,8 +12,8 @@ class ResourceReducer {
       .onEach { it.validateArgumentTypes(typedArgs) }
       .maxByOrNull { resource ->
         when (resource) {
-          is ResourceEntry.String -> resource.args.size
-          is ResourceEntry.Plural -> resource.args.size
+          is ResourceEntry.WithArgs.String -> resource.args.size
+          is ResourceEntry.WithArgs.Plural -> resource.args.size
           else -> return resource // non-reducable resource type
         }
       }!!.apply {
@@ -26,8 +26,8 @@ class ResourceReducer {
     typedArgs: MutableMap<Int, Pair<StringArg, File>>,
   ) {
     val args = when (this) {
-      is ResourceEntry.String -> args
-      is ResourceEntry.Plural -> args
+      is ResourceEntry.WithArgs.String -> args
+      is ResourceEntry.WithArgs.Plural -> args
       else -> return // no need to validate other resource types
     }
     args.forEach { arg ->

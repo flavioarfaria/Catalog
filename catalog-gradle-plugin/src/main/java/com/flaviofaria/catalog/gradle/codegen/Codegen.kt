@@ -1,8 +1,7 @@
 package com.flaviofaria.catalog.gradle.codegen
 
-import com.flaviofaria.catalog.gradle.codegen.writer.PluralCatalogWriter
 import com.flaviofaria.catalog.gradle.codegen.writer.StringArrayCatalogWriter
-import com.flaviofaria.catalog.gradle.codegen.writer.StringCatalogWriter
+import com.flaviofaria.catalog.gradle.codegen.writer.WithArgsCatalogWriter
 import java.io.File
 
 class Codegen(
@@ -13,13 +12,15 @@ class Codegen(
 ) {
 
   private val resourceReducer = ResourceReducer()
-  private val stringCatalogWriter = StringCatalogWriter(
+  private val stringCatalogWriter = WithArgsCatalogWriter(
     packageName,
     composeExtensions,
+    asPlurals = false,
   )
-  private val pluralCatalogWriter = PluralCatalogWriter(
+  private val pluralCatalogWriter = WithArgsCatalogWriter(
     packageName,
     composeExtensions,
+    asPlurals = true,
   )
   private val stringArrayCatalogWriter = StringArrayCatalogWriter(
     packageName,
@@ -80,18 +81,18 @@ class Codegen(
       .groupBy { it::class } // groups them back by type to write Kotlin files
       .forEach { (type, resources) ->
         when (type) {
-          ResourceEntry.String::class -> {
+          ResourceEntry.WithArgs.String::class -> {
             @Suppress("UNCHECKED_CAST")
             stringCatalogWriter.write(
-              resources as List<ResourceEntry.String>, // TODO unchecked cast
+              resources as List<ResourceEntry.WithArgs.String>, // TODO unchecked cast
               sourceSetName,
               codegenDir,
             )
           }
-          ResourceEntry.Plural::class -> {
+          ResourceEntry.WithArgs.Plural::class -> {
             @Suppress("UNCHECKED_CAST")
             pluralCatalogWriter.write(
-              resources as List<ResourceEntry.Plural>, // TODO
+              resources as List<ResourceEntry.WithArgs.Plural>, // TODO
               sourceSetName,
               codegenDir,
             )

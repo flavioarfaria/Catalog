@@ -46,19 +46,19 @@ class XmlResourceParserTest {
     val resourceEntries = parser.parseFile(file)
 
     assertThat(resourceEntries).containsExactly(
-      ResourceEntry.String(
+      ResourceEntry.WithArgs.String(
         file = file,
         name = "string_no_args_wo_docs",
         docs = null,
         args = emptyList(),
       ),
-      ResourceEntry.String(
+      ResourceEntry.WithArgs.String(
         file = file,
         name = "string_no_args_with_docs",
         docs = "Some test doc",
         args = emptyList(),
       ),
-      ResourceEntry.String(
+      ResourceEntry.WithArgs.String(
         file = file,
         name = "string_with_non_positioned_args",
         docs = null,
@@ -67,7 +67,7 @@ class XmlResourceParserTest {
           StringArg(2, 'd', false),
         ),
       ),
-      ResourceEntry.String(
+      ResourceEntry.WithArgs.String(
         file = file,
         name = "string_with_positioned_args",
         docs = null,
@@ -78,25 +78,25 @@ class XmlResourceParserTest {
           StringArg(2, 'c', false),
         ),
       ),
-      ResourceEntry.String(
+      ResourceEntry.WithArgs.String(
         file = file,
         name = "unformatted_string",
         docs = null,
         args = emptyList(),
       ),
-      ResourceEntry.String(
+      ResourceEntry.WithArgs.String(
         file = file,
         name = "double_percent_symbol",
         docs = null,
         args = emptyList(),
       ),
-      ResourceEntry.String(
+      ResourceEntry.WithArgs.String(
         file = file,
         name = "escaped_percent_symbol",
         docs = null,
         args = emptyList(),
       ),
-      ResourceEntry.Plural(
+      ResourceEntry.WithArgs.Plural(
         file = file,
         name = "some_plural",
         docs = "there's no arg count validation, the only risk is going out of bounds",
