@@ -8,7 +8,11 @@ import com.flaviofaria.catalog.gradle.codegen.SourceSetQualifier
 import com.flaviofaria.catalog.gradle.codegen.XmlResourceParser
 import org.gradle.api.DefaultTask
 import org.gradle.api.NamedDomainObjectContainer
-import org.gradle.api.tasks.*
+import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.Nested
+import org.gradle.api.tasks.TaskAction
 import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -44,7 +48,7 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() {
     Codegen(
       xmlResourceParser = XmlResourceParser(),
       packageName = packageName,
-      composeExtensions = input.composeExtensions,
+      generateComposeExtensions = input.generateComposeExtensions,
       projectDir = project.projectDir,
     ).start(input.qualifiedSourceSets)
   }
@@ -73,7 +77,7 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() {
     @Input val variantName: String,
     @Input val buildType: String?,
     @Input val productFlavors: List<String>,
-    @Input val composeExtensions: Boolean = false,
+    @Input val generateComposeExtensions: Boolean = false,
     @Internal val qualifiedSourceSets: Set<Pair<File, SourceSetQualifier>>
   )
 }

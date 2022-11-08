@@ -68,7 +68,7 @@ class CatalogPlugin : Plugin<Project> {
               variantName = variant.name,
               buildType = variant.buildType,
               productFlavors = variant.productFlavors.map { it.first },
-              composeExtensions = catalogExtension.composeExtensions
+              generateComposeExtensions = catalogExtension.generateComposeExtensions
                 ?: project.dependsOnCompose(),
               qualifiedSourceSets = sourceSetMap,
             )

@@ -5,7 +5,7 @@ plugins {
 }
 
 catalog {
-  composeExtensions = false
+  generateComposeExtensions = false
 }
 
 android {
