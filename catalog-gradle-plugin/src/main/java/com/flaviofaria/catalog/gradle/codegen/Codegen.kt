@@ -7,24 +7,21 @@ import java.io.File
 class Codegen(
   private val xmlResourceParser: XmlResourceParser = XmlResourceParser(),
   packageName: String,
-  composeExtensions: Boolean,
+  private val composeExtensions: Boolean,
   private val projectDir: File,
 ) {
 
   private val resourceReducer = ResourceReducer()
   private val stringCatalogWriter = WithArgsCatalogWriter(
-    packageName,
-    composeExtensions,
-    asPlurals = false,
+    packageName = packageName,
+    resourceType = ResourceType.String,
   )
   private val pluralCatalogWriter = WithArgsCatalogWriter(
-    packageName,
-    composeExtensions,
-    asPlurals = true,
+    packageName = packageName,
+    resourceType = ResourceType.Plural,
   )
   private val stringArrayCatalogWriter = StringArrayCatalogWriter(
-    packageName,
-    composeExtensions,
+    packageName = packageName,
   )
 
   fun start(
@@ -87,6 +84,7 @@ class Codegen(
               resources as List<ResourceEntry.WithArgs.String>, // TODO unchecked cast
               sourceSetName,
               codegenDir,
+              composeExtensions,
             )
           }
           ResourceEntry.WithArgs.Plural::class -> {
@@ -95,6 +93,7 @@ class Codegen(
               resources as List<ResourceEntry.WithArgs.Plural>, // TODO
               sourceSetName,
               codegenDir,
+              composeExtensions,
             )
           }
           ResourceEntry.StringArray::class -> {
@@ -103,6 +102,7 @@ class Codegen(
               resources as List<ResourceEntry.StringArray>, // TODO
               sourceSetName,
               codegenDir,
+              composeExtensions,
             )
           }
         }

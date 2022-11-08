@@ -1,6 +1,7 @@
 package com.flaviofaria.catalog.gradle.codegen.writer
 
 import com.flaviofaria.catalog.gradle.codegen.ResourceEntry
+import com.flaviofaria.catalog.gradle.codegen.ResourceType
 import com.flaviofaria.catalog.gradle.codegen.StringArg
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
@@ -16,7 +17,6 @@ class WithArgsCatalogWriterTest {
   var folder = TemporaryFolder()
 
   private lateinit var codegenDestination: File
-  private lateinit var codegenFile: File
 
   private val stringResources = listOf(
     ResourceEntry.WithArgs.String(
@@ -194,14 +194,18 @@ class WithArgsCatalogWriterTest {
   }
 
   @Test
-  fun `GIVEN composeExtensions disabled plurals disabled THEN generate standard extensions`() {
-    codegenFile = File("${codegenDestination.absolutePath}/com/example/Strings.kt")
+  fun `GIVEN resource type String and composeExtensions disabled THEN generate standard extensions`() {
+    val codegenFile = File("${codegenDestination.absolutePath}/com/example/Strings.kt")
     val writer = WithArgsCatalogWriter(
       packageName = "com.example",
-      asComposeExtensions = false,
-      asPlurals = false,
+      resourceType = ResourceType.String,
     )
-    writer.write(stringResources, "main", codegenDestination = codegenDestination)
+    writer.write(
+      stringResources,
+      sourceSetName = "main",
+      codegenDestination = codegenDestination,
+      asComposeExtensions = false,
+    )
     assertThat(
       codegenFile.readBytes().toString(Charset.defaultCharset()),
     ).isEqualTo(
@@ -298,14 +302,18 @@ class WithArgsCatalogWriterTest {
   }
 
   @Test
-  fun `GIVEN composeExtensions enabled plurals disabled THEN generate standard extensions`() {
-    codegenFile = File("${codegenDestination.absolutePath}/com/example/Strings.kt")
+  fun `GIVEN resource type String and composeExtensions enabled THEN generate standard extensions`() {
+    val codegenFile = File("${codegenDestination.absolutePath}/com/example/Strings.kt")
     val writer = WithArgsCatalogWriter(
       packageName = "com.example",
-      asComposeExtensions = true,
-      asPlurals = false,
+      resourceType = ResourceType.String,
     )
-    writer.write(stringResources, "main", codegenDestination = codegenDestination)
+    writer.write(
+      stringResources,
+      sourceSetName = "main",
+      codegenDestination = codegenDestination,
+      asComposeExtensions = true,
+    )
     assertThat(
       codegenFile.readBytes().toString(Charset.defaultCharset()),
     ).isEqualTo(
@@ -421,14 +429,18 @@ class WithArgsCatalogWriterTest {
   }
 
   @Test
-  fun `GIVEN composeExtensions disabled plurals enabled THEN generate standard extensions`() {
-    codegenFile = File("${codegenDestination.absolutePath}/com/example/Plurals.kt")
+  fun `GIVEN resource type Plurals and composeExtensions disabled THEN generate standard extensions`() {
+    val codegenFile = File("${codegenDestination.absolutePath}/com/example/Plurals.kt")
     val writer = WithArgsCatalogWriter(
       packageName = "com.example",
-      asComposeExtensions = false,
-      asPlurals = true,
+      resourceType = ResourceType.Plural,
     )
-    writer.write(pluralResources, "main", codegenDestination = codegenDestination)
+    writer.write(
+      pluralResources,
+      sourceSetName = "main",
+      codegenDestination = codegenDestination,
+      asComposeExtensions = false,
+    )
     assertThat(
       codegenFile.readBytes().toString(Charset.defaultCharset()),
     ).isEqualTo(
@@ -533,14 +545,18 @@ class WithArgsCatalogWriterTest {
   }
 
   @Test
-  fun `GIVEN composeExtensions enabled plurals enabled THEN generate standard extensions`() {
-    codegenFile = File("${codegenDestination.absolutePath}/com/example/Plurals.kt")
+  fun `GIVEN resource type Plurals and composeExtensions enabled THEN generate standard extensions`() {
+    val codegenFile = File("${codegenDestination.absolutePath}/com/example/Plurals.kt")
     val writer = WithArgsCatalogWriter(
       packageName = "com.example",
-      asComposeExtensions = true,
-      asPlurals = true,
+      resourceType = ResourceType.Plural,
     )
-    writer.write(stringResources, "main", codegenDestination = codegenDestination)
+    writer.write(
+      pluralResources,
+      sourceSetName = "main",
+      codegenDestination = codegenDestination,
+      asComposeExtensions = true,
+    )
     assertThat(
       codegenFile.readBytes().toString(Charset.defaultCharset()),
     ).isEqualTo(
@@ -570,105 +586,105 @@ class WithArgsCatalogWriterTest {
       |import kotlin.jvm.JvmName
       |
       |/**
-      | * String 1 docs
+      | * Plural 1 docs
       | */
-      |public inline val Plurals.string1: Int
-      |  get() = R.plurals.string_1
+      |public inline val Plurals.plural1: Int
+      |  get() = R.plurals.plural_1
       |
       |/**
-      | * String 1 docs
+      | * Plural 1 docs
       | */
       |context(Context)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable
-      |public inline fun Plurals.string1(quantity: Int): CharSequence =
-      |    pluralStringResource(R.plurals.string_1, quantity)
+      |public inline fun Plurals.plural1(quantity: Int): CharSequence =
+      |    pluralStringResource(R.plurals.plural_1, quantity)
       |
       |/**
-      | * String 1 docs
+      | * Plural 1 docs
       | */
       |context(Fragment)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable
-      |public inline fun Plurals.string1(quantity: Int): CharSequence =
-      |    pluralStringResource(R.plurals.string_1, quantity)
+      |public inline fun Plurals.plural1(quantity: Int): CharSequence =
+      |    pluralStringResource(R.plurals.plural_1, quantity)
       |
-      |public inline val Plurals.string2: Int
-      |  get() = R.plurals.string_2
+      |public inline val Plurals.plural2: Int
+      |  get() = R.plurals.plural_2
       |
       |context(Context)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable
-      |public inline fun Plurals.string2(
+      |public inline fun Plurals.plural2(
       |  quantity: Int,
       |  arg1: Int,
       |  arg2: Int,
       |  arg3: UInt,
       |  arg4: UInt,
       |  arg5: UInt,
-      |): String = pluralStringResource(R.plurals.string_2, quantity, arg1, arg2, arg3, arg4, arg5)
+      |): String = pluralStringResource(R.plurals.plural_2, quantity, arg1, arg2, arg3, arg4, arg5)
       |
       |context(Fragment)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable
-      |public inline fun Plurals.string2(
+      |public inline fun Plurals.plural2(
       |  quantity: Int,
       |  arg1: Int,
       |  arg2: Int,
       |  arg3: UInt,
       |  arg4: UInt,
       |  arg5: UInt,
-      |): String = pluralStringResource(R.plurals.string_2, quantity, arg1, arg2, arg3, arg4, arg5)
+      |): String = pluralStringResource(R.plurals.plural_2, quantity, arg1, arg2, arg3, arg4, arg5)
       |
-      |public inline val Plurals.string3: Int
-      |  get() = R.plurals.string_3
+      |public inline val Plurals.plural3: Int
+      |  get() = R.plurals.plural_3
       |
       |context(Context)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable
-      |public inline fun Plurals.string3(
+      |public inline fun Plurals.plural3(
       |  quantity: Int,
       |  arg1: Double,
       |  arg2: Double,
       |  arg3: Double,
       |  arg4: Double,
       |  arg5: String,
-      |): String = pluralStringResource(R.plurals.string_3, quantity, arg1, arg2, arg3, arg4, arg5)
+      |): String = pluralStringResource(R.plurals.plural_3, quantity, arg1, arg2, arg3, arg4, arg5)
       |
       |context(Fragment)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable
-      |public inline fun Plurals.string3(
+      |public inline fun Plurals.plural3(
       |  quantity: Int,
       |  arg1: Double,
       |  arg2: Double,
       |  arg3: Double,
       |  arg4: Double,
       |  arg5: String,
-      |): String = pluralStringResource(R.plurals.string_3, quantity, arg1, arg2, arg3, arg4, arg5)
+      |): String = pluralStringResource(R.plurals.plural_3, quantity, arg1, arg2, arg3, arg4, arg5)
       |
-      |public inline val Plurals.string4: Int
-      |  get() = R.plurals.string_4
+      |public inline val Plurals.plural4: Int
+      |  get() = R.plurals.plural_4
       |
       |context(Context)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable
-      |public inline fun Plurals.string4(quantity: Int, arg1: Char): String =
-      |    pluralStringResource(R.plurals.string_4, quantity, arg1)
+      |public inline fun Plurals.plural4(quantity: Int, arg1: Char): String =
+      |    pluralStringResource(R.plurals.plural_4, quantity, arg1)
       |
       |context(Fragment)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable
-      |public inline fun Plurals.string4(quantity: Int, arg1: Char): String =
-      |    pluralStringResource(R.plurals.string_4, quantity, arg1)
+      |public inline fun Plurals.plural4(quantity: Int, arg1: Char): String =
+      |    pluralStringResource(R.plurals.plural_4, quantity, arg1)
       |""".trimMargin(),
     )
   }
