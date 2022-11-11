@@ -78,8 +78,8 @@ class XmlResourceParserTest {
         name = "string_with_non_positioned_args",
         docs = null,
         args = listOf(
-          StringArg(1, 'd', false),
-          StringArg(2, 'd', false),
+          StringArg(1, 'd'),
+          StringArg(2, 'd'),
         ),
       ),
       ResourceEntry.WithArgs.String(
@@ -87,10 +87,10 @@ class XmlResourceParserTest {
         name = "string_with_positioned_args",
         docs = null,
         args = listOf(
-          StringArg(3, 'd', false),
-          StringArg(1, 'f', false),
-          StringArg(4, 's', false),
-          StringArg(2, 'c', false),
+          StringArg(3, 'd'),
+          StringArg(1, 'f'),
+          StringArg(4, 's'),
+          StringArg(2, 'c'),
         ),
       ),
       ResourceEntry.WithArgs.String(
@@ -116,8 +116,8 @@ class XmlResourceParserTest {
         name = "some_plural",
         docs = "there's no arg count validation, the only risk is going out of bounds",
         args = listOf(
-          StringArg(1, 'd', false),
-          StringArg(2, 'd', true),
+          StringArg(1, 'd'),
+          StringArg(2, 'd'),
         ),
       ),
       ResourceEntry.StringArray(

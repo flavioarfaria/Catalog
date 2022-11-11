@@ -113,12 +113,10 @@ class XmlResourceParser {
     val sharedArgs = mutableListOf<StringArg>()
     for (argPosition in 1..highestArgPosition) {
       var sharedArg: StringArg? = null
-      var isOptional = false
       allArgs.forEach { quantityArgs ->
         val arg = quantityArgs[argPosition]
         when {
           arg == null -> {
-            isOptional = true
             return@forEach
           }
           sharedArg == null -> sharedArg = arg
@@ -127,7 +125,7 @@ class XmlResourceParser {
           )
         }
       }
-      sharedArg?.copy(isOptional = isOptional)?.also { sharedArgs += it }
+      sharedArg?.let { sharedArgs += it }
     }
     return sharedArgs
   }

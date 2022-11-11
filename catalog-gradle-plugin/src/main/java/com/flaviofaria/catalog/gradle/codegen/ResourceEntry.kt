@@ -50,5 +50,4 @@ sealed interface ResourceEntry {
 data class StringArg(
   val position: Int,
   val type: Char,
-  val isOptional: Boolean = false,
 )

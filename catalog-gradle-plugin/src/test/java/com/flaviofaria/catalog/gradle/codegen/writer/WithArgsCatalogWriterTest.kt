@@ -48,27 +48,22 @@ class WithArgsCatalogWriterTest {
         StringArg(
           position = 1,
           type = 'd',
-          isOptional = false,
         ),
         StringArg(
           position = 2,
           type = 'i',
-          isOptional = false,
         ),
         StringArg(
           position = 3,
           type = 'u',
-          isOptional = true,
         ),
         StringArg(
           position = 4,
           type = 'x',
-          isOptional = false,
         ),
         StringArg(
           position = 5,
           type = 'o',
-          isOptional = false,
         ),
       ),
     ),
@@ -80,27 +75,22 @@ class WithArgsCatalogWriterTest {
         StringArg(
           position = 1,
           type = 'f',
-          isOptional = true,
         ),
         StringArg(
           position = 2,
           type = 'e',
-          isOptional = false,
         ),
         StringArg(
           position = 3,
           type = 'g',
-          isOptional = false,
         ),
         StringArg(
           position = 4,
           type = 'a',
-          isOptional = true,
         ),
         StringArg(
           position = 5,
           type = 's',
-          isOptional = true,
         ),
       ),
     ),
@@ -112,7 +102,6 @@ class WithArgsCatalogWriterTest {
         StringArg(
           position = 1,
           type = 'c',
-          isOptional = true,
         ),
       ),
     ),
@@ -133,27 +122,22 @@ class WithArgsCatalogWriterTest {
         StringArg(
           position = 1,
           type = 'd',
-          isOptional = false,
         ),
         StringArg(
           position = 2,
           type = 'i',
-          isOptional = false,
         ),
         StringArg(
           position = 3,
           type = 'u',
-          isOptional = true,
         ),
         StringArg(
           position = 4,
           type = 'x',
-          isOptional = false,
         ),
         StringArg(
           position = 5,
           type = 'o',
-          isOptional = false,
         ),
       ),
     ),
@@ -165,27 +149,22 @@ class WithArgsCatalogWriterTest {
         StringArg(
           position = 1,
           type = 'f',
-          isOptional = true,
         ),
         StringArg(
           position = 2,
           type = 'e',
-          isOptional = false,
         ),
         StringArg(
           position = 3,
           type = 'g',
-          isOptional = false,
         ),
         StringArg(
           position = 4,
           type = 'a',
-          isOptional = true,
         ),
         StringArg(
           position = 5,
           type = 's',
-          isOptional = true,
         ),
       ),
     ),
@@ -197,7 +176,6 @@ class WithArgsCatalogWriterTest {
         StringArg(
           position = 1,
           type = 'c',
-          isOptional = true,
         ),
       ),
     ),
