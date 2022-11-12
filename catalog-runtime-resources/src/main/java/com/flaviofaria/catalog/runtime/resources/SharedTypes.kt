@@ -13,16 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.flaviofaria.catalog.sample.resources
+package com.flaviofaria.catalog.runtime.resources
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.flaviofaria.catalog.runtime.resources.Strings
-
-class DebugActivity : AppCompatActivity() {
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    Strings.debugString()
-  }
-}
+object Strings
+object StringArrays
+object Plurals

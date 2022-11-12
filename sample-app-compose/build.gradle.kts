@@ -4,6 +4,10 @@ plugins {
   id(libs.plugins.catalog.get().pluginId)
 }
 
+catalog {
+  generateResourcesExtensions = false
+}
+
 android {
   namespace = "com.flaviofaria.catalog.sample.compose"
   compileSdk = libs.versions.android.sdk.compile.get().toInt()

@@ -22,6 +22,7 @@ import java.io.File
 class Codegen(
   private val xmlResourceParser: XmlResourceParser = XmlResourceParser(),
   packageName: String,
+  private val generateResourcesExtensions: Boolean,
   private val generateComposeExtensions: Boolean,
   private val projectDir: File,
 ) {
@@ -99,6 +100,7 @@ class Codegen(
               resources as List<ResourceEntry.WithArgs.String>, // TODO unchecked cast
               sourceSetName,
               codegenDir,
+              generateResourcesExtensions,
               generateComposeExtensions,
             )
           }
@@ -108,6 +110,7 @@ class Codegen(
               resources as List<ResourceEntry.WithArgs.Plural>, // TODO
               sourceSetName,
               codegenDir,
+              generateResourcesExtensions,
               generateComposeExtensions,
             )
           }
@@ -117,6 +120,7 @@ class Codegen(
               resources as List<ResourceEntry.StringArray>, // TODO
               sourceSetName,
               codegenDir,
+              generateResourcesExtensions,
               generateComposeExtensions,
             )
           }

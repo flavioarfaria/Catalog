@@ -67,7 +67,13 @@ class StringArrayCatalogWriter(
         }
         .addModifiers(KModifier.INLINE)
         .contextReceivers(contextReceiver)
-        .receiver(receiverClass)
+        .receiver(
+          if (asComposeExtensions) {
+            composeReceiverClass
+          } else {
+            resourcesReceiverClass
+          }
+        )
         .returns(
           Array::class
             .asClassName()

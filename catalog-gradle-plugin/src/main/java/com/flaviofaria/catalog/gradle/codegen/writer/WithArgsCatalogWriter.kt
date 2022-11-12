@@ -107,7 +107,13 @@ class WithArgsCatalogWriter(
         }
         .addModifiers(KModifier.INLINE)
         .contextReceivers(contextReceiver)
-        .receiver(receiverClass)
+        .receiver(
+          if (asComposeExtensions) {
+            composeReceiverClass
+          } else {
+            resourcesReceiverClass
+          }
+        )
         .apply {
           if (asPlurals) {
             addParameter(name = quantityParamName, type = Int::class)

@@ -16,6 +16,6 @@
 package com.flaviofaria.catalog.gradle
 
 open class CatalogExtension {
-
+  var generateResourcesExtensions: Boolean = true
   var generateComposeExtensions: Boolean? = null
 }

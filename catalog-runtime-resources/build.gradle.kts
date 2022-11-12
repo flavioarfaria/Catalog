@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-  namespace = "com.flaviofaria.catalog.runtime"
+  namespace = "com.flaviofaria.catalog.runtime.resources"
   compileSdk = libs.versions.android.sdk.compile.get().toInt()
 
   defaultConfig {
@@ -24,7 +24,7 @@ publishing {
   publications {
     create<MavenPublication>("maven") {
       groupId = catalogPluginId
-      artifactId = "catalog-runtime"
+      artifactId = "catalog-runtime-resources"
       version = catalogVersion
 
       artifact("$buildDir/outputs/aar/${artifactId}-release.aar")

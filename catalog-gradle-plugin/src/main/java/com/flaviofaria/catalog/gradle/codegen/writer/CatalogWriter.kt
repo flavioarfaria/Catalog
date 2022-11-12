@@ -32,8 +32,12 @@ abstract class CatalogWriter<T : ResourceEntry>(
   protected val resourceType: ResourceType,
 ) {
 
-  open val receiverClass = ClassName(
-    "com.flaviofaria.catalog.runtime",
+  open val resourcesReceiverClass = ClassName(
+    "com.flaviofaria.catalog.runtime.resources",
+    resourceType.receiverType,
+  )
+  open val composeReceiverClass = ClassName(
+    "com.flaviofaria.catalog.runtime.compose",
     resourceType.receiverType,
   )
   private val contextClass = ClassName("android.content", "Context")
@@ -47,15 +51,22 @@ abstract class CatalogWriter<T : ResourceEntry>(
     resources: List<T>,
     sourceSetName: String,
     codegenDestination: File,
-    asComposeExtensions: Boolean,
+    generateResourcesExtensions: Boolean,
+    generateComposeExtensions: Boolean,
   ) {
     val file = FileSpec.builder(packageName, resourceType.receiverType)
       .addFileHeaders(sourceSetName)
       .apply {
         resources.forEach { resource ->
-          addResourceProperty(resourceType.resourceGroup, resource)
-          buildExtensionMethod(this, resource, contextClass, asComposeExtensions)
-          buildExtensionMethod(this, resource, fragmentClass, asComposeExtensions)
+          addResourceProperty(resourceType.resourceGroup, resource, generateComposeExtensions)
+          if (generateResourcesExtensions) {
+            buildExtensionMethod(this, resource, contextClass, asComposeExtensions = false)
+            buildExtensionMethod(this, resource, fragmentClass, asComposeExtensions = false)
+          }
+          if (generateComposeExtensions) {
+            buildExtensionMethod(this, resource, contextClass, asComposeExtensions = true)
+            buildExtensionMethod(this, resource, fragmentClass, asComposeExtensions = true)
+          }
         }
       }.build()
     file.writeTo(codegenDestination)
@@ -86,11 +97,18 @@ abstract class CatalogWriter<T : ResourceEntry>(
   private fun FileSpec.Builder.addResourceProperty(
     resourceGroup: String,
     resource: ResourceEntry,
+    asComposeExtensions: Boolean,
   ) {
     addProperty(
       PropertySpec.builder(resource.name.toCamelCase(), Int::class)
         .apply { resource.docs?.let(::addKdoc) }
-        .receiver(receiverClass)
+        .receiver(
+          if (asComposeExtensions) {
+            composeReceiverClass
+          } else {
+            resourcesReceiverClass
+          }
+        )
         .getter(
           FunSpec.getterBuilder()
             .addModifiers(KModifier.INLINE)

@@ -63,6 +63,7 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() {
     Codegen(
       xmlResourceParser = XmlResourceParser(),
       packageName = packageName,
+      generateResourcesExtensions = input.generateResourcesExtensions,
       generateComposeExtensions = input.generateComposeExtensions,
       projectDir = project.projectDir,
     ).start(input.qualifiedSourceSets)
@@ -92,7 +93,8 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() {
     @Input val variantName: String,
     @Input val buildType: String?,
     @Input val productFlavors: List<String>,
-    @Input val generateComposeExtensions: Boolean = false,
+    @Input val generateResourcesExtensions: Boolean,
+    @Input val generateComposeExtensions: Boolean,
     @Internal val qualifiedSourceSets: Set<Pair<File, SourceSetQualifier>>
   )
 }

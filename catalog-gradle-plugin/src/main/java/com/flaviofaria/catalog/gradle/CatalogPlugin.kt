@@ -39,7 +39,14 @@ class CatalogPlugin : Plugin<Project> {
     }
     val androidComponents = project.extensions.getByType(AndroidComponentsExtension::class.java)
     androidComponents.finalizeDsl { commonExtension ->
-      project.addRuntimeDependency()
+      if (catalogExtension.generateResourcesExtensions) {
+        project.addRuntimeResourcesDependency()
+      }
+      val generateComposeExtensions = catalogExtension.generateComposeExtensions
+        ?: project.dependsOnCompose()
+      if (generateComposeExtensions) {
+        project.addRuntimeComposeDependency()
+      }
       androidComponents.beforeVariants { variantBuilder ->
         commonExtension.addGeneratedFilesToSourceSet(variantBuilder.name)
         variantBuilder.flavorName?.takeIf { it.isNotEmpty() }?.let {
@@ -83,8 +90,8 @@ class CatalogPlugin : Plugin<Project> {
               variantName = variant.name,
               buildType = variant.buildType,
               productFlavors = variant.productFlavors.map { it.first },
-              generateComposeExtensions = catalogExtension.generateComposeExtensions
-                ?: project.dependsOnCompose(),
+              generateResourcesExtensions = catalogExtension.generateResourcesExtensions,
+              generateComposeExtensions = generateComposeExtensions,
               qualifiedSourceSets = sourceSetMap,
             )
           )
@@ -100,9 +107,15 @@ class CatalogPlugin : Plugin<Project> {
     }
   }
 
-  private fun Project.addRuntimeDependency() {
+  private fun Project.addRuntimeResourcesDependency() {
     configurations.getByName("api").dependencies.add(
-      dependencies.create("com.flaviofaria.catalog:catalog-runtime:0.1")
+      dependencies.create("com.flaviofaria.catalog:catalog-runtime-resources:$RUNTIME_VERSION")
+    )
+  }
+
+  private fun Project.addRuntimeComposeDependency() {
+    configurations.getByName("api").dependencies.add(
+      dependencies.create("com.flaviofaria.catalog:catalog-runtime-compose:$RUNTIME_VERSION")
     )
   }
 
@@ -136,5 +149,9 @@ class CatalogPlugin : Plugin<Project> {
       .filter { config -> dependencyConfigs.any { it in config.extendsFrom } }
       .flatMap { it.dependencies }
       .any { it.group == "androidx.compose.ui" && it.name == "ui" }
+  }
+
+  companion object {
+    private const val RUNTIME_VERSION = "0.1"
   }
 }

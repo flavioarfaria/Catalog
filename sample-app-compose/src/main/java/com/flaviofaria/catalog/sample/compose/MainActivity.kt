@@ -21,9 +21,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.Text
 import com.flaviofaria.catalog.library.libraryName
 import com.flaviofaria.catalog.library.libraryStringArray
-import com.flaviofaria.catalog.runtime.Plurals
-import com.flaviofaria.catalog.runtime.StringArrays
-import com.flaviofaria.catalog.runtime.Strings
+import com.flaviofaria.catalog.runtime.compose.Plurals
+import com.flaviofaria.catalog.runtime.compose.StringArrays
+import com.flaviofaria.catalog.runtime.compose.Strings
 
 class MainActivity : ComponentActivity() {
 

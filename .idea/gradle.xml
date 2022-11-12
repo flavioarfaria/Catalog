@@ -12,7 +12,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/catalog-gradle-plugin" />
-            <option value="$PROJECT_DIR$/catalog-runtime" />
+            <option value="$PROJECT_DIR$/catalog-runtime-compose" />
+            <option value="$PROJECT_DIR$/catalog-runtime-resources" />
             <option value="$PROJECT_DIR$/sample-app-compose" />
             <option value="$PROJECT_DIR$/sample-app-resources" />
             <option value="$PROJECT_DIR$/sample-library" />
