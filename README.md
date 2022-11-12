@@ -43,7 +43,7 @@ Catalog also works with plurals:
 and string arrays:
 
 ```xml
-<string-array name="season">
+<string-array name="seasons">
   <item>Spring</item>
   <item>Summer</item>
   <item>Fall</item>
