@@ -52,9 +52,9 @@ class ResourceReducer {
       } else {
         require(knownArg.first.type == arg.type) {
           """Inconsistent string argument type for [$name] at position [${arg.position}] in files
-                      |${knownArg.second}
-                      |$file
-                    """.trimMargin()
+          |${knownArg.second}
+          |$file
+          """.trimMargin()
         }
       }
     }
