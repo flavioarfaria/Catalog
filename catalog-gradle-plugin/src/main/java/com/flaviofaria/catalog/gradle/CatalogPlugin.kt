@@ -65,21 +65,21 @@ class CatalogPlugin : Plugin<Project> {
 
         commonExtension
           .getQualifiedSourceSetsByName(variant.name, SourceSetType.VARIANT)
-          ?.let(sourceSetMap::addAll)
+            .let(sourceSetMap::addAll)
 
         variant.buildType?.let { buildType ->
           commonExtension
             .getQualifiedSourceSetsByName(buildType, SourceSetType.BUILD_TYPE)
-            ?.let(sourceSetMap::addAll)
+              .let(sourceSetMap::addAll)
         }
         variant.flavorName?.takeIf { it.isNotEmpty() }?.let { flavorName ->
           commonExtension
             .getQualifiedSourceSetsByName(flavorName, SourceSetType.FLAVOR)
-            ?.let(sourceSetMap::addAll)
+              .let(sourceSetMap::addAll)
         }
         commonExtension
           .getQualifiedSourceSetsByName("main", SourceSetType.MAIN)
-          ?.let(sourceSetMap::addAll)
+            .let(sourceSetMap::addAll)
 
         project.tasks.register(
           taskName,
@@ -130,7 +130,7 @@ class CatalogPlugin : Plugin<Project> {
   private fun CommonExtension<*, *, *, *>.getQualifiedSourceSetsByName(
     sourceSetName: String,
     sourceSetType: SourceSetType,
-  ): List<Pair<File, SourceSetQualifier>>? {
+  ): List<Pair<File, SourceSetQualifier>> {
     return sourceSets.getByName(sourceSetName).res.let { res ->
       (res as DefaultAndroidSourceDirectorySet).srcDirs.map {
         it to SourceSetQualifier(sourceSetName, sourceSetType)
