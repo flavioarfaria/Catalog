@@ -4,6 +4,7 @@ plugins {
   alias(libs.plugins.catalog) apply false
   alias(libs.plugins.kotlin.android) apply false
   alias(libs.plugins.kotlin.jvm) apply false
+  alias(libs.plugins.gradle.maven.publish) apply false
 }
 
 buildscript {

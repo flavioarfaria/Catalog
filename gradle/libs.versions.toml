@@ -7,6 +7,7 @@ android-library = "com.android.library:_"
 catalog = { id = "com.flaviofaria.catalog", version.ref = "catalog" }
 kotlin-android = "org.jetbrains.kotlin.android:_"
 kotlin-jvm = "org.jetbrains.kotlin.jvm:_"
+gradle-maven-publish = { id = "com.vanniktech.maven.publish", version = "0.22.0" }
 
 [versions]
 

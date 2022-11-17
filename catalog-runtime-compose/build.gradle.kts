@@ -1,7 +1,7 @@
 plugins {
   id(libs.plugins.android.library.get().pluginId)
   id(libs.plugins.kotlin.android.get().pluginId)
-  `maven-publish`
+  id(libs.plugins.gradle.maven.publish.get().pluginId)
 }
 
 android {
@@ -11,23 +11,5 @@ android {
   defaultConfig {
     minSdk = libs.versions.android.sdk.min.get().toInt()
     targetSdk = libs.versions.android.sdk.target.get().toInt()
-  }
-}
-
-val catalogPluginId = libs.plugins.catalog.get().pluginId
-val catalogVersion = libs.versions.catalog.get()
-
-group = catalogPluginId
-version = catalogVersion
-
-publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      groupId = catalogPluginId
-      artifactId = "catalog-runtime-compose"
-      version = catalogVersion
-
-      artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
-    }
   }
 }
