@@ -8,7 +8,6 @@ on:
 jobs:
   build:
     runs-on: macos-latest
-
     steps:
       - name: Repo checkout
         uses: actions/checkout@v3
@@ -22,5 +21,28 @@ jobs:
       - name: Gradle checksum
         uses: gradle/wrapper-validation-action@v1.0.4
 
-      - name: Codegen tests
-        run: ./gradlew -p catalog-codegen test
+      - name: Build sample-app-resources Demo
+        run: ./gradlew :sample-app-resources:buildDemoDebug :sample-app-resources:buildDemoRelease
+
+      - name: Build sample-app-resources Full
+        run: ./gradlew :sample-app-resources:buildFullDebug :sample-app-resources:buildFullRelease
+
+  test:
+    runs-on: macos-latest
+    needs: build
+    steps:
+      - name: Unit tests
+        run: ./gradlew :catalog-gradle-plugin:test
+
+  publish:
+    runs-on: macos-latest
+    if: github.ref == 'refs/heads/main' && github.repository == 'flavioarfaria/Catalog'
+    needs: test
+    steps:
+      - name: Publish to Maven Central
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
+        run: ./gradlew publishAllPublicationsToMavenCentral
