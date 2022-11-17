@@ -89,7 +89,7 @@ To use Catalog, just apply the plugin to your module:
 
 ```groovy
 plugins {
-  id 'com.flaviofaria.catalog' version '0.1'
+  id 'com.flaviofaria.catalog' version '0.1-SNAPSHOT'
 }
 ```
 
