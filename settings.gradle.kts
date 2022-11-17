@@ -13,7 +13,7 @@ plugins {
 dependencyResolutionManagement {
   repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
   repositories {
-    maven { url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots") }
+    maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
     google()
     mavenCentral()
     mavenLocal()
