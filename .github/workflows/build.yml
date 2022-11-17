@@ -27,6 +27,9 @@ jobs:
       - name: Build sample-app-resources Full
         run: ./gradlew :sample-app-resources:buildFullDebug :sample-app-resources:buildFullRelease
 
+      - name: Build sample-app-compose
+        run: ./gradlew :sample-app-compose:buildDebug :sample-app-compose:buildRelease
+
   test:
     runs-on: macos-latest
     needs: build
