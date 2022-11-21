@@ -53,7 +53,9 @@ and string arrays:
 
 <img width="691" alt="image" src="https://user-images.githubusercontent.com/1800351/201458738-5c6d1b9b-af88-40fb-a3b9-730a140bfcdf.png">
 
-In the future, other resource types will also be supported.
+In the future, other resource types like integer arrays, dimensions, etc. will also be supported.
+
+### Comment support
 
 Resource comments are also carried over to extension properties and methods:
 
