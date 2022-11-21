@@ -30,22 +30,14 @@ jobs:
       - name: Build sample-app-compose
         run: ./gradlew :sample-app-compose:buildDebug :sample-app-compose:buildRelease
 
-  test:
-    runs-on: macos-latest
-    needs: build
-    steps:
       - name: Unit tests
         run: ./gradlew :catalog-gradle-plugin:test
 
-  publish:
-    runs-on: macos-latest
-    if: github.ref == 'refs/heads/main' && github.repository == 'flavioarfaria/Catalog'
-    needs: test
-    steps:
-      - name: Publish to Maven Central
+      - run: ./gradlew publishAllPublicationsToMavenCentral
+        if: github.ref == 'refs/heads/main' && github.repository == 'flavioarfaria/Catalog'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
-        run: ./gradlew publishAllPublicationsToMavenCentral
+
