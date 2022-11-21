@@ -8,15 +8,15 @@ pluginManagement {
   }
 }
 plugins {
-  id("de.fayard.refreshVersions") version "0.50.2"
+  id("de.fayard.refreshVersions") version "0.51.0"
 }
 dependencyResolutionManagement {
   repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
   repositories {
+    mavenLocal()
     maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
     google()
     mavenCentral()
-    mavenLocal()
   }
 }
 enableFeaturePreview("VERSION_CATALOGS")
