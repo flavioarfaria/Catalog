@@ -1,8 +1,12 @@
 plugins {
   id(libs.plugins.kotlin.jvm.get().pluginId)
-  id(libs.plugins.gradle.maven.publish.get().pluginId)
   `java-library`
   `java-gradle-plugin`
+}
+
+if (rootProject.name == "Catalog") {
+  // only apply this when we're not using dependency substitution
+  plugins.apply(libs.plugins.gradle.maven.publish.get().pluginId)
 }
 
 val catalogPluginId = libs.plugins.catalog.get().pluginId

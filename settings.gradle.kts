@@ -27,3 +27,13 @@ include(":catalog-gradle-plugin")
 include(":sample-library")
 include(":catalog-runtime-resources")
 include(":catalog-runtime-compose")
+
+includeBuild("build-logic") {
+  dependencySubstitution {
+    substitute(
+      module(
+        "com.flaviofaria.catalog:catalog-gradle-plugin",
+      ),
+    ).using(project(":catalog-gradle-plugin"))
+  }
+}
