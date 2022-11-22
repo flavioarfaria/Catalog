@@ -40,12 +40,12 @@ class CatalogPlugin : Plugin<Project> {
     val androidComponents = project.extensions.getByType(AndroidComponentsExtension::class.java)
     androidComponents.finalizeDsl { commonExtension ->
       if (catalogExtension.generateResourcesExtensions) {
-        project.addRuntimeResourcesDependency()
+        project.addRuntimeDependency("resources")
       }
       val generateComposeExtensions = catalogExtension.generateComposeExtensions
         ?: project.dependsOnCompose()
       if (generateComposeExtensions) {
-        project.addRuntimeComposeDependency()
+        project.addRuntimeDependency("compose")
       }
       androidComponents.beforeVariants { variantBuilder ->
         commonExtension.addGeneratedFilesToSourceSet(variantBuilder.name)
@@ -107,15 +107,13 @@ class CatalogPlugin : Plugin<Project> {
     }
   }
 
-  private fun Project.addRuntimeResourcesDependency() {
+  private fun Project.addRuntimeDependency(runtimeType: String) {
     configurations.getByName("api").dependencies.add(
-      dependencies.create("com.flaviofaria.catalog:catalog-runtime-resources:$RUNTIME_VERSION")
-    )
-  }
-
-  private fun Project.addRuntimeComposeDependency() {
-    configurations.getByName("api").dependencies.add(
-      dependencies.create("com.flaviofaria.catalog:catalog-runtime-compose:$RUNTIME_VERSION")
+      if (project.properties["com.flaviofaria.catalog.internal"].toString() == "true") {
+        dependencies.project(mapOf("path" to ":catalog-runtime-$runtimeType"))
+      } else {
+        dependencies.create("com.flaviofaria.catalog:catalog-runtime-$runtimeType:$RUNTIME_VERSION")
+      }
     )
   }
 
