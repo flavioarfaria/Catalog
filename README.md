@@ -4,7 +4,7 @@ _Just like View Binding, but for resources._
 
 Catalog is a Gradle plugin that generates type-safe, user-friendly extensions to resolve Android resources.
 
-Let's see how the following string resource gets resolved without and with Catalog.
+Let's see how the following string resource gets resolved without and with Catalog:
 
 ```xml
 <string name="good_morning_with_weather">Good morning, %1$s! It’s %2$d°C outside.</string>
@@ -23,7 +23,7 @@ Here's how we resolve string resources without Catalog:
 
 ### With Catalog:
 
-<img width="655" src="https://user-images.githubusercontent.com/1800351/201457592-44fc7ac9-85b7-4aab-bd3c-6938d2b34754.png">
+<img width="725" alt="image" src="https://user-images.githubusercontent.com/1800351/203698324-cfb73cc8-dca2-4eda-8287-64ce74fa2367.png">
 
 You can also use Catalog to access the resource id directly:
 
