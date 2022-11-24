@@ -14,7 +14,7 @@ kotlin-jvm = "org.jetbrains.kotlin.jvm:_"
 android-sdk-compile = "33"
 android-sdk-min = "21"
 android-sdk-target = "33"
-catalog = "0.2.0"
+catalog = "0.2.1-SNAPSHOT"
 kotlinCompilerExtension = "1.3.2"
 
 [libraries]
