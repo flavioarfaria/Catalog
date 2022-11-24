@@ -150,6 +150,6 @@ class CatalogPlugin : Plugin<Project> {
   }
 
   companion object {
-    private const val RUNTIME_VERSION = "0.1.0"
+    private const val RUNTIME_VERSION = "0.2.0"
   }
 }
