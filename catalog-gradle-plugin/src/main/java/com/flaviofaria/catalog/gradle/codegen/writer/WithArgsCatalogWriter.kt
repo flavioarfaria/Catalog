@@ -91,7 +91,12 @@ class WithArgsCatalogWriter(
     val statementFormat = "return $methodName(${functionCallParams.joinToString()})"
     return builder.addFunction(
       FunSpec.builder(resource.name.toCamelCase())
-        .apply { resource.docs?.let(::addKdoc) }
+        .apply {
+          resource.docs
+            ?.split('\n')
+            ?.joinToString("\n") { if (it.matches(Regex("^ *@.*\$"))) it.trimStart() else it }
+            ?.let(::addKdoc)
+        }
         .apply {
           if (asComposeExtensions) {
             if (asPlurals) {
