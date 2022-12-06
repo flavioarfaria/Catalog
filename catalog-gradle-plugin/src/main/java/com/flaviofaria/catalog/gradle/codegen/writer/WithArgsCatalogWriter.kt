@@ -49,7 +49,7 @@ class WithArgsCatalogWriter(
   override fun buildExtensionMethod(
     builder: FileSpec.Builder,
     resource: ResourceEntry.WithArgs,
-    contextReceiver: TypeName,
+    contextReceiver: TypeName?,
     asComposeExtensions: Boolean,
   ): FileSpec.Builder {
     val sortedArgs = resource.args.sortedBy { it.position }
@@ -106,7 +106,7 @@ class WithArgsCatalogWriter(
           }
         }
         .addModifiers(KModifier.INLINE)
-        .contextReceivers(contextReceiver)
+        .let { b -> contextReceiver?.let { b.contextReceivers(it) } ?: b }
         .receiver(
           if (asComposeExtensions) {
             composeReceiverClass

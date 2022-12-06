@@ -42,7 +42,7 @@ class StringArrayCatalogWriter(
   override fun buildExtensionMethod(
     builder: FileSpec.Builder,
     resource: ResourceEntry.StringArray,
-    contextReceiver: TypeName,
+    contextReceiver: TypeName?,
     asComposeExtensions: Boolean,
   ): FileSpec.Builder {
     val statementArgs: List<Any>
@@ -66,7 +66,7 @@ class StringArrayCatalogWriter(
           }
         }
         .addModifiers(KModifier.INLINE)
-        .contextReceivers(contextReceiver)
+        .let { b -> contextReceiver?.let { b.contextReceivers(it) } ?: b }
         .receiver(
           if (asComposeExtensions) {
             composeReceiverClass

@@ -122,7 +122,7 @@ abstract class CatalogWriter<T : ResourceEntry>(
   abstract fun buildExtensionMethod(
     builder: FileSpec.Builder,
     resource: T,
-    contextReceiver: TypeName,
+    contextReceiver: TypeName?,
     asComposeExtensions: Boolean,
   ): FileSpec.Builder
 }
