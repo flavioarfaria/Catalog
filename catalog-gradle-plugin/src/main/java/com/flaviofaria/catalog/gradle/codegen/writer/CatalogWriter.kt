@@ -64,7 +64,7 @@ abstract class CatalogWriter<T : ResourceEntry>(
             buildExtensionMethod(this, resource, fragmentClass, asComposeExtensions = false)
           }
           if (generateComposeExtensions) {
-            buildExtensionMethod(this, resource, null, asComposeExtensions = true)
+            buildExtensionMethod(this, resource, contextReceiver = null, asComposeExtensions = true)
           }
         }
       }.build()
