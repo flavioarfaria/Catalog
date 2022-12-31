@@ -66,7 +66,7 @@ class StringArrayCatalogWriter(
           }
         }
         .addModifiers(KModifier.INLINE)
-        .let { b -> contextReceiver?.let { b.contextReceivers(it) } ?: b }
+        .apply { contextReceiver?.let { contextReceivers(it) } }
         .receiver(
           if (asComposeExtensions) {
             composeReceiverClass
