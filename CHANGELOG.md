@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+Fixed a bug that was causing bad indentation of the comments.
+
 
 ## [0.1.0] - 2022-11-22
 
