@@ -64,8 +64,7 @@ abstract class CatalogWriter<T : ResourceEntry>(
             buildExtensionMethod(this, resource, fragmentClass, asComposeExtensions = false)
           }
           if (generateComposeExtensions) {
-            buildExtensionMethod(this, resource, contextClass, asComposeExtensions = true)
-            buildExtensionMethod(this, resource, fragmentClass, asComposeExtensions = true)
+            buildExtensionMethod(this, resource, contextReceiver = null, asComposeExtensions = true)
           }
         }
       }.build()
@@ -122,7 +121,7 @@ abstract class CatalogWriter<T : ResourceEntry>(
   abstract fun buildExtensionMethod(
     builder: FileSpec.Builder,
     resource: T,
-    contextReceiver: TypeName,
+    contextReceiver: TypeName?,
     asComposeExtensions: Boolean,
   ): FileSpec.Builder
 }

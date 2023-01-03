@@ -181,11 +181,9 @@ class StringArrayCatalogWriterTest {
       |
       |package com.example
       |
-      |import android.content.Context
       |import androidx.compose.runtime.Composable
       |import androidx.compose.runtime.ReadOnlyComposable
       |import androidx.compose.ui.res.stringArrayResource
-      |import androidx.fragment.app.Fragment
       |import com.flaviofaria.catalog.runtime.compose.StringArrays
       |import kotlin.Array
       |import kotlin.Int
@@ -202,16 +200,6 @@ class StringArrayCatalogWriterTest {
       |/**
       | * String array 1 docs
       | */
-      |context(Context)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun StringArrays.stringArray1(): Array<String> =
-      |    stringArrayResource(R.array.string_array_1)
-      |
-      |/**
-      | * String array 1 docs
-      | */
-      |context(Fragment)
       |@Composable
       |@ReadOnlyComposable
       |public inline fun StringArrays.stringArray1(): Array<String> =
@@ -220,13 +208,6 @@ class StringArrayCatalogWriterTest {
       |public inline val StringArrays.stringArray2: Int
       |  get() = R.array.string_array_2
       |
-      |context(Context)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun StringArrays.stringArray2(): Array<String> =
-      |    stringArrayResource(R.array.string_array_2)
-      |
-      |context(Fragment)
       |@Composable
       |@ReadOnlyComposable
       |public inline fun StringArrays.stringArray2(): Array<String> =
@@ -294,16 +275,6 @@ class StringArrayCatalogWriterTest {
       |/**
       | * String array 1 docs
       | */
-      |context(Context)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun StringArrays.stringArray1(): Array<String> =
-      |    stringArrayResource(R.array.string_array_1)
-      |
-      |/**
-      | * String array 1 docs
-      | */
-      |context(Fragment)
       |@Composable
       |@ReadOnlyComposable
       |public inline fun StringArrays.stringArray1(): Array<String> =
@@ -320,13 +291,6 @@ class StringArrayCatalogWriterTest {
       |public inline fun com.flaviofaria.catalog.runtime.resources.StringArrays.stringArray2():
       |    Array<String> = resources.getStringArray(R.array.string_array_2)
       |
-      |context(Context)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun StringArrays.stringArray2(): Array<String> =
-      |    stringArrayResource(R.array.string_array_2)
-      |
-      |context(Fragment)
       |@Composable
       |@ReadOnlyComposable
       |public inline fun StringArrays.stringArray2(): Array<String> =
