@@ -81,7 +81,7 @@ class XmlResourceParser {
           preceedingComment = null
         }
         Node.COMMENT_NODE -> {
-          preceedingComment = (node as Comment).data.trimIndent().trimStart().trimEnd()
+          preceedingComment = (node as Comment).data.trimIndent().trim()
         }
       }
     }
