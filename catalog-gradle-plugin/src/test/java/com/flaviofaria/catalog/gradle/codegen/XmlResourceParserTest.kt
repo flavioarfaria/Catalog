@@ -37,6 +37,13 @@ class XmlResourceParserTest {
             |   <string name="string_no_args_wo_docs">String no args w/o docs</string>
             |   <!-- Some test doc -->
             |   <string name="string_no_args_with_docs">String no args with docs</string>
+            |   <!--
+            |   Some test documentation:
+            |       - Bullet 1
+            |       - Bullet 2
+            |   @since 20221231
+            |   -->
+            |   <string name="string_no_args_with_ktdocs">String no args w/o docs</string>
             |   <string name="string_with_non_positioned_args">String with %d non-positioned %d args</string>
             |   <string name="string_with_positioned_args">Args %3${'$'}d are %1${'$'}f out %4${'$'}s of %2${'$'}c order</string>
             |   <string name="unformatted_string" formatted="false">Some %1${'$'}f unformatted %2${'$'}s args %3${'$'}d</string>
@@ -71,6 +78,12 @@ class XmlResourceParserTest {
         file = file,
         name = "string_no_args_with_docs",
         docs = "Some test doc",
+        args = emptyList(),
+      ),
+      ResourceEntry.WithArgs.String(
+        file = file,
+        name = "string_no_args_with_ktdocs",
+        docs = "Some test documentation:\n    - Bullet 1\n    - Bullet 2\n@since 20221231",
         args = emptyList(),
       ),
       ResourceEntry.WithArgs.String(

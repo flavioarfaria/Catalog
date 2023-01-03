@@ -1,7 +1,10 @@
 <resources>
   <!-- Some test doc -->
   <string name="app_name">Catalog Compose</string>
-  <!-- Some test doc 2 -->
+  <!--
+  Some test doc 2
+  @since 20221231
+  -->
   <string name="some_other_string_resource">Some other string resource</string>
   <string name="string_with_non_positioned_args">Args %d are %d out of order</string>
   <string name="string_with_positioned_args">Args %3$d are %1$f out %4$s of %2$c order</string>
