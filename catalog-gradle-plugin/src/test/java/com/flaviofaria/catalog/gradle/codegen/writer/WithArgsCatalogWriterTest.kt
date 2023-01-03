@@ -533,11 +533,9 @@ class WithArgsCatalogWriterTest {
       |
       |package com.example
       |
-      |import android.content.Context
       |import androidx.compose.runtime.Composable
       |import androidx.compose.runtime.ReadOnlyComposable
       |import androidx.compose.ui.res.stringResource
-      |import androidx.fragment.app.Fragment
       |import com.flaviofaria.catalog.runtime.compose.Strings
       |import kotlin.Char
       |import kotlin.CharSequence
@@ -557,15 +555,6 @@ class WithArgsCatalogWriterTest {
       |/**
       | * String 1 docs
       | */
-      |context(Context)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Strings.string1(): CharSequence = stringResource(R.string.string_1)
-      |
-      |/**
-      | * String 1 docs
-      | */
-      |context(Fragment)
       |@Composable
       |@ReadOnlyComposable
       |public inline fun Strings.string1(): CharSequence = stringResource(R.string.string_1)
@@ -573,18 +562,6 @@ class WithArgsCatalogWriterTest {
       |public inline val Strings.string2: Int
       |  get() = R.string.string_2
       |
-      |context(Context)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Strings.string2(
-      |  arg1: Int,
-      |  arg2: Int,
-      |  arg3: UInt,
-      |  arg4: UInt,
-      |  arg5: UInt,
-      |): String = stringResource(R.string.string_2, arg1, arg2, arg3, arg4, arg5)
-      |
-      |context(Fragment)
       |@Composable
       |@ReadOnlyComposable
       |public inline fun Strings.string2(
@@ -598,18 +575,6 @@ class WithArgsCatalogWriterTest {
       |public inline val Strings.string3: Int
       |  get() = R.string.string_3
       |
-      |context(Context)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Strings.string3(
-      |  arg1: Double,
-      |  arg2: Double,
-      |  arg3: Double,
-      |  arg4: Double,
-      |  arg5: String,
-      |): String = stringResource(R.string.string_3, arg1, arg2, arg3, arg4, arg5)
-      |
-      |context(Fragment)
       |@Composable
       |@ReadOnlyComposable
       |public inline fun Strings.string3(
@@ -623,12 +588,6 @@ class WithArgsCatalogWriterTest {
       |public inline val Strings.string4: Int
       |  get() = R.string.string_4
       |
-      |context(Context)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Strings.string4(arg1: Char): String = stringResource(R.string.string_4, arg1)
-      |
-      |context(Fragment)
       |@Composable
       |@ReadOnlyComposable
       |public inline fun Strings.string4(arg1: Char): String = stringResource(R.string.string_4, arg1)
@@ -661,12 +620,10 @@ class WithArgsCatalogWriterTest {
       |
       |package com.example
       |
-      |import android.content.Context
       |import androidx.compose.runtime.Composable
       |import androidx.compose.runtime.ReadOnlyComposable
       |import androidx.compose.ui.ExperimentalComposeUiApi
       |import androidx.compose.ui.res.pluralStringResource
-      |import androidx.fragment.app.Fragment
       |import com.flaviofaria.catalog.runtime.compose.Plurals
       |import kotlin.Char
       |import kotlin.CharSequence
@@ -687,17 +644,6 @@ class WithArgsCatalogWriterTest {
       |/**
       | * Plural 1 docs
       | */
-      |context(Context)
-      |@OptIn(ExperimentalComposeUiApi::class)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Plurals.plural1(quantity: Int): CharSequence =
-      |    pluralStringResource(R.plurals.plural_1, quantity)
-      |
-      |/**
-      | * Plural 1 docs
-      | */
-      |context(Fragment)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable
@@ -707,20 +653,6 @@ class WithArgsCatalogWriterTest {
       |public inline val Plurals.plural2: Int
       |  get() = R.plurals.plural_2
       |
-      |context(Context)
-      |@OptIn(ExperimentalComposeUiApi::class)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Plurals.plural2(
-      |  quantity: Int,
-      |  arg1: Int,
-      |  arg2: Int,
-      |  arg3: UInt,
-      |  arg4: UInt,
-      |  arg5: UInt,
-      |): String = pluralStringResource(R.plurals.plural_2, quantity, arg1, arg2, arg3, arg4, arg5)
-      |
-      |context(Fragment)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable
@@ -736,20 +668,6 @@ class WithArgsCatalogWriterTest {
       |public inline val Plurals.plural3: Int
       |  get() = R.plurals.plural_3
       |
-      |context(Context)
-      |@OptIn(ExperimentalComposeUiApi::class)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Plurals.plural3(
-      |  quantity: Int,
-      |  arg1: Double,
-      |  arg2: Double,
-      |  arg3: Double,
-      |  arg4: Double,
-      |  arg5: String,
-      |): String = pluralStringResource(R.plurals.plural_3, quantity, arg1, arg2, arg3, arg4, arg5)
-      |
-      |context(Fragment)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable
@@ -765,14 +683,6 @@ class WithArgsCatalogWriterTest {
       |public inline val Plurals.plural4: Int
       |  get() = R.plurals.plural_4
       |
-      |context(Context)
-      |@OptIn(ExperimentalComposeUiApi::class)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Plurals.plural4(quantity: Int, arg1: Char): String =
-      |    pluralStringResource(R.plurals.plural_4, quantity, arg1)
-      |
-      |context(Fragment)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable
@@ -845,15 +755,6 @@ class WithArgsCatalogWriterTest {
       |/**
       | * String 1 docs
       | */
-      |context(Context)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Strings.string1(): CharSequence = stringResource(R.string.string_1)
-      |
-      |/**
-      | * String 1 docs
-      | */
-      |context(Fragment)
       |@Composable
       |@ReadOnlyComposable
       |public inline fun Strings.string1(): CharSequence = stringResource(R.string.string_1)
@@ -879,18 +780,6 @@ class WithArgsCatalogWriterTest {
       |  arg5: UInt,
       |): String = getString(R.string.string_2, arg1, arg2, arg3, arg4, arg5)
       |
-      |context(Context)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Strings.string2(
-      |  arg1: Int,
-      |  arg2: Int,
-      |  arg3: UInt,
-      |  arg4: UInt,
-      |  arg5: UInt,
-      |): String = stringResource(R.string.string_2, arg1, arg2, arg3, arg4, arg5)
-      |
-      |context(Fragment)
       |@Composable
       |@ReadOnlyComposable
       |public inline fun Strings.string2(
@@ -922,18 +811,6 @@ class WithArgsCatalogWriterTest {
       |  arg5: String,
       |): String = getString(R.string.string_3, arg1, arg2, arg3, arg4, arg5)
       |
-      |context(Context)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Strings.string3(
-      |  arg1: Double,
-      |  arg2: Double,
-      |  arg3: Double,
-      |  arg4: Double,
-      |  arg5: String,
-      |): String = stringResource(R.string.string_3, arg1, arg2, arg3, arg4, arg5)
-      |
-      |context(Fragment)
       |@Composable
       |@ReadOnlyComposable
       |public inline fun Strings.string3(
@@ -955,12 +832,6 @@ class WithArgsCatalogWriterTest {
       |public inline fun com.flaviofaria.catalog.runtime.resources.Strings.string4(arg1: Char): String =
       |    getString(R.string.string_4, arg1)
       |
-      |context(Context)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Strings.string4(arg1: Char): String = stringResource(R.string.string_4, arg1)
-      |
-      |context(Fragment)
       |@Composable
       |@ReadOnlyComposable
       |public inline fun Strings.string4(arg1: Char): String = stringResource(R.string.string_4, arg1)
@@ -1033,17 +904,6 @@ class WithArgsCatalogWriterTest {
       |/**
       | * Plural 1 docs
       | */
-      |context(Context)
-      |@OptIn(ExperimentalComposeUiApi::class)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Plurals.plural1(quantity: Int): CharSequence =
-      |    pluralStringResource(R.plurals.plural_1, quantity)
-      |
-      |/**
-      | * Plural 1 docs
-      | */
-      |context(Fragment)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable
@@ -1073,20 +933,6 @@ class WithArgsCatalogWriterTest {
       |  arg5: UInt,
       |): String = resources.getQuantityString(R.plurals.plural_2, quantity, arg1, arg2, arg3, arg4, arg5)
       |
-      |context(Context)
-      |@OptIn(ExperimentalComposeUiApi::class)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Plurals.plural2(
-      |  quantity: Int,
-      |  arg1: Int,
-      |  arg2: Int,
-      |  arg3: UInt,
-      |  arg4: UInt,
-      |  arg5: UInt,
-      |): String = pluralStringResource(R.plurals.plural_2, quantity, arg1, arg2, arg3, arg4, arg5)
-      |
-      |context(Fragment)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable
@@ -1122,20 +968,6 @@ class WithArgsCatalogWriterTest {
       |  arg5: String,
       |): String = resources.getQuantityString(R.plurals.plural_3, quantity, arg1, arg2, arg3, arg4, arg5)
       |
-      |context(Context)
-      |@OptIn(ExperimentalComposeUiApi::class)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Plurals.plural3(
-      |  quantity: Int,
-      |  arg1: Double,
-      |  arg2: Double,
-      |  arg3: Double,
-      |  arg4: Double,
-      |  arg5: String,
-      |): String = pluralStringResource(R.plurals.plural_3, quantity, arg1, arg2, arg3, arg4, arg5)
-      |
-      |context(Fragment)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable
@@ -1159,14 +991,6 @@ class WithArgsCatalogWriterTest {
       |public inline fun com.flaviofaria.catalog.runtime.resources.Plurals.plural4(quantity: Int,
       |    arg1: Char): String = resources.getQuantityString(R.plurals.plural_4, quantity, arg1)
       |
-      |context(Context)
-      |@OptIn(ExperimentalComposeUiApi::class)
-      |@Composable
-      |@ReadOnlyComposable
-      |public inline fun Plurals.plural4(quantity: Int, arg1: Char): String =
-      |    pluralStringResource(R.plurals.plural_4, quantity, arg1)
-      |
-      |context(Fragment)
       |@OptIn(ExperimentalComposeUiApi::class)
       |@Composable
       |@ReadOnlyComposable

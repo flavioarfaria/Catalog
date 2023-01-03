@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+Fixed composable resources being generated twice, and with `Context` context.
 
 ## [0.1.0] - 2022-11-22
 
