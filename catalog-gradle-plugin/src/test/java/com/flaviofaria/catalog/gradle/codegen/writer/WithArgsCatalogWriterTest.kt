@@ -211,6 +211,7 @@ class WithArgsCatalogWriterTest {
       |
       |package com.example
       |
+      |import androidx.`annotation`.StringRes
       |import com.flaviofaria.catalog.runtime.resources.Strings
       |import kotlin.Int
       |import kotlin.Suppress
@@ -219,15 +220,19 @@ class WithArgsCatalogWriterTest {
       |/**
       | * String 1 docs
       | */
+      |@get:StringRes
       |public inline val Strings.string1: Int
       |  get() = R.string.string_1
       |
+      |@get:StringRes
       |public inline val Strings.string2: Int
       |  get() = R.string.string_2
       |
+      |@get:StringRes
       |public inline val Strings.string3: Int
       |  get() = R.string.string_3
       |
+      |@get:StringRes
       |public inline val Strings.string4: Int
       |  get() = R.string.string_4
       |""".trimMargin(),
@@ -259,6 +264,7 @@ class WithArgsCatalogWriterTest {
       |
       |package com.example
       |
+      |import androidx.`annotation`.PluralsRes
       |import com.flaviofaria.catalog.runtime.resources.Plurals
       |import kotlin.Int
       |import kotlin.Suppress
@@ -267,15 +273,19 @@ class WithArgsCatalogWriterTest {
       |/**
       | * Plural 1 docs
       | */
+      |@get:PluralsRes
       |public inline val Plurals.plural1: Int
       |  get() = R.plurals.plural_1
       |
+      |@get:PluralsRes
       |public inline val Plurals.plural2: Int
       |  get() = R.plurals.plural_2
       |
+      |@get:PluralsRes
       |public inline val Plurals.plural3: Int
       |  get() = R.plurals.plural_3
       |
+      |@get:PluralsRes
       |public inline val Plurals.plural4: Int
       |  get() = R.plurals.plural_4
       |""".trimMargin(),
@@ -308,6 +318,7 @@ class WithArgsCatalogWriterTest {
       |package com.example
       |
       |import android.content.Context
+      |import androidx.`annotation`.StringRes
       |import androidx.fragment.app.Fragment
       |import com.flaviofaria.catalog.runtime.resources.Strings
       |import kotlin.Char
@@ -322,6 +333,7 @@ class WithArgsCatalogWriterTest {
       |/**
       | * String 1 docs
       | */
+      |@get:StringRes
       |public inline val Strings.string1: Int
       |  get() = R.string.string_1
       |
@@ -337,6 +349,7 @@ class WithArgsCatalogWriterTest {
       |context(Fragment)
       |public inline fun Strings.string1(): CharSequence = getText(R.string.string_1)
       |
+      |@get:StringRes
       |public inline val Strings.string2: Int
       |  get() = R.string.string_2
       |
@@ -358,6 +371,7 @@ class WithArgsCatalogWriterTest {
       |  arg5: UInt,
       |): String = getString(R.string.string_2, arg1, arg2, arg3, arg4, arg5)
       |
+      |@get:StringRes
       |public inline val Strings.string3: Int
       |  get() = R.string.string_3
       |
@@ -379,6 +393,7 @@ class WithArgsCatalogWriterTest {
       |  arg5: String,
       |): String = getString(R.string.string_3, arg1, arg2, arg3, arg4, arg5)
       |
+      |@get:StringRes
       |public inline val Strings.string4: Int
       |  get() = R.string.string_4
       |
@@ -417,6 +432,7 @@ class WithArgsCatalogWriterTest {
       |package com.example
       |
       |import android.content.Context
+      |import androidx.`annotation`.PluralsRes
       |import androidx.fragment.app.Fragment
       |import com.flaviofaria.catalog.runtime.resources.Plurals
       |import kotlin.Char
@@ -431,6 +447,7 @@ class WithArgsCatalogWriterTest {
       |/**
       | * Plural 1 docs
       | */
+      |@get:PluralsRes
       |public inline val Plurals.plural1: Int
       |  get() = R.plurals.plural_1
       |
@@ -448,6 +465,7 @@ class WithArgsCatalogWriterTest {
       |public inline fun Plurals.plural1(quantity: Int): CharSequence =
       |    resources.getQuantityString(R.plurals.plural_1, quantity)
       |
+      |@get:PluralsRes
       |public inline val Plurals.plural2: Int
       |  get() = R.plurals.plural_2
       |
@@ -471,6 +489,7 @@ class WithArgsCatalogWriterTest {
       |  arg5: UInt,
       |): String = resources.getQuantityString(R.plurals.plural_2, quantity, arg1, arg2, arg3, arg4, arg5)
       |
+      |@get:PluralsRes
       |public inline val Plurals.plural3: Int
       |  get() = R.plurals.plural_3
       |
@@ -494,6 +513,7 @@ class WithArgsCatalogWriterTest {
       |  arg5: String,
       |): String = resources.getQuantityString(R.plurals.plural_3, quantity, arg1, arg2, arg3, arg4, arg5)
       |
+      |@get:PluralsRes
       |public inline val Plurals.plural4: Int
       |  get() = R.plurals.plural_4
       |
@@ -533,6 +553,7 @@ class WithArgsCatalogWriterTest {
       |
       |package com.example
       |
+      |import androidx.`annotation`.StringRes
       |import androidx.compose.runtime.Composable
       |import androidx.compose.runtime.ReadOnlyComposable
       |import androidx.compose.ui.res.stringResource
@@ -549,6 +570,7 @@ class WithArgsCatalogWriterTest {
       |/**
       | * String 1 docs
       | */
+      |@get:StringRes
       |public inline val Strings.string1: Int
       |  get() = R.string.string_1
       |
@@ -559,6 +581,7 @@ class WithArgsCatalogWriterTest {
       |@ReadOnlyComposable
       |public inline fun Strings.string1(): CharSequence = stringResource(R.string.string_1)
       |
+      |@get:StringRes
       |public inline val Strings.string2: Int
       |  get() = R.string.string_2
       |
@@ -572,6 +595,7 @@ class WithArgsCatalogWriterTest {
       |  arg5: UInt,
       |): String = stringResource(R.string.string_2, arg1, arg2, arg3, arg4, arg5)
       |
+      |@get:StringRes
       |public inline val Strings.string3: Int
       |  get() = R.string.string_3
       |
@@ -585,6 +609,7 @@ class WithArgsCatalogWriterTest {
       |  arg5: String,
       |): String = stringResource(R.string.string_3, arg1, arg2, arg3, arg4, arg5)
       |
+      |@get:StringRes
       |public inline val Strings.string4: Int
       |  get() = R.string.string_4
       |
@@ -620,6 +645,7 @@ class WithArgsCatalogWriterTest {
       |
       |package com.example
       |
+      |import androidx.`annotation`.PluralsRes
       |import androidx.compose.runtime.Composable
       |import androidx.compose.runtime.ReadOnlyComposable
       |import androidx.compose.ui.ExperimentalComposeUiApi
@@ -638,6 +664,7 @@ class WithArgsCatalogWriterTest {
       |/**
       | * Plural 1 docs
       | */
+      |@get:PluralsRes
       |public inline val Plurals.plural1: Int
       |  get() = R.plurals.plural_1
       |
@@ -650,6 +677,7 @@ class WithArgsCatalogWriterTest {
       |public inline fun Plurals.plural1(quantity: Int): CharSequence =
       |    pluralStringResource(R.plurals.plural_1, quantity)
       |
+      |@get:PluralsRes
       |public inline val Plurals.plural2: Int
       |  get() = R.plurals.plural_2
       |
@@ -665,6 +693,7 @@ class WithArgsCatalogWriterTest {
       |  arg5: UInt,
       |): String = pluralStringResource(R.plurals.plural_2, quantity, arg1, arg2, arg3, arg4, arg5)
       |
+      |@get:PluralsRes
       |public inline val Plurals.plural3: Int
       |  get() = R.plurals.plural_3
       |
@@ -680,6 +709,7 @@ class WithArgsCatalogWriterTest {
       |  arg5: String,
       |): String = pluralStringResource(R.plurals.plural_3, quantity, arg1, arg2, arg3, arg4, arg5)
       |
+      |@get:PluralsRes
       |public inline val Plurals.plural4: Int
       |  get() = R.plurals.plural_4
       |
@@ -718,6 +748,7 @@ class WithArgsCatalogWriterTest {
       |package com.example
       |
       |import android.content.Context
+      |import androidx.`annotation`.StringRes
       |import androidx.compose.runtime.Composable
       |import androidx.compose.runtime.ReadOnlyComposable
       |import androidx.compose.ui.res.stringResource
@@ -735,6 +766,7 @@ class WithArgsCatalogWriterTest {
       |/**
       | * String 1 docs
       | */
+      |@get:StringRes
       |public inline val Strings.string1: Int
       |  get() = R.string.string_1
       |
@@ -759,6 +791,7 @@ class WithArgsCatalogWriterTest {
       |@ReadOnlyComposable
       |public inline fun Strings.string1(): CharSequence = stringResource(R.string.string_1)
       |
+      |@get:StringRes
       |public inline val Strings.string2: Int
       |  get() = R.string.string_2
       |
@@ -790,6 +823,7 @@ class WithArgsCatalogWriterTest {
       |  arg5: UInt,
       |): String = stringResource(R.string.string_2, arg1, arg2, arg3, arg4, arg5)
       |
+      |@get:StringRes
       |public inline val Strings.string3: Int
       |  get() = R.string.string_3
       |
@@ -821,6 +855,7 @@ class WithArgsCatalogWriterTest {
       |  arg5: String,
       |): String = stringResource(R.string.string_3, arg1, arg2, arg3, arg4, arg5)
       |
+      |@get:StringRes
       |public inline val Strings.string4: Int
       |  get() = R.string.string_4
       |
@@ -865,6 +900,7 @@ class WithArgsCatalogWriterTest {
       |package com.example
       |
       |import android.content.Context
+      |import androidx.`annotation`.PluralsRes
       |import androidx.compose.runtime.Composable
       |import androidx.compose.runtime.ReadOnlyComposable
       |import androidx.compose.ui.ExperimentalComposeUiApi
@@ -884,6 +920,7 @@ class WithArgsCatalogWriterTest {
       |/**
       | * Plural 1 docs
       | */
+      |@get:PluralsRes
       |public inline val Plurals.plural1: Int
       |  get() = R.plurals.plural_1
       |
@@ -910,6 +947,7 @@ class WithArgsCatalogWriterTest {
       |public inline fun Plurals.plural1(quantity: Int): CharSequence =
       |    pluralStringResource(R.plurals.plural_1, quantity)
       |
+      |@get:PluralsRes
       |public inline val Plurals.plural2: Int
       |  get() = R.plurals.plural_2
       |
@@ -945,6 +983,7 @@ class WithArgsCatalogWriterTest {
       |  arg5: UInt,
       |): String = pluralStringResource(R.plurals.plural_2, quantity, arg1, arg2, arg3, arg4, arg5)
       |
+      |@get:PluralsRes
       |public inline val Plurals.plural3: Int
       |  get() = R.plurals.plural_3
       |
@@ -980,6 +1019,7 @@ class WithArgsCatalogWriterTest {
       |  arg5: String,
       |): String = pluralStringResource(R.plurals.plural_3, quantity, arg1, arg2, arg3, arg4, arg5)
       |
+      |@get:PluralsRes
       |public inline val Plurals.plural4: Int
       |  get() = R.plurals.plural_4
       |

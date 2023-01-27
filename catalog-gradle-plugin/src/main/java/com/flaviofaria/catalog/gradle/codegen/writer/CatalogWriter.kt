@@ -58,7 +58,7 @@ abstract class CatalogWriter<T : ResourceEntry>(
       .addFileHeaders(sourceSetName)
       .apply {
         resources.forEach { resource ->
-          addResourceProperty(resourceType.resourceGroup, resource, generateComposeExtensions)
+          addResourceProperty(resourceType, resource, generateComposeExtensions)
           if (generateResourcesExtensions) {
             buildExtensionMethod(this, resource, contextClass, asComposeExtensions = false)
             buildExtensionMethod(this, resource, fragmentClass, asComposeExtensions = false)
@@ -94,13 +94,18 @@ abstract class CatalogWriter<T : ResourceEntry>(
   }
 
   private fun FileSpec.Builder.addResourceProperty(
-    resourceGroup: String,
+    resourceType: ResourceType,
     resource: ResourceEntry,
     asComposeExtensions: Boolean,
   ) {
     addProperty(
       PropertySpec.builder(resource.name.toCamelCase(), Int::class)
         .apply { resource.docs?.let(::addKdoc) }
+        .addAnnotation(
+          AnnotationSpec.builder(resourceType.annotationClass)
+            .useSiteTarget(AnnotationSpec.UseSiteTarget.GET)
+            .build()
+        )
         .receiver(
           if (asComposeExtensions) {
             composeReceiverClass
@@ -111,7 +116,7 @@ abstract class CatalogWriter<T : ResourceEntry>(
         .getter(
           FunSpec.getterBuilder()
             .addModifiers(KModifier.INLINE)
-            .addStatement("return %T.$resourceGroup.%L", rClass, resource.name)
+            .addStatement("return %T.${resourceType.resourceGroup}.%L", rClass, resource.name)
             .build()
         )
         .build()
