@@ -15,11 +15,26 @@
  */
 package com.flaviofaria.catalog.gradle.codegen
 
+import com.squareup.kotlinpoet.ClassName
+
 enum class ResourceType(
   val receiverType: kotlin.String,
   val resourceGroup: kotlin.String,
+  val annotationClass: ClassName,
 ) {
-  String(receiverType = "Strings", resourceGroup = "string"),
-  Plural(receiverType = "Plurals", resourceGroup = "plurals"),
-  StringArray(receiverType = "StringArrays", resourceGroup = "array"),
+  String(
+    receiverType = "Strings",
+    resourceGroup = "string",
+    annotationClass = ClassName("androidx.annotation", "StringRes"),
+  ),
+  Plural(
+    receiverType = "Plurals",
+    resourceGroup = "plurals",
+    annotationClass = ClassName("androidx.annotation", "PluralsRes"),
+  ),
+  StringArray(
+    receiverType = "StringArrays",
+    resourceGroup = "array",
+    annotationClass = ClassName("androidx.annotation", "ArrayRes"),
+  ),
 }
