@@ -128,8 +128,7 @@ class WithArgsCatalogWriter(
                 's' -> String::class
                 'c' -> Char::class
                 else -> error(
-                  """Unexpected argument type "${parameter.type}" for string
-                    | resource "${resource.name}" in file "${resource.file}"""".trimMargin(),
+                  """Unexpected argument type "${parameter.type}" for string resource "${resource.name}" in file "${resource.file}"""".trimMargin(),
                 )
               }
             )
