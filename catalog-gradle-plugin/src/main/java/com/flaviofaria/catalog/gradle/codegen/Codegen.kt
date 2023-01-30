@@ -24,7 +24,6 @@ class Codegen(
   packageName: String,
   private val generateResourcesExtensions: Boolean,
   private val generateComposeExtensions: Boolean,
-  private val projectDir: File,
 ) {
 
   private val resourceReducer = ResourceReducer()
@@ -41,39 +40,28 @@ class Codegen(
   )
 
   fun start(
-    resourcesDirs: Set<Pair<File, SourceSetQualifier>>,
+    sourceSetName: String,
+    sourceSetDirs: Set<File>,
+    outputDir: File,
   ) {
-    resourcesDirs
+    sourceSetDirs
       .asSequence()
-      .flatMap { (file, sourceSetName) ->
-        file.walk().associateWith { sourceSetName }.toList()
+      .flatMap { sourceSetDir ->
+        sourceSetDir.walk()
       }
-      .filter { (file, _) ->
+      .filter { file ->
         file.parentFile.name.startsWith("values") && file.extension == "xml"
       }
-      .flatMap { (file, sourceSetName) ->
-        xmlResourceParser
-          .parseFile(file)
-          .map { it to sourceSetName }
+      .flatMap { file ->
+        xmlResourceParser.parseFile(file)
       }
-      .groupBy { (resourceEntry, _) -> // groups resources by name to eliminate duplicates by priority
+      .distinctBy { resourceEntry -> // groups resources by name to eliminate duplicates by priority
         resourceEntry.name
-      }
-      .map { (_, qualifiedResourceEntries) -> // selects only the resource of highest priority among duplicates
-        qualifiedResourceEntries.minByOrNull { (_, qualifier) -> qualifier.type.ordinal }!!
-      }
-      .groupBy { (_, sourceSetQualifier) ->
-        sourceSetQualifier
-      }
-      .map { (sourceSetQualifier, qualifiedEntries) ->
-        sourceSetQualifier.name to qualifiedEntries.map { (resourceEntry, _) ->
-          resourceEntry
-        }
-      }
-      .forEach { (sourceSetName, resourceEntries) ->
+      }.toList().let { resourceEntries ->
         generateExtensionFilesForSourceSet(
           sourceSetName,
-          resourceEntries,
+          resourceEntries.toList(),
+          outputDir,
         )
       }
   }
@@ -81,9 +69,9 @@ class Codegen(
   private fun generateExtensionFilesForSourceSet(
     sourceSetName: String,
     resourceEntries: List<ResourceEntry>,
+    outputDir: File,
   ) {
-    val codegenDir = File(projectDir, "build/generated/catalog/${sourceSetName}/kotlin")
-    codegenDir.mkdirs()
+    outputDir.mkdirs()
     resourceEntries.groupBy { it::class } // groups by type
       .map { it.value }
       .flatMap { groupedByType ->
@@ -99,7 +87,7 @@ class Codegen(
             stringCatalogWriter.write(
               resources as List<ResourceEntry.WithArgs.String>, // TODO unchecked cast
               sourceSetName,
-              codegenDir,
+              outputDir,
               generateResourcesExtensions,
               generateComposeExtensions,
             )
@@ -109,7 +97,7 @@ class Codegen(
             pluralCatalogWriter.write(
               resources as List<ResourceEntry.WithArgs.Plural>, // TODO
               sourceSetName,
-              codegenDir,
+              outputDir,
               generateResourcesExtensions,
               generateComposeExtensions,
             )
@@ -119,7 +107,7 @@ class Codegen(
             stringArrayCatalogWriter.write(
               resources as List<ResourceEntry.StringArray>, // TODO
               sourceSetName,
-              codegenDir,
+              outputDir,
               generateResourcesExtensions,
               generateComposeExtensions,
             )

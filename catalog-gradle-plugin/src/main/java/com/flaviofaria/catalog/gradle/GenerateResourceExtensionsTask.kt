@@ -21,15 +21,18 @@ import com.android.build.gradle.internal.api.DefaultAndroidSourceFile
 import com.flaviofaria.catalog.gradle.codegen.Codegen
 import com.flaviofaria.catalog.gradle.codegen.SourceSetQualifier
 import com.flaviofaria.catalog.gradle.codegen.XmlResourceParser
+import com.flaviofaria.catalog.gradle.codegen.capitalize
+import java.io.File
+import javax.xml.parsers.DocumentBuilderFactory
 import org.gradle.api.DefaultTask
 import org.gradle.api.NamedDomainObjectContainer
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Nested
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
-import java.io.File
-import javax.xml.parsers.DocumentBuilderFactory
 
 @CacheableTask
 abstract class GenerateResourceExtensionsTask : DefaultTask() {
@@ -37,17 +40,20 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() {
   @Nested
   lateinit var input: TaskInput
 
+  @get:OutputDirectory
+  abstract val outputFolder: DirectoryProperty
+
   fun initialize(input: TaskInput) {
     this.input = input
-    input.qualifiedSourceSets.map { qualifiedSourceSet ->
-      qualifiedSourceSet.first.takeIf { it.exists() }?.apply {
+    val outputDir = File(
+      project.projectDir,
+      "build/generated/kotlin/generate${input.sourceSetQualifier.name.capitalize()}ResourceExtensions",
+    )
+    input.sourceSetDirs.map { sourceSetDir ->
+      sourceSetDir.takeIf { it.exists() }?.apply {
         inputs.dir(this)
-        outputs.dir(
-          File(
-            project.projectDir,
-            "build/generated/catalog/${qualifiedSourceSet.second.name}/kotlin"
-          )
-        )
+        outputs.dir(outputDir)
+        outputFolder.set(outputDir)
       }
     }
   }
@@ -58,25 +64,18 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() {
 
     val packageName = commonExtension.namespace
       ?: commonExtension.sourceSets.findPackageNameInManifest()
-      ?: error("Missing package name in manifest file for build variant ${input.variantName}")
+      ?: error("Missing package name in manifest file for source set ${input.sourceSetQualifier.name}")
 
     Codegen(
       xmlResourceParser = XmlResourceParser(),
       packageName = packageName,
       generateResourcesExtensions = input.generateResourcesExtensions,
       generateComposeExtensions = input.generateComposeExtensions,
-      projectDir = project.projectDir,
-    ).start(input.qualifiedSourceSets)
+    ).start(input.sourceSetQualifier.name, input.sourceSetDirs, outputFolder.asFile.get())
   }
 
   private fun NamedDomainObjectContainer<out AndroidSourceSet>.findPackageNameInManifest(): String? {
-    // https://developer.android.com/studio/build/manage-manifests#merge_priorities
-    return findByName(input.variantName)?.readManifestPackageName()
-      ?: input.buildType?.let { findByName(it) }?.readManifestPackageName()
-      ?: input.productFlavors.asSequence().mapNotNull { flavor ->
-        findByName(flavor)?.readManifestPackageName()
-      }.firstOrNull()
-      ?: findByName("main")?.readManifestPackageName()
+    return findByName(input.sourceSetQualifier.name)?.readManifestPackageName()
   }
 
   private fun AndroidSourceSet.readManifestPackageName(): String? {
@@ -90,11 +89,9 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() {
   }
 
   data class TaskInput(
-    @Input val variantName: String,
-    @Input val buildType: String?,
-    @Input val productFlavors: List<String>,
     @Input val generateResourcesExtensions: Boolean,
     @Input val generateComposeExtensions: Boolean,
-    @Internal val qualifiedSourceSets: Set<Pair<File, SourceSetQualifier>>
+    @Internal val sourceSetDirs: Set<File>,
+    @Internal val sourceSetQualifier: SourceSetQualifier,
   )
 }
