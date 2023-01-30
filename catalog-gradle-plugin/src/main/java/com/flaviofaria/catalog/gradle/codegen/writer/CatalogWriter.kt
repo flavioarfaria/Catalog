@@ -58,17 +58,29 @@ abstract class CatalogWriter<T : ResourceEntry>(
       .addFileHeaders(sourceSetName)
       .apply {
         resources.forEach { resource ->
-          addResourceProperty(resourceType, resource, generateComposeExtensions)
-          if (generateResourcesExtensions) {
-            buildExtensionMethod(this, resource, contextClass, asComposeExtensions = false)
-            buildExtensionMethod(this, resource, fragmentClass, asComposeExtensions = false)
-          }
-          if (generateComposeExtensions) {
-            buildExtensionMethod(this, resource, contextReceiver = null, asComposeExtensions = true)
-          }
+          writeResource(resource, generateResourcesExtensions, generateComposeExtensions)
         }
       }.build()
     file.writeTo(codegenDestination)
+  }
+
+  private fun FileSpec.Builder.writeResource(
+    resource: T,
+    generateResourcesExtensions: Boolean,
+    generateComposeExtensions: Boolean,
+  ) {
+    try {
+      addResourceProperty(resourceType, resource, generateComposeExtensions)
+      if (generateResourcesExtensions) {
+        buildExtensionMethod(this, resource, contextClass, asComposeExtensions = false)
+        buildExtensionMethod(this, resource, fragmentClass, asComposeExtensions = false)
+      }
+      if (generateComposeExtensions) {
+        buildExtensionMethod(this, resource, contextReceiver = null, asComposeExtensions = true)
+      }
+    } catch (e: Exception) {
+      throw IllegalStateException("Error writing resource \"${resource.name}\" in ${resource.file}")
+    }
   }
 
   private fun FileSpec.Builder.addFileHeaders(
