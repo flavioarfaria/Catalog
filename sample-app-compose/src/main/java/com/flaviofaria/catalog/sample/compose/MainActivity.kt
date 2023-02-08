@@ -21,6 +21,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.Text
 import com.flaviofaria.catalog.library.libraryName
 import com.flaviofaria.catalog.library.libraryStringArray
+import com.flaviofaria.catalog.runtime.compose.Colors
 import com.flaviofaria.catalog.runtime.compose.Plurals
 import com.flaviofaria.catalog.runtime.compose.StringArrays
 import com.flaviofaria.catalog.runtime.compose.Strings
@@ -35,6 +36,7 @@ class MainActivity : ComponentActivity() {
       Strings.libraryName()
       StringArrays.libraryStringArray()
       Plurals.somePlural(3, 1, 2)
+      Colors.black()
       Text(text = Strings.composable().toString())
     }
   }

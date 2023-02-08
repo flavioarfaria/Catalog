@@ -15,6 +15,7 @@
  */
 package com.flaviofaria.catalog.gradle.codegen
 
+import com.flaviofaria.catalog.gradle.codegen.writer.ColorCatalogWriter
 import com.flaviofaria.catalog.gradle.codegen.writer.StringArrayCatalogWriter
 import com.flaviofaria.catalog.gradle.codegen.writer.WithArgsCatalogWriter
 import java.io.File
@@ -36,6 +37,10 @@ class Codegen(
     resourceType = ResourceType.Plural,
   )
   private val stringArrayCatalogWriter = StringArrayCatalogWriter(
+    packageName = packageName,
+  )
+
+  private val colorCatalogWriter = ColorCatalogWriter(
     packageName = packageName,
   )
 
@@ -106,6 +111,16 @@ class Codegen(
             @Suppress("UNCHECKED_CAST")
             stringArrayCatalogWriter.write(
               resources as List<ResourceEntry.StringArray>, // TODO
+              sourceSetName,
+              outputDir,
+              generateResourcesExtensions,
+              generateComposeExtensions,
+            )
+          }
+          ResourceEntry.Color::class -> {
+            @Suppress("UNCHECKED_CAST")
+            colorCatalogWriter.write(
+              resources as List<ResourceEntry.Color>, // TODO
               sourceSetName,
               outputDir,
               generateResourcesExtensions,
