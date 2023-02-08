@@ -20,10 +20,12 @@ import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet
 import com.flaviofaria.catalog.gradle.codegen.SourceSetQualifier
 import com.flaviofaria.catalog.gradle.codegen.SourceSetType
+import com.flaviofaria.catalog.gradle.codegen.capitalize
+import java.io.File
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
-import java.io.File
 
 class CatalogPlugin : Plugin<Project> {
 
@@ -47,63 +49,86 @@ class CatalogPlugin : Plugin<Project> {
       if (generateComposeExtensions) {
         project.addRuntimeDependency("compose")
       }
-      androidComponents.beforeVariants { variantBuilder ->
-        commonExtension.addGeneratedFilesToSourceSet(variantBuilder.name)
-        variantBuilder.flavorName?.takeIf { it.isNotEmpty() }?.let {
-          commonExtension.addGeneratedFilesToSourceSet(it)
-        }
-        variantBuilder.buildType?.let { commonExtension.addGeneratedFilesToSourceSet(it) }
-        commonExtension.addGeneratedFilesToSourceSet("main")
-      }
+
+      val mainTaskProvider = project.getTaskProviderForSourceSet(
+        generateResourcesExtensions = catalogExtension.generateResourcesExtensions,
+        generateComposeExtensions = generateComposeExtensions,
+        sourceSetDirs = commonExtension.getQualifiedSourceSetsByName("main"),
+        sourceSetQualifier = SourceSetQualifier("main", SourceSetType.MAIN)
+      )
+
       androidComponents.onVariants { variant ->
-        val capitalizedVariantName = variant.name.replaceFirstChar {
-          it.titlecase()
-        }
-        val taskName = "generate${capitalizedVariantName}ResourceExtensions"
-
-        val sourceSetMap = mutableSetOf<Pair<File, SourceSetQualifier>>()
-
-        commonExtension
-          .getQualifiedSourceSetsByName(variant.name, SourceSetType.VARIANT)
-            .let(sourceSetMap::addAll)
-
-        variant.buildType?.let { buildType ->
-          commonExtension
-            .getQualifiedSourceSetsByName(buildType, SourceSetType.BUILD_TYPE)
-              .let(sourceSetMap::addAll)
-        }
-        variant.flavorName?.takeIf { it.isNotEmpty() }?.let { flavorName ->
-          commonExtension
-            .getQualifiedSourceSetsByName(flavorName, SourceSetType.FLAVOR)
-              .let(sourceSetMap::addAll)
-        }
-        commonExtension
-          .getQualifiedSourceSetsByName("main", SourceSetType.MAIN)
-            .let(sourceSetMap::addAll)
-
-        project.tasks.register(
-          taskName,
-          GenerateResourceExtensionsTask::class.java,
-        ) { task ->
-          task.initialize(
-            GenerateResourceExtensionsTask.TaskInput(
-              variantName = variant.name,
-              buildType = variant.buildType,
-              productFlavors = variant.productFlavors.map { it.first },
-              generateResourcesExtensions = catalogExtension.generateResourcesExtensions,
-              generateComposeExtensions = generateComposeExtensions,
-              qualifiedSourceSets = sourceSetMap,
-            )
+        val variantTaskProvider = project.getTaskProviderForSourceSet(
+          generateResourcesExtensions = catalogExtension.generateResourcesExtensions,
+          generateComposeExtensions = generateComposeExtensions,
+          sourceSetDirs = commonExtension.getQualifiedSourceSetsByName(variant.name),
+          sourceSetQualifier = SourceSetQualifier(variant.name, SourceSetType.VARIANT),
+        )
+        val buildTypeTaskProvider = variant.buildType?.let { buildType ->
+          project.getTaskProviderForSourceSet(
+            generateResourcesExtensions = catalogExtension.generateResourcesExtensions,
+            generateComposeExtensions = generateComposeExtensions,
+            sourceSetDirs = commonExtension.getQualifiedSourceSetsByName(buildType),
+            sourceSetQualifier = SourceSetQualifier(buildType, SourceSetType.BUILD_TYPE),
           )
         }
-        project.afterEvaluate {
-          project.tasks.named(
-            "compile${capitalizedVariantName}Kotlin",
-          ).configure { task ->
-            task.dependsOn(taskName)
+        val flavorTaskProvider = variant.flavorName.takeUnless {
+          it?.isEmpty() == true // build variants come with a "" flavor
+        }?.let { flavorName ->
+          project.getTaskProviderForSourceSet(
+            generateResourcesExtensions = catalogExtension.generateResourcesExtensions,
+            generateComposeExtensions = generateComposeExtensions,
+            sourceSetDirs = commonExtension.getQualifiedSourceSetsByName(flavorName),
+            sourceSetQualifier = SourceSetQualifier(flavorName, SourceSetType.FLAVOR),
+          )
+        }
+        variant.sources.java?.apply {
+          addGeneratedSourceDirectory(
+            mainTaskProvider,
+            GenerateResourceExtensionsTask::outputFolder,
+          )
+          addGeneratedSourceDirectory(
+            variantTaskProvider,
+            GenerateResourceExtensionsTask::outputFolder,
+          )
+          buildTypeTaskProvider?.let {
+            addGeneratedSourceDirectory(
+              buildTypeTaskProvider,
+              GenerateResourceExtensionsTask::outputFolder,
+            )
+          }
+          flavorTaskProvider?.let {
+            addGeneratedSourceDirectory(
+              flavorTaskProvider,
+              GenerateResourceExtensionsTask::outputFolder,
+            )
           }
         }
       }
+    }
+  }
+
+  private fun Project.getTaskProviderForSourceSet(
+    generateResourcesExtensions: Boolean,
+    generateComposeExtensions: Boolean,
+    sourceSetDirs: Set<File>,
+    sourceSetQualifier: SourceSetQualifier,
+  ): TaskProvider<GenerateResourceExtensionsTask> {
+    val taskName = "generate${sourceSetQualifier.name.capitalize()}ResourceExtensions"
+    return runCatching {
+      tasks.named(taskName, GenerateResourceExtensionsTask::class.java)
+    }.getOrNull() ?: tasks.register(
+      taskName,
+      GenerateResourceExtensionsTask::class.java,
+    ) { task ->
+      task.initialize(
+        GenerateResourceExtensionsTask.TaskInput(
+          generateResourcesExtensions = generateResourcesExtensions,
+          generateComposeExtensions = generateComposeExtensions,
+          sourceSetDirs = sourceSetDirs,
+          sourceSetQualifier = sourceSetQualifier,
+        )
+      )
     }
   }
 
@@ -117,22 +142,17 @@ class CatalogPlugin : Plugin<Project> {
     )
   }
 
-  private fun CommonExtension<*, *, *, *>.addGeneratedFilesToSourceSet(sourceSetName: String) {
-    sourceSets {
-      findByName(sourceSetName)?.kotlin?.srcDir(
-        "build/generated/catalog/$sourceSetName/kotlin",
-      )
-    }
-  }
-
+  /**
+   * Gets all the /res folders for a given source set name.
+   *
+   * This should only get one item, unless another source set
+   * has been added by another plugin or Gradle script.
+   */
   private fun CommonExtension<*, *, *, *>.getQualifiedSourceSetsByName(
     sourceSetName: String,
-    sourceSetType: SourceSetType,
-  ): List<Pair<File, SourceSetQualifier>> {
+  ): Set<File> {
     return sourceSets.getByName(sourceSetName).res.let { res ->
-      (res as DefaultAndroidSourceDirectorySet).srcDirs.map {
-        it to SourceSetQualifier(sourceSetName, sourceSetType)
-      }
+      (res as DefaultAndroidSourceDirectorySet).srcDirs
     }
   }
 

@@ -33,3 +33,9 @@ fun String.toCamelCase(): String {
   }
   return camelCase.toString()
 }
+
+fun String.capitalize(): String {
+  return replaceFirstChar {
+    it.titlecase()
+  }
+}
