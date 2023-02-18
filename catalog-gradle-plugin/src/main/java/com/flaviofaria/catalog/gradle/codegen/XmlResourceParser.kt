@@ -71,7 +71,13 @@ class XmlResourceParser {
                 preceedingComment,
               )
             }
-            "color" -> null
+            "color" -> {
+              ResourceEntry.Color(
+                file,
+                name,
+                preceedingComment,
+              )
+            }
             "dimen" -> null
             "id" -> null
             else -> null

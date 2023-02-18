@@ -45,6 +45,12 @@ sealed interface ResourceEntry {
     override val name: String,
     override val docs: String?,
   ) : ResourceEntry
+
+  data class Color(
+    override val file: File,
+    override val name: String,
+    override val docs: String?,
+  ) : ResourceEntry
 }
 
 data class StringArg(

@@ -37,4 +37,9 @@ enum class ResourceType(
     resourceGroup = "array",
     annotationClass = ClassName("androidx.annotation", "ArrayRes"),
   ),
+  Color(
+    receiverType = "Colors",
+    resourceGroup = "color",
+    annotationClass = ClassName("androidx.annotation", "ColorRes"),
+  ),
 }

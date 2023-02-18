@@ -32,20 +32,20 @@ abstract class CatalogWriter<T : ResourceEntry>(
   protected val resourceType: ResourceType,
 ) {
 
-  open val resourcesReceiverClass = ClassName(
+  protected val resourcesReceiverClass = ClassName(
     "com.flaviofaria.catalog.runtime.resources",
     resourceType.receiverType,
   )
-  open val composeReceiverClass = ClassName(
+  protected  val composeReceiverClass = ClassName(
     "com.flaviofaria.catalog.runtime.compose",
     resourceType.receiverType,
   )
-  private val contextClass = ClassName("android.content", "Context")
-  private val fragmentClass = ClassName("androidx.fragment.app", "Fragment")
-  open val rClass = ClassName(packageName, "R")
+  protected val contextClass = ClassName("android.content", "Context")
+  protected val fragmentClass = ClassName("androidx.fragment.app", "Fragment")
+  protected val rClass = ClassName(packageName, "R")
 
-  open val composableClass = ClassName("androidx.compose.runtime", "Composable")
-  open val readOnlyComposableClass = ClassName("androidx.compose.runtime", "ReadOnlyComposable")
+  protected val composableClass = ClassName("androidx.compose.runtime", "Composable")
+  protected val readOnlyComposableClass = ClassName("androidx.compose.runtime", "ReadOnlyComposable")
 
   fun write(
     resources: List<T>,

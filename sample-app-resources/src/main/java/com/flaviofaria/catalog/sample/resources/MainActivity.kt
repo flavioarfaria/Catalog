@@ -15,11 +15,14 @@
  */
 package com.flaviofaria.catalog.sample.resources
 
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.red
 import com.flaviofaria.catalog.library.libraryName
 import com.flaviofaria.catalog.library.libraryStringArray
+import com.flaviofaria.catalog.runtime.resources.Colors
 import com.flaviofaria.catalog.runtime.resources.Plurals
 import com.flaviofaria.catalog.runtime.resources.StringArrays
 import com.flaviofaria.catalog.runtime.resources.Strings
@@ -34,6 +37,7 @@ class MainActivity : AppCompatActivity() {
       Strings.libraryName()
       StringArrays.libraryStringArray()
       Plurals.somePlural(3, 1, 2)
+      Colors.black()
       text = Strings.someOtherStringResource()
     })
   }

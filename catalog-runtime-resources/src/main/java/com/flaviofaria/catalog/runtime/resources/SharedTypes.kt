@@ -18,3 +18,4 @@ package com.flaviofaria.catalog.runtime.resources
 object Strings
 object StringArrays
 object Plurals
+object Colors
