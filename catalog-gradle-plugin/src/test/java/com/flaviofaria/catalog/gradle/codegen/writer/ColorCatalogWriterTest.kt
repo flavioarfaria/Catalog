@@ -73,6 +73,7 @@ class ColorCatalogWriterTest {
       |
       |package com.example
       |
+      |import androidx.`annotation`.ColorRes
       |import com.flaviofaria.catalog.runtime.resources.Colors
       |import kotlin.Int
       |import kotlin.Suppress
@@ -81,9 +82,11 @@ class ColorCatalogWriterTest {
       |/**
       | * Color 1 docs
       | */
+      |@get:ColorRes
       |public inline val Colors.color1: Int
       |  get() = R.color.color_1
       |
+      |@get:ColorRes
       |public inline val Colors.color2: Int
       |  get() = R.color.color_2
       |""".trimMargin(),
@@ -115,7 +118,8 @@ class ColorCatalogWriterTest {
       |package com.example
       |
       |import android.content.Context
-      |import android.graphics.Color
+      |import androidx.`annotation`.ColorInt
+      |import androidx.`annotation`.ColorRes
       |import androidx.core.content.ContextCompat
       |import androidx.fragment.app.Fragment
       |import com.flaviofaria.catalog.runtime.resources.Colors
@@ -126,6 +130,7 @@ class ColorCatalogWriterTest {
       |/**
       | * Color 1 docs
       | */
+      |@get:ColorRes
       |public inline val Colors.color1: Int
       |  get() = R.color.color_1
       |
@@ -133,26 +138,27 @@ class ColorCatalogWriterTest {
       | * Color 1 docs
       | */
       |context(Context)
-      |public inline fun Colors.color1(): Color = Color.valueOf(ContextCompat.getColor(this@Context,
-      |    R.color.color_1))
+      |@ColorInt
+      |public inline fun Colors.color1(): Int = ContextCompat.getColor(this@Context, R.color.color_1)
       |
       |/**
       | * Color 1 docs
       | */
       |context(Fragment)
-      |public inline fun Colors.color1(): Color = Color.valueOf(ContextCompat.getColor(requireContext(),
-      |    R.color.color_1))
+      |@ColorInt
+      |public inline fun Colors.color1(): Int = ContextCompat.getColor(requireContext(), R.color.color_1)
       |
+      |@get:ColorRes
       |public inline val Colors.color2: Int
       |  get() = R.color.color_2
       |
       |context(Context)
-      |public inline fun Colors.color2(): Color = Color.valueOf(ContextCompat.getColor(this@Context,
-      |    R.color.color_2))
+      |@ColorInt
+      |public inline fun Colors.color2(): Int = ContextCompat.getColor(this@Context, R.color.color_2)
       |
       |context(Fragment)
-      |public inline fun Colors.color2(): Color = Color.valueOf(ContextCompat.getColor(requireContext(),
-      |    R.color.color_2))
+      |@ColorInt
+      |public inline fun Colors.color2(): Int = ContextCompat.getColor(requireContext(), R.color.color_2)
       |""".trimMargin(),
     )
   }
@@ -181,6 +187,7 @@ class ColorCatalogWriterTest {
       |
       |package com.example
       |
+      |import androidx.`annotation`.ColorRes
       |import androidx.compose.runtime.Composable
       |import androidx.compose.runtime.ReadOnlyComposable
       |import androidx.compose.ui.graphics.Color
@@ -193,6 +200,7 @@ class ColorCatalogWriterTest {
       |/**
       | * Color 1 docs
       | */
+      |@get:ColorRes
       |public inline val Colors.color1: Int
       |  get() = R.color.color_1
       |
@@ -203,6 +211,7 @@ class ColorCatalogWriterTest {
       |@ReadOnlyComposable
       |public inline fun Colors.color1(): Color = colorResource(R.color.color_1)
       |
+      |@get:ColorRes
       |public inline val Colors.color2: Int
       |  get() = R.color.color_2
       |
@@ -238,9 +247,11 @@ class ColorCatalogWriterTest {
       |package com.example
       |
       |import android.content.Context
-      |import android.graphics.Color
+      |import androidx.`annotation`.ColorInt
+      |import androidx.`annotation`.ColorRes
       |import androidx.compose.runtime.Composable
       |import androidx.compose.runtime.ReadOnlyComposable
+      |import androidx.compose.ui.graphics.Color
       |import androidx.compose.ui.res.colorResource
       |import androidx.core.content.ContextCompat
       |import androidx.fragment.app.Fragment
@@ -252,6 +263,7 @@ class ColorCatalogWriterTest {
       |/**
       | * Color 1 docs
       | */
+      |@get:ColorRes
       |public inline val Colors.color1: Int
       |  get() = R.color.color_1
       |
@@ -259,40 +271,44 @@ class ColorCatalogWriterTest {
       | * Color 1 docs
       | */
       |context(Context)
-      |public inline fun com.flaviofaria.catalog.runtime.resources.Colors.color1(): Color =
-      |    Color.valueOf(ContextCompat.getColor(this@Context, R.color.color_1))
+      |@ColorInt
+      |public inline fun com.flaviofaria.catalog.runtime.resources.Colors.color1(): Int =
+      |    ContextCompat.getColor(this@Context, R.color.color_1)
       |
       |/**
       | * Color 1 docs
       | */
       |context(Fragment)
-      |public inline fun com.flaviofaria.catalog.runtime.resources.Colors.color1(): Color =
-      |    Color.valueOf(ContextCompat.getColor(requireContext(), R.color.color_1))
+      |@ColorInt
+      |public inline fun com.flaviofaria.catalog.runtime.resources.Colors.color1(): Int =
+      |    ContextCompat.getColor(requireContext(), R.color.color_1)
       |
       |/**
       | * Color 1 docs
       | */
       |@Composable
       |@ReadOnlyComposable
-      |public inline fun Colors.color1(): androidx.compose.ui.graphics.Color =
-      |    colorResource(R.color.color_1)
+      |public inline fun Colors.color1(): Color = colorResource(R.color.color_1)
       |
+      |@get:ColorRes
       |public inline val Colors.color2: Int
       |  get() = R.color.color_2
       |
       |context(Context)
-      |public inline fun com.flaviofaria.catalog.runtime.resources.Colors.color2(): Color =
-      |    Color.valueOf(ContextCompat.getColor(this@Context, R.color.color_2))
+      |@ColorInt
+      |public inline fun com.flaviofaria.catalog.runtime.resources.Colors.color2(): Int =
+      |    ContextCompat.getColor(this@Context, R.color.color_2)
       |
       |context(Fragment)
-      |public inline fun com.flaviofaria.catalog.runtime.resources.Colors.color2(): Color =
-      |    Color.valueOf(ContextCompat.getColor(requireContext(), R.color.color_2))
+      |@ColorInt
+      |public inline fun com.flaviofaria.catalog.runtime.resources.Colors.color2(): Int =
+      |    ContextCompat.getColor(requireContext(), R.color.color_2)
       |
       |@Composable
       |@ReadOnlyComposable
-      |public inline fun Colors.color2(): androidx.compose.ui.graphics.Color =
-      |    colorResource(R.color.color_2)
+      |public inline fun Colors.color2(): Color = colorResource(R.color.color_2)
       |""".trimMargin(),
+      // Auto-generated by Catalog. DO NOT EDIT.
     )
   }
 }
