@@ -40,7 +40,7 @@ Catalog also works with plurals:
 
 <img width="691" alt="image" src="https://user-images.githubusercontent.com/1800351/201458751-48d31e9a-d683-4006-80a3-2c7e9734e65d.png">
 
-and string arrays:
+string arrays:
 
 ```xml
 <string-array name="seasons">
@@ -52,6 +52,14 @@ and string arrays:
 ```
 
 <img width="691" alt="image" src="https://user-images.githubusercontent.com/1800351/201458738-5c6d1b9b-af88-40fb-a3b9-730a140bfcdf.png">
+
+and simple color resources:
+
+```xml
+<color name="red">#FFFF0000</color>
+```
+
+<img width="689" alt="image" src="https://user-images.githubusercontent.com/1800351/219828664-70e5080b-ffff-43d9-91e6-4f254cfda855.png">
 
 In the future, other resource types like integer arrays, dimensions, etc. will also be supported.
 
@@ -91,7 +99,7 @@ To use Catalog, just apply the plugin to your module:
 
 ```groovy
 plugins {
-  id 'com.flaviofaria.catalog' version '0.1.0'
+  id 'com.flaviofaria.catalog' version '0.2.1'
 }
 ```
 
