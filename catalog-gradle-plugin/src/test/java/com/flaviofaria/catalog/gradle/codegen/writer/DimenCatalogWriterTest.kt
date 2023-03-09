@@ -44,17 +44,17 @@ class DimenCatalogWriterTest {
     ),
   )
 
+  private lateinit var codegenFile: File
+  private val writer = DimenCatalogWriter(packageName = "com.example")
+
   @Before
   fun setUp() {
     codegenDestination = folder.newFolder()
+    codegenFile = File("${codegenDestination.absolutePath}/com/example/Dimens.kt")
   }
 
   @Test
   fun `GIVEN generateResourcesExtensions and generateComposeExtensions disabled THEN generate property extensions only`() {
-    val codegenFile = File("${codegenDestination.absolutePath}/com/example/Dimens.kt")
-    val writer = DimenCatalogWriter(
-      packageName = "com.example",
-    )
     writer.write(
       resources,
       sourceSetName = "main",
@@ -95,10 +95,6 @@ class DimenCatalogWriterTest {
 
   @Test
   fun `GIVEN generateResourcesExtensions enabled and generateComposeExtensions disabled THEN generate property and resources extensions only`() {
-    val codegenFile = File("${codegenDestination.absolutePath}/com/example/Dimens.kt")
-    val writer = DimenCatalogWriter(
-      packageName = "com.example",
-    )
     writer.write(
       resources,
       sourceSetName = "main",
@@ -160,10 +156,6 @@ class DimenCatalogWriterTest {
 
   @Test
   fun `GIVEN generateResourcesExtensions disabled and generateComposeExtensions enabled THEN generate property and compose extensions only`() {
-    val codegenFile = File("${codegenDestination.absolutePath}/com/example/Dimens.kt")
-    val writer = DimenCatalogWriter(
-      packageName = "com.example",
-    )
     writer.write(
       resources,
       sourceSetName = "main",
@@ -219,10 +211,6 @@ class DimenCatalogWriterTest {
 
   @Test
   fun `GIVEN generateResources and generateComposeExtensions enabled THEN generate property, resources and compose extensions`() {
-    val codegenFile = File("${codegenDestination.absolutePath}/com/example/Dimens.kt")
-    val writer = DimenCatalogWriter(
-      packageName = "com.example",
-    )
     writer.write(
       resources,
       sourceSetName = "main",
