@@ -17,12 +17,12 @@ package com.flaviofaria.catalog.gradle.codegen.writer
 
 import com.flaviofaria.catalog.gradle.codegen.ResourceEntry
 import com.google.common.truth.Truth.assertThat
+import java.io.File
+import java.nio.charset.Charset
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.io.File
-import java.nio.charset.Charset
 
 class ColorCatalogWriterTest {
 
@@ -44,17 +44,17 @@ class ColorCatalogWriterTest {
     ),
   )
 
+  private lateinit var codegenFile: File
+  private val writer = ColorCatalogWriter(packageName = "com.example")
+
   @Before
   fun setUp() {
     codegenDestination = folder.newFolder()
+    codegenFile = File("${codegenDestination.absolutePath}/com/example/Colors.kt")
   }
 
   @Test
   fun `GIVEN generateResourcesExtensions and generateComposeExtensions disabled THEN generate property extensions only`() {
-    val codegenFile = File("${codegenDestination.absolutePath}/com/example/Colors.kt")
-    val writer = ColorCatalogWriter(
-      packageName = "com.example",
-    )
     writer.write(
       resources,
       sourceSetName = "main",
@@ -95,10 +95,6 @@ class ColorCatalogWriterTest {
 
   @Test
   fun `GIVEN generateResourcesExtensions enabled and generateComposeExtensions disabled THEN generate property and resources extensions only`() {
-    val codegenFile = File("${codegenDestination.absolutePath}/com/example/Colors.kt")
-    val writer = ColorCatalogWriter(
-      packageName = "com.example",
-    )
     writer.write(
       resources,
       sourceSetName = "main",
@@ -165,10 +161,6 @@ class ColorCatalogWriterTest {
 
   @Test
   fun `GIVEN generateResourcesExtensions disabled and generateComposeExtensions enabled THEN generate property and compose extensions only`() {
-    val codegenFile = File("${codegenDestination.absolutePath}/com/example/Colors.kt")
-    val writer = ColorCatalogWriter(
-      packageName = "com.example",
-    )
     writer.write(
       resources,
       sourceSetName = "main",
@@ -224,10 +216,6 @@ class ColorCatalogWriterTest {
 
   @Test
   fun `GIVEN generateResources and generateComposeExtensions enabled THEN generate property, resources and compose extensions`() {
-    val codegenFile = File("${codegenDestination.absolutePath}/com/example/Colors.kt")
-    val writer = ColorCatalogWriter(
-      packageName = "com.example",
-    )
     writer.write(
       resources,
       sourceSetName = "main",
