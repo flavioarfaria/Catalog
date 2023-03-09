@@ -78,7 +78,13 @@ class XmlResourceParser {
                 preceedingComment,
               )
             }
-            "dimen" -> null
+            "dimen" -> {
+              ResourceEntry.Dimen(
+                file,
+                name,
+                preceedingComment,
+              )
+            }
             "id" -> null
             else -> null
           }?.let {

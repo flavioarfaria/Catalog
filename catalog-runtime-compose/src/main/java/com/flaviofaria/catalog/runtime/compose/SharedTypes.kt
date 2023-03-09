@@ -19,3 +19,4 @@ object Strings
 object StringArrays
 object Plurals
 object Colors
+object Dimens
