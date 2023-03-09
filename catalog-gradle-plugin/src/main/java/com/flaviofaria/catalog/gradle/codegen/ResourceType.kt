@@ -42,4 +42,9 @@ enum class ResourceType(
     resourceGroup = "color",
     annotationClass = ClassName("androidx.annotation", "ColorRes"),
   ),
+  Dimen(
+    receiverType = "Dimens",
+    resourceGroup = "dimen",
+    annotationClass = ClassName("androidx.annotation", "DimenRes"),
+  ),
 }

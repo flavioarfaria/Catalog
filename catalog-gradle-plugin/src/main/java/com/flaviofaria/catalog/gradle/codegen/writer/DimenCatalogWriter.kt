@@ -28,48 +28,36 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 
 @OptIn(ExperimentalKotlinPoetApi::class)
-class ColorCatalogWriter(
+class DimenCatalogWriter(
   packageName: String,
-) : CatalogWriter<ResourceEntry.Color>(
-  packageName, ResourceType.Color,
+) : CatalogWriter<ResourceEntry.Dimen>(
+  packageName, ResourceType.Dimen,
 ) {
 
-  private val colorResourceMember = MemberName(
+  private val dimensionResourceMember = MemberName(
     "androidx.compose.ui.res",
-    "colorResource",
+    "dimensionResource",
   )
 
-  private val contextCompatClass = ClassName(
-    "androidx.core.content",
-    "ContextCompat",
+  private val composeDpClass = ClassName(
+    "androidx.compose.ui.unit",
+    "Dp",
   )
-
-  private val composeColorClass = ClassName(
-    "androidx.compose.ui.graphics",
-    "Color",
-  )
-
-  private val colorIntAnnotationClass = ClassName("androidx.annotation", "ColorInt")
 
   override fun buildExtensionMethod(
     builder: FileSpec.Builder,
-    resource: ResourceEntry.Color,
+    resource: ResourceEntry.Dimen,
     contextReceiver: TypeName?,
     asComposeExtensions: Boolean,
   ): FileSpec.Builder {
     val statementArgs: List<Any>
     val statementFormat: String
     if (asComposeExtensions) {
-      statementFormat = "return %M(%T.color.%L)"
-      statementArgs = mutableListOf(colorResourceMember, rClass, resource.name)
+      statementFormat = "return %M(%T.dimen.%L)"
+      statementArgs = mutableListOf(dimensionResourceMember, rClass, resource.name)
     } else {
-      val context = when (contextReceiver) {
-        contextClass -> "this@Context"
-        fragmentClass -> "requireContext()"
-        else -> error("Unexpected receiver: $contextReceiver")
-      }
-      statementFormat = "return %T.getColor($context, %T.color.%L)"
-      statementArgs = mutableListOf(contextCompatClass, rClass, resource.name)
+      statementFormat = "return resources.getDimension(%T.dimen.%L)"
+      statementArgs = mutableListOf(rClass, resource.name)
     }
     return builder.addFunction(
       FunSpec.builder(resource.name.toCamelCase())
@@ -78,8 +66,6 @@ class ColorCatalogWriter(
           if (asComposeExtensions) {
             addAnnotation(composableClass)
             addAnnotation(readOnlyComposableClass)
-          } else {
-            addAnnotation(colorIntAnnotationClass)
           }
         }
         .addModifiers(KModifier.INLINE)
@@ -93,9 +79,9 @@ class ColorCatalogWriter(
         )
         .returns(
           if (asComposeExtensions) {
-            composeColorClass
+            composeDpClass
           } else {
-            Int::class.asClassName()
+            Float::class.asClassName()
           }
         )
         .addStatement(statementFormat, *statementArgs.toTypedArray())
