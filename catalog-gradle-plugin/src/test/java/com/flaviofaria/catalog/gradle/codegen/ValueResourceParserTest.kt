@@ -16,17 +16,18 @@
 package com.flaviofaria.catalog.gradle.codegen
 
 import com.google.common.truth.Truth.assertThat
+import javax.xml.parsers.DocumentBuilderFactory
 import org.intellij.lang.annotations.Language
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
-class XmlResourceParserTest {
+class ValueResourceParserTest {
 
   @get:Rule
   var folder = TemporaryFolder()
 
-  private val parser = XmlResourceParser()
+  private val parser = ValueResourceParser(DocumentBuilderFactory.newInstance().newDocumentBuilder())
 
   @Test
   fun `parseFile()`() {
@@ -68,25 +69,25 @@ class XmlResourceParserTest {
     val resourceEntries = parser.parseFile(file)
 
     assertThat(resourceEntries).containsExactly(
-      ResourceEntry.WithArgs.String(
+      ResourceEntry.XmlItem.WithArgs.String(
         file = file,
         name = "string_no_args_wo_docs",
         docs = null,
         args = emptyList(),
       ),
-      ResourceEntry.WithArgs.String(
+      ResourceEntry.XmlItem.WithArgs.String(
         file = file,
         name = "string_no_args_with_docs",
         docs = "Some test doc",
         args = emptyList(),
       ),
-      ResourceEntry.WithArgs.String(
+      ResourceEntry.XmlItem.WithArgs.String(
         file = file,
         name = "string_no_args_with_ktdocs",
         docs = "Some test documentation:\n    - Bullet 1\n    - Bullet 2\n@since 20221231",
         args = emptyList(),
       ),
-      ResourceEntry.WithArgs.String(
+      ResourceEntry.XmlItem.WithArgs.String(
         file = file,
         name = "string_with_non_positioned_args",
         docs = null,
@@ -95,7 +96,7 @@ class XmlResourceParserTest {
           StringArg(2, 'd'),
         ),
       ),
-      ResourceEntry.WithArgs.String(
+      ResourceEntry.XmlItem.WithArgs.String(
         file = file,
         name = "string_with_positioned_args",
         docs = null,
@@ -106,25 +107,25 @@ class XmlResourceParserTest {
           StringArg(2, 'c'),
         ),
       ),
-      ResourceEntry.WithArgs.String(
+      ResourceEntry.XmlItem.WithArgs.String(
         file = file,
         name = "unformatted_string",
         docs = null,
         args = emptyList(),
       ),
-      ResourceEntry.WithArgs.String(
+      ResourceEntry.XmlItem.WithArgs.String(
         file = file,
         name = "double_percent_symbol",
         docs = null,
         args = emptyList(),
       ),
-      ResourceEntry.WithArgs.String(
+      ResourceEntry.XmlItem.WithArgs.String(
         file = file,
         name = "escaped_percent_symbol",
         docs = null,
         args = emptyList(),
       ),
-      ResourceEntry.WithArgs.Plural(
+      ResourceEntry.XmlItem.WithArgs.Plural(
         file = file,
         name = "some_plural",
         docs = "there's no arg count validation, the only risk is going out of bounds",
@@ -133,7 +134,7 @@ class XmlResourceParserTest {
           StringArg(2, 'd'),
         ),
       ),
-      ResourceEntry.StringArray(
+      ResourceEntry.XmlItem.StringArray(
         file = file,
         name = "some_string_array",
         docs = null,

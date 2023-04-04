@@ -30,7 +30,7 @@ import com.squareup.kotlinpoet.asClassName
 @OptIn(ExperimentalKotlinPoetApi::class)
 class DimenCatalogWriter(
   packageName: String,
-) : CatalogWriter<ResourceEntry.Dimen>(
+) : CatalogWriter<ResourceEntry.XmlItem.Dimen>(
   packageName, ResourceType.Dimen,
 ) {
 
@@ -46,7 +46,7 @@ class DimenCatalogWriter(
 
   override fun buildExtensionMethod(
     builder: FileSpec.Builder,
-    resource: ResourceEntry.Dimen,
+    resource: ResourceEntry.XmlItem.Dimen,
     contextReceiver: TypeName?,
     asComposeExtensions: Boolean,
   ): FileSpec.Builder {

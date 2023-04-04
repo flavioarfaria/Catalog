@@ -71,11 +71,11 @@ abstract class CatalogWriter<T : ResourceEntry>(
   ) {
     try {
       addResourceProperty(resourceType, resource, generateComposeExtensions)
-      if (generateResourcesExtensions) {
+      if (generateResourcesExtensions && shouldGenerateExtension(resource, false)) {
         buildExtensionMethod(this, resource, contextClass, asComposeExtensions = false)
         buildExtensionMethod(this, resource, fragmentClass, asComposeExtensions = false)
       }
-      if (generateComposeExtensions) {
+      if (generateComposeExtensions && shouldGenerateExtension(resource, true)) {
         buildExtensionMethod(this, resource, contextReceiver = null, asComposeExtensions = true)
       }
     } catch (e: Exception) {
@@ -112,7 +112,7 @@ abstract class CatalogWriter<T : ResourceEntry>(
   ) {
     addProperty(
       PropertySpec.builder(resource.name.toCamelCase(), Int::class)
-        .apply { resource.docs?.let(::addKdoc) }
+        .apply { (resource as? ResourceEntry.XmlItem)?.docs?.let(::addKdoc) }
         .addAnnotation(
           AnnotationSpec.builder(resourceType.annotationClass)
             .useSiteTarget(AnnotationSpec.UseSiteTarget.GET)
@@ -133,6 +133,10 @@ abstract class CatalogWriter<T : ResourceEntry>(
         )
         .build()
     )
+  }
+
+  open fun shouldGenerateExtension(resource: T, asComposeExtensions: Boolean): Boolean {
+    return true
   }
 
   abstract fun buildExtensionMethod(

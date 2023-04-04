@@ -31,6 +31,7 @@ android {
 dependencies {
   implementation(project(":sample-library"))
   implementation(libs.android.material)
+  implementation(libs.androidx.compose.animation.graphics)
   implementation(libs.androidx.compose.material)
   implementation(libs.androidx.compose.ui)
   implementation(libs.androidx.compose.ui.tooling.preview)

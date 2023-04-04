@@ -47,4 +47,9 @@ enum class ResourceType(
     resourceGroup = "dimen",
     annotationClass = ClassName("androidx.annotation", "DimenRes"),
   ),
+  Drawable(
+    receiverType = "Drawables",
+    resourceGroup = "drawable",
+    annotationClass = ClassName("androidx.annotation", "DrawableRes"),
+  ),
 }

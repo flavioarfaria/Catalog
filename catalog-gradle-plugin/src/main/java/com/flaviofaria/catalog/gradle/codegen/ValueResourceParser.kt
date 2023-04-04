@@ -15,17 +15,15 @@
  */
 package com.flaviofaria.catalog.gradle.codegen
 
-import org.w3c.dom.Comment
-import org.w3c.dom.Element
-import org.w3c.dom.Node
 import java.io.File
 import java.lang.Integer.max
 import java.util.regex.Pattern
-import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.parsers.DocumentBuilder
+import org.w3c.dom.Comment
+import org.w3c.dom.Element
+import org.w3c.dom.Node
 
-class XmlResourceParser {
-
-  private val docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+class ValueResourceParser(private val docBuilder: DocumentBuilder) {
 
   // Original pattern from String.format() is %(\\d+\\$)?([-#+ 0,(\\<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%])
   // https://en.wikipedia.org/wiki/Printf_format_string#Type_field
@@ -49,7 +47,7 @@ class XmlResourceParser {
             "string" -> {
               val formatted =
                 node.attributes.getNamedItem("formatted")?.nodeValue != "false"
-              ResourceEntry.WithArgs.String(
+              ResourceEntry.XmlItem.WithArgs.String(
                 file,
                 name,
                 preceedingComment,
@@ -57,7 +55,7 @@ class XmlResourceParser {
               )
             }
             "plurals" -> {
-              ResourceEntry.WithArgs.Plural(
+              ResourceEntry.XmlItem.WithArgs.Plural(
                 file,
                 name,
                 preceedingComment,
@@ -65,21 +63,21 @@ class XmlResourceParser {
               )
             }
             "string-array" -> {
-              ResourceEntry.StringArray(
+              ResourceEntry.XmlItem.StringArray(
                 file,
                 name,
                 preceedingComment,
               )
             }
             "color" -> {
-              ResourceEntry.Color(
+              ResourceEntry.XmlItem.Color(
                 file,
                 name,
                 preceedingComment,
               )
             }
             "dimen" -> {
-              ResourceEntry.Dimen(
+              ResourceEntry.XmlItem.Dimen(
                 file,
                 name,
                 preceedingComment,

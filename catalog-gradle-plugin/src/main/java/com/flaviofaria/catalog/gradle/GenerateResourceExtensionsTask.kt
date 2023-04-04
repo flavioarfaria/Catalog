@@ -19,8 +19,9 @@ import com.android.build.api.dsl.AndroidSourceSet
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.gradle.internal.api.DefaultAndroidSourceFile
 import com.flaviofaria.catalog.gradle.codegen.Codegen
+import com.flaviofaria.catalog.gradle.codegen.DrawableResourceParser
 import com.flaviofaria.catalog.gradle.codegen.SourceSetQualifier
-import com.flaviofaria.catalog.gradle.codegen.XmlResourceParser
+import com.flaviofaria.catalog.gradle.codegen.ValueResourceParser
 import com.flaviofaria.catalog.gradle.codegen.capitalize
 import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
@@ -66,11 +67,15 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() {
       ?: commonExtension.sourceSets.findPackageNameInManifest()
       ?: error("Missing package name in manifest file for source set ${input.sourceSetQualifier.name}")
 
+    val docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+
     Codegen(
-      xmlResourceParser = XmlResourceParser(),
+      valueResourceParser = ValueResourceParser(docBuilder),
+      drawableResourceParser = DrawableResourceParser(docBuilder),
       packageName = packageName,
       generateResourcesExtensions = input.generateResourcesExtensions,
       generateComposeExtensions = input.generateComposeExtensions,
+      generateComposeAnimatedVectorExtensions = input.generateComposeAnimatedVectorExtensions,
     ).start(input.sourceSetQualifier.name, input.sourceSetDirs, outputFolder.asFile.get())
   }
 
@@ -91,6 +96,7 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() {
   data class TaskInput(
     @Input val generateResourcesExtensions: Boolean,
     @Input val generateComposeExtensions: Boolean,
+    @Input val generateComposeAnimatedVectorExtensions: Boolean,
     @Internal val sourceSetDirs: Set<File>,
     @Internal val sourceSetQualifier: SourceSetQualifier,
   )
