@@ -17,34 +17,44 @@ package com.flaviofaria.catalog.gradle.codegen
 
 import com.flaviofaria.catalog.gradle.codegen.writer.ColorCatalogWriter
 import com.flaviofaria.catalog.gradle.codegen.writer.DimenCatalogWriter
+import com.flaviofaria.catalog.gradle.codegen.writer.DrawableCatalogWriter
 import com.flaviofaria.catalog.gradle.codegen.writer.StringArrayCatalogWriter
 import com.flaviofaria.catalog.gradle.codegen.writer.WithArgsCatalogWriter
 import java.io.File
 
 class Codegen(
-  private val xmlResourceParser: XmlResourceParser = XmlResourceParser(),
+  private val valueResourceParser: ValueResourceParser,
+  private val drawableResourceParser: DrawableResourceParser,
   packageName: String,
   private val generateResourcesExtensions: Boolean,
   private val generateComposeExtensions: Boolean,
+  generateComposeAnimatedVectorExtensions: Boolean,
 ) {
 
   private val resourceReducer = ResourceReducer()
-  private val stringCatalogWriter = WithArgsCatalogWriter(
-    packageName = packageName,
-    resourceType = ResourceType.String,
-  )
-  private val pluralCatalogWriter = WithArgsCatalogWriter(
-    packageName = packageName,
-    resourceType = ResourceType.Plural,
-  )
-  private val stringArrayCatalogWriter = StringArrayCatalogWriter(
-    packageName = packageName,
-  )
-  private val colorCatalogWriter = ColorCatalogWriter(
-    packageName = packageName,
-  )
-  private val dimenCatalogWriter = DimenCatalogWriter(
-    packageName = packageName,
+
+  private val resourceWriterRegistry = mapOf(
+    ResourceEntry.XmlItem.WithArgs.String::class to WithArgsCatalogWriter(
+      packageName = packageName,
+      resourceType = ResourceType.String,
+    ),
+    ResourceEntry.XmlItem.WithArgs.Plural::class to WithArgsCatalogWriter(
+      packageName = packageName,
+      resourceType = ResourceType.Plural,
+    ),
+    ResourceEntry.XmlItem.StringArray::class to StringArrayCatalogWriter(
+      packageName = packageName,
+    ),
+    ResourceEntry.XmlItem.Color::class to ColorCatalogWriter(
+      packageName = packageName,
+    ),
+    ResourceEntry.XmlItem.Dimen::class to DimenCatalogWriter(
+      packageName = packageName,
+    ),
+    ResourceEntry.Drawable::class to DrawableCatalogWriter(
+      packageName = packageName,
+      generateComposeAnimatedVectorExtensions = generateComposeAnimatedVectorExtensions,
+    ),
   )
 
   fun start(
@@ -56,14 +66,13 @@ class Codegen(
       .asSequence()
       .flatMap { sourceSetDir ->
         sourceSetDir.walk()
-      }
-      .filter { file ->
-        file.parentFile.name.startsWith("values") && file.extension == "xml"
+      }.filterNot {
+        it.isDirectory
       }
       .flatMap { file ->
-        xmlResourceParser.parseFile(file)
+        file.toResourceEntries()
       }
-      .distinctBy { resourceEntry -> // groups resources by name to eliminate duplicates by priority
+      .distinctBy { resourceEntry -> // group by name to eliminate alternative resources
         resourceEntry.name
       }.toList().let { resourceEntries ->
         generateExtensionFilesForSourceSet(
@@ -89,58 +98,63 @@ class Codegen(
       .map(resourceReducer::reduce)
       .groupBy { it::class } // groups them back by type to write Kotlin files
       .forEach { (type, resources) ->
-        when (type) {
-          ResourceEntry.WithArgs.String::class -> {
-            @Suppress("UNCHECKED_CAST")
-            stringCatalogWriter.write(
-              resources as List<ResourceEntry.WithArgs.String>, // TODO unchecked cast
-              sourceSetName,
-              outputDir,
-              generateResourcesExtensions,
-              generateComposeExtensions,
-            )
-          }
-          ResourceEntry.WithArgs.Plural::class -> {
-            @Suppress("UNCHECKED_CAST")
-            pluralCatalogWriter.write(
-              resources as List<ResourceEntry.WithArgs.Plural>, // TODO
-              sourceSetName,
-              outputDir,
-              generateResourcesExtensions,
-              generateComposeExtensions,
-            )
-          }
-          ResourceEntry.StringArray::class -> {
-            @Suppress("UNCHECKED_CAST")
-            stringArrayCatalogWriter.write(
-              resources as List<ResourceEntry.StringArray>, // TODO
-              sourceSetName,
-              outputDir,
-              generateResourcesExtensions,
-              generateComposeExtensions,
-            )
-          }
-          ResourceEntry.Color::class -> {
-            @Suppress("UNCHECKED_CAST")
-            colorCatalogWriter.write(
-              resources as List<ResourceEntry.Color>, // TODO
-              sourceSetName,
-              outputDir,
-              generateResourcesExtensions,
-              generateComposeExtensions,
-            )
-          }
-          ResourceEntry.Dimen::class -> {
-            @Suppress("UNCHECKED_CAST")
-            dimenCatalogWriter.write(
-              resources as List<ResourceEntry.Dimen>, // TODO
-              sourceSetName,
-              outputDir,
-              generateResourcesExtensions,
-              generateComposeExtensions,
-            )
-          }
-        }
+        @Suppress("UNCHECKED_CAST")
+        resourceWriterRegistry[type]?.write(
+          resources as List<Nothing>,
+          sourceSetName,
+          outputDir,
+          generateResourcesExtensions,
+          generateComposeExtensions,
+        ) ?: error("Could not find resource writer for type $type")
       }
+  }
+
+  private fun File.toResourceEntries(): Iterable<ResourceEntry> {
+    return when {
+      parentFile.name.startsWith("values") && lowercaseExtension == "xml" -> {
+        valueResourceParser.parseFile(this)
+      }
+      parentFile.name.startsWith("drawable") -> {
+        toDrawableResourceEntry()?.let { listOf(it) }
+      }
+      else -> null
+    } ?: emptyList()
+  }
+
+  private val File.lowercaseExtension: String
+    get() = extension.lowercase()
+
+  private val File.isValidBitmap: Boolean
+    get() = parentFile.name.startsWith("drawable")
+      && lowercaseExtension in VALID_BITMAP_EXTENSIONS
+
+  private val File.is9PatchDrawable: Boolean
+    get() = nameWithoutExtension.endsWith(".9") && lowercaseExtension == "png"
+
+  private fun File.toDrawableResourceEntry(): ResourceEntry? {
+    return when {
+      is9PatchDrawable -> ResourceEntry.Drawable(
+        file = this,
+        name = nameWithoutExtension.substringBeforeLast(".9"),
+        type = ResourceEntry.Drawable.Type.NINE_PATCH,
+      )
+      isValidBitmap -> ResourceEntry.Drawable(
+        file = this,
+        name = nameWithoutExtension,
+        type = ResourceEntry.Drawable.Type.BITMAP,
+      )
+      lowercaseExtension == "xml" -> drawableResourceParser.parseFile(this)
+      else -> null
+    }
+  }
+
+  private companion object {
+    val VALID_BITMAP_EXTENSIONS = setOf(
+      "gif",
+      "jpeg",
+      "jpg",
+      "png",
+      "webp",
+    )
   }
 }

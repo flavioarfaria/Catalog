@@ -18,17 +18,28 @@ package com.flaviofaria.catalog.sample.compose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
+import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.flaviofaria.catalog.library.libraryName
 import com.flaviofaria.catalog.library.libraryStringArray
 import com.flaviofaria.catalog.runtime.compose.Colors
 import com.flaviofaria.catalog.runtime.compose.Dimens
+import com.flaviofaria.catalog.runtime.compose.Drawables
 import com.flaviofaria.catalog.runtime.compose.Plurals
 import com.flaviofaria.catalog.runtime.compose.StringArrays
 import com.flaviofaria.catalog.runtime.compose.Strings
 
 class MainActivity : ComponentActivity() {
 
+  @OptIn(ExperimentalAnimationGraphicsApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContent {
@@ -39,7 +50,17 @@ class MainActivity : ComponentActivity() {
       Plurals.somePlural(3, 1, 2)
       Colors.black()
       Dimens.margin()
-      Text(text = Strings.composable().toString())
+      Column {
+        Text(text = Strings.composable().toString())
+        Icon(painter = Drawables.icLauncherForeground(), contentDescription = "")
+        var atEnd by remember { mutableStateOf(false) }
+        IconButton(onClick = { atEnd = !atEnd }) {
+          Icon(
+            painter = rememberAnimatedVectorPainter(Drawables.animatedVector(), atEnd),
+            contentDescription = null,
+          )
+        }
+      }
     }
   }
 }

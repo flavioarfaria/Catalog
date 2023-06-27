@@ -19,16 +19,14 @@ import java.io.File
 
 class ResourceReducer {
 
-  // TODO figure out if it's possible to tighten typing here (all elements are of the same ResourceEntry subtype)
-  fun reduce(resources: List<ResourceEntry>): ResourceEntry {
+  fun <T : ResourceEntry> reduce(resources: List<T>): T {
     val typedArgs = mutableMapOf<Int, Pair<StringArg, File>>()
     return resources
       .asSequence()
       .onEach { it.validateArgumentTypes(typedArgs) }
       .maxByOrNull { resource ->
         when (resource) {
-          is ResourceEntry.WithArgs.String -> resource.args.size
-          is ResourceEntry.WithArgs.Plural -> resource.args.size
+          is ResourceEntry.XmlItem.WithArgs -> resource.args.size
           else -> return resource // non-reducable resource type
         }
       }!!.apply {
@@ -41,8 +39,8 @@ class ResourceReducer {
     typedArgs: MutableMap<Int, Pair<StringArg, File>>,
   ) {
     val args = when (this) {
-      is ResourceEntry.WithArgs.String -> args
-      is ResourceEntry.WithArgs.Plural -> args
+      is ResourceEntry.XmlItem.WithArgs.String -> args
+      is ResourceEntry.XmlItem.WithArgs.Plural -> args
       else -> return // no need to validate other resource types
     }
     args.forEach { arg ->

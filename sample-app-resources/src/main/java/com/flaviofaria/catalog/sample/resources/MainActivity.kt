@@ -22,6 +22,7 @@ import com.flaviofaria.catalog.library.libraryName
 import com.flaviofaria.catalog.library.libraryStringArray
 import com.flaviofaria.catalog.runtime.resources.Colors
 import com.flaviofaria.catalog.runtime.resources.Dimens
+import com.flaviofaria.catalog.runtime.resources.Drawables
 import com.flaviofaria.catalog.runtime.resources.Plurals
 import com.flaviofaria.catalog.runtime.resources.StringArrays
 import com.flaviofaria.catalog.runtime.resources.Strings
@@ -39,6 +40,12 @@ class MainActivity : AppCompatActivity() {
       Colors.black()
       Dimens.margin()
       text = Strings.someOtherStringResource()
+      setCompoundDrawablesRelativeWithIntrinsicBounds(
+        Drawables.icLauncherForeground(),
+        null,
+        null,
+        null,
+      )
     })
   }
 }

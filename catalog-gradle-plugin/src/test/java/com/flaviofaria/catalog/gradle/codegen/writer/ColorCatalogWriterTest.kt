@@ -32,12 +32,12 @@ class ColorCatalogWriterTest {
   private lateinit var codegenDestination: File
 
   private val resources = listOf(
-    ResourceEntry.Color(
+    ResourceEntry.XmlItem.Color(
       file = File("."),
       name = "color_1",
       docs = "Color 1 docs",
     ),
-    ResourceEntry.Color(
+    ResourceEntry.XmlItem.Color(
       file = File("."),
       name = "color_2",
       docs = null,

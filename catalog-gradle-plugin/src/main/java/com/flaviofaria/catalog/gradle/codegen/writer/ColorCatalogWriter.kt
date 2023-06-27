@@ -30,7 +30,7 @@ import com.squareup.kotlinpoet.asClassName
 @OptIn(ExperimentalKotlinPoetApi::class)
 class ColorCatalogWriter(
   packageName: String,
-) : CatalogWriter<ResourceEntry.Color>(
+) : CatalogWriter<ResourceEntry.XmlItem.Color>(
   packageName, ResourceType.Color,
 ) {
 
@@ -53,7 +53,7 @@ class ColorCatalogWriter(
 
   override fun buildExtensionMethod(
     builder: FileSpec.Builder,
-    resource: ResourceEntry.Color,
+    resource: ResourceEntry.XmlItem.Color,
     contextReceiver: TypeName?,
     asComposeExtensions: Boolean,
   ): FileSpec.Builder {

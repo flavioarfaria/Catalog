@@ -31,7 +31,7 @@ import com.squareup.kotlinpoet.TypeName
 class WithArgsCatalogWriter(
   packageName: String,
   resourceType: ResourceType,
-) : CatalogWriter<ResourceEntry.WithArgs>(
+) : CatalogWriter<ResourceEntry.XmlItem.WithArgs>(
   packageName, resourceType,
 ) {
 
@@ -48,7 +48,7 @@ class WithArgsCatalogWriter(
 
   override fun buildExtensionMethod(
     builder: FileSpec.Builder,
-    resource: ResourceEntry.WithArgs,
+    resource: ResourceEntry.XmlItem.WithArgs,
     contextReceiver: TypeName?,
     asComposeExtensions: Boolean,
   ): FileSpec.Builder {

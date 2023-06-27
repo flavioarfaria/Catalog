@@ -45,14 +45,19 @@ class CatalogPlugin : Plugin<Project> {
         project.addRuntimeDependency("resources")
       }
       val generateComposeExtensions = catalogExtension.generateComposeExtensions
-        ?: project.dependsOnCompose()
+        ?: project.dependsOn(group = "androidx.compose.ui", name= "ui")
       if (generateComposeExtensions) {
         project.addRuntimeDependency("compose")
       }
+      val generateComposeAnimatedVectorExtensions = project.dependsOn(
+        group = "androidx.compose.animation",
+        name = "animation-graphics",
+      )
 
       val mainTaskProvider = project.getTaskProviderForSourceSet(
         generateResourcesExtensions = catalogExtension.generateResourcesExtensions,
         generateComposeExtensions = generateComposeExtensions,
+        generateComposeAnimatedVectorExtensions = generateComposeAnimatedVectorExtensions,
         sourceSetDirs = commonExtension.getQualifiedSourceSetsByName("main"),
         sourceSetQualifier = SourceSetQualifier("main", SourceSetType.MAIN)
       )
@@ -61,6 +66,7 @@ class CatalogPlugin : Plugin<Project> {
         val variantTaskProvider = project.getTaskProviderForSourceSet(
           generateResourcesExtensions = catalogExtension.generateResourcesExtensions,
           generateComposeExtensions = generateComposeExtensions,
+          generateComposeAnimatedVectorExtensions = generateComposeAnimatedVectorExtensions,
           sourceSetDirs = commonExtension.getQualifiedSourceSetsByName(variant.name),
           sourceSetQualifier = SourceSetQualifier(variant.name, SourceSetType.VARIANT),
         )
@@ -68,6 +74,7 @@ class CatalogPlugin : Plugin<Project> {
           project.getTaskProviderForSourceSet(
             generateResourcesExtensions = catalogExtension.generateResourcesExtensions,
             generateComposeExtensions = generateComposeExtensions,
+            generateComposeAnimatedVectorExtensions = generateComposeAnimatedVectorExtensions,
             sourceSetDirs = commonExtension.getQualifiedSourceSetsByName(buildType),
             sourceSetQualifier = SourceSetQualifier(buildType, SourceSetType.BUILD_TYPE),
           )
@@ -78,6 +85,7 @@ class CatalogPlugin : Plugin<Project> {
           project.getTaskProviderForSourceSet(
             generateResourcesExtensions = catalogExtension.generateResourcesExtensions,
             generateComposeExtensions = generateComposeExtensions,
+            generateComposeAnimatedVectorExtensions = generateComposeAnimatedVectorExtensions,
             sourceSetDirs = commonExtension.getQualifiedSourceSetsByName(flavorName),
             sourceSetQualifier = SourceSetQualifier(flavorName, SourceSetType.FLAVOR),
           )
@@ -111,6 +119,7 @@ class CatalogPlugin : Plugin<Project> {
   private fun Project.getTaskProviderForSourceSet(
     generateResourcesExtensions: Boolean,
     generateComposeExtensions: Boolean,
+    generateComposeAnimatedVectorExtensions: Boolean,
     sourceSetDirs: Set<File>,
     sourceSetQualifier: SourceSetQualifier,
   ): TaskProvider<GenerateResourceExtensionsTask> {
@@ -125,6 +134,7 @@ class CatalogPlugin : Plugin<Project> {
         GenerateResourceExtensionsTask.TaskInput(
           generateResourcesExtensions = generateResourcesExtensions,
           generateComposeExtensions = generateComposeExtensions,
+          generateComposeAnimatedVectorExtensions = generateComposeAnimatedVectorExtensions,
           sourceSetDirs = sourceSetDirs,
           sourceSetQualifier = sourceSetQualifier,
         )
@@ -156,7 +166,7 @@ class CatalogPlugin : Plugin<Project> {
     }
   }
 
-  private fun Project.dependsOnCompose(): Boolean {
+  private fun Project.dependsOn(group: String, name: String): Boolean {
     val dependencyConfigs = setOf(
       configurations.getByName("api"),
       configurations.getByName("compileOnly"),
@@ -166,7 +176,7 @@ class CatalogPlugin : Plugin<Project> {
       .asSequence()
       .filter { config -> dependencyConfigs.any { it in config.extendsFrom } }
       .flatMap { it.dependencies }
-      .any { it.group == "androidx.compose.ui" && it.name == "ui" }
+      .any { it.group == group && it.name == name }
   }
 
   companion object {

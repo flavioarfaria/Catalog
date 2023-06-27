@@ -32,12 +32,12 @@ class DimenCatalogWriterTest {
   private lateinit var codegenDestination: File
 
   private val resources = listOf(
-    ResourceEntry.Dimen(
+    ResourceEntry.XmlItem.Dimen(
       file = File("."),
       name = "dimen_1",
       docs = "Dimen 1 docs",
     ),
-    ResourceEntry.Dimen(
+    ResourceEntry.XmlItem.Dimen(
       file = File("."),
       name = "dimen_2",
       docs = null,

@@ -34,13 +34,13 @@ class WithArgsCatalogWriterTest {
   private lateinit var codegenDestination: File
 
   private val stringResources = listOf(
-    ResourceEntry.WithArgs.String(
+    ResourceEntry.XmlItem.WithArgs.String(
       file = File("."),
       name = "string_1",
       docs = "String 1 docs",
       args = emptyList(),
     ),
-    ResourceEntry.WithArgs.String(
+    ResourceEntry.XmlItem.WithArgs.String(
       file = File("."),
       name = "string_2",
       docs = null,
@@ -67,7 +67,7 @@ class WithArgsCatalogWriterTest {
         ),
       ),
     ),
-    ResourceEntry.WithArgs.String(
+    ResourceEntry.XmlItem.WithArgs.String(
       file = File("."),
       name = "string_3",
       docs = null,
@@ -94,7 +94,7 @@ class WithArgsCatalogWriterTest {
         ),
       ),
     ),
-    ResourceEntry.WithArgs.String(
+    ResourceEntry.XmlItem.WithArgs.String(
       file = File("."),
       name = "string_4",
       docs = null,
@@ -108,13 +108,13 @@ class WithArgsCatalogWriterTest {
   )
 
   private val pluralResources = listOf(
-    ResourceEntry.WithArgs.Plural(
+    ResourceEntry.XmlItem.WithArgs.Plural(
       file = File("."),
       name = "plural_1",
       docs = "Plural 1 docs",
       args = emptyList(),
     ),
-    ResourceEntry.WithArgs.Plural(
+    ResourceEntry.XmlItem.WithArgs.Plural(
       file = File("."),
       name = "plural_2",
       docs = null,
@@ -141,7 +141,7 @@ class WithArgsCatalogWriterTest {
         ),
       ),
     ),
-    ResourceEntry.WithArgs.Plural(
+    ResourceEntry.XmlItem.WithArgs.Plural(
       file = File("."),
       name = "plural_3",
       docs = null,
@@ -168,7 +168,7 @@ class WithArgsCatalogWriterTest {
         ),
       ),
     ),
-    ResourceEntry.WithArgs.Plural(
+    ResourceEntry.XmlItem.WithArgs.Plural(
       file = File("."),
       name = "plural_4",
       docs = null,

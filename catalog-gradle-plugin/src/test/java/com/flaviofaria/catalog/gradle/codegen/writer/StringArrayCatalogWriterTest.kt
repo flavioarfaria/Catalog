@@ -32,12 +32,12 @@ class StringArrayCatalogWriterTest {
   private lateinit var codegenDestination: File
 
   private val resources = listOf(
-    ResourceEntry.StringArray(
+    ResourceEntry.XmlItem.StringArray(
       file = File("."),
       name = "string_array_1",
       docs = "String array 1 docs",
     ),
-    ResourceEntry.StringArray(
+    ResourceEntry.XmlItem.StringArray(
       file = File("."),
       name = "string_array_2",
       docs = null,

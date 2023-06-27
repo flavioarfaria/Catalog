@@ -20,3 +20,4 @@ object StringArrays
 object Plurals
 object Colors
 object Dimens
+object Drawables

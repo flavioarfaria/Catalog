@@ -20,43 +20,71 @@ import java.io.File
 sealed interface ResourceEntry {
   val file: File
   val name: String
-  val docs: String?
 
-  interface WithArgs : ResourceEntry {
-    val args: List<StringArg>
+  sealed interface XmlItem : ResourceEntry {
+    val docs: String?
 
-    data class String(
+    sealed interface WithArgs : XmlItem {
+      val args: List<StringArg>
+
+      data class String(
+        override val file: File,
+        override val name: kotlin.String,
+        override val docs: kotlin.String?,
+        override val args: List<StringArg>,
+      ) : WithArgs
+
+      data class Plural(
+        override val file: File,
+        override val name: kotlin.String,
+        override val docs: kotlin.String?,
+        override val args: List<StringArg>,
+      ) : WithArgs
+    }
+
+    data class StringArray(
       override val file: File,
-      override val name: kotlin.String,
-      override val docs: kotlin.String?,
-      override val args: List<StringArg>,
-    ) : WithArgs
+      override val name: String,
+      override val docs: String?,
+    ) : XmlItem
 
-    data class Plural(
+    data class Color(
       override val file: File,
-      override val name: kotlin.String,
-      override val docs: kotlin.String?,
-      override val args: List<StringArg>,
-    ) : WithArgs
+      override val name: String,
+      override val docs: String?,
+    ) : XmlItem
+
+    data class Dimen(
+      override val file: File,
+      override val name: String,
+      override val docs: String?,
+    ) : XmlItem
   }
 
-  data class StringArray(
+  data class Drawable(
     override val file: File,
     override val name: String,
-    override val docs: String?,
-  ) : ResourceEntry
-
-  data class Color(
-    override val file: File,
-    override val name: String,
-    override val docs: String?,
-  ) : ResourceEntry
-
-  data class Dimen(
-    override val file: File,
-    override val name: String,
-    override val docs: String?,
-  ) : ResourceEntry
+    val type: Type,
+  ) : ResourceEntry {
+    enum class Type {
+      ANIMATED_VECTOR,
+      ANIMATION_LIST,
+      CLIP,
+      BITMAP,
+      BITMAP_REFERENCE,
+      INSET,
+      LAYER_LIST,
+      LEVEL_LIST,
+      NINE_PATCH,
+      NINE_PATCH_REFERENCE,
+      SCALE,
+      SHAPE,
+      STATE_LIST,
+      TRANSITION,
+      VECTOR,
+      OTHER,
+    }
+  }
 }
 
 data class StringArg(

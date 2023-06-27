@@ -30,7 +30,7 @@ import com.squareup.kotlinpoet.asClassName
 @OptIn(ExperimentalKotlinPoetApi::class)
 class StringArrayCatalogWriter(
   packageName: String,
-) : CatalogWriter<ResourceEntry.StringArray>(
+) : CatalogWriter<ResourceEntry.XmlItem.StringArray>(
   packageName, ResourceType.StringArray,
 ) {
 
@@ -41,7 +41,7 @@ class StringArrayCatalogWriter(
 
   override fun buildExtensionMethod(
     builder: FileSpec.Builder,
-    resource: ResourceEntry.StringArray,
+    resource: ResourceEntry.XmlItem.StringArray,
     contextReceiver: TypeName?,
     asComposeExtensions: Boolean,
   ): FileSpec.Builder {
