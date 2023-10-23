@@ -15,13 +15,18 @@
  */
 package com.flaviofaria.catalog.gradle
 
+import com.android.build.api.dsl.AndroidSourceSet
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet
+import com.android.build.gradle.internal.api.DefaultAndroidSourceFile
+import com.android.build.gradle.internal.parsePackage
 import com.flaviofaria.catalog.gradle.codegen.SourceSetQualifier
 import com.flaviofaria.catalog.gradle.codegen.SourceSetType
 import com.flaviofaria.catalog.gradle.codegen.capitalize
 import java.io.File
+import javax.xml.parsers.DocumentBuilderFactory
+import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskProvider
@@ -54,40 +59,48 @@ class CatalogPlugin : Plugin<Project> {
         name = "animation-graphics",
       )
 
+      var sourceSetQualifier = SourceSetQualifier("main", SourceSetType.MAIN)
       val mainTaskProvider = project.getTaskProviderForSourceSet(
         generateResourcesExtensions = catalogExtension.generateResourcesExtensions,
         generateComposeExtensions = generateComposeExtensions,
         generateComposeAnimatedVectorExtensions = generateComposeAnimatedVectorExtensions,
+        packageName = commonExtension.getPackageName(sourceSetQualifier),
         sourceSetDirs = commonExtension.getQualifiedSourceSetsByName("main"),
-        sourceSetQualifier = SourceSetQualifier("main", SourceSetType.MAIN)
+        sourceSetQualifier = sourceSetQualifier,
       )
 
       androidComponents.onVariants { variant ->
+        sourceSetQualifier = SourceSetQualifier(variant.name, SourceSetType.VARIANT)
         val variantTaskProvider = project.getTaskProviderForSourceSet(
           generateResourcesExtensions = catalogExtension.generateResourcesExtensions,
           generateComposeExtensions = generateComposeExtensions,
           generateComposeAnimatedVectorExtensions = generateComposeAnimatedVectorExtensions,
+          packageName = commonExtension.getPackageName(sourceSetQualifier),
           sourceSetDirs = commonExtension.getQualifiedSourceSetsByName(variant.name),
-          sourceSetQualifier = SourceSetQualifier(variant.name, SourceSetType.VARIANT),
+          sourceSetQualifier = sourceSetQualifier,
         )
         val buildTypeTaskProvider = variant.buildType?.let { buildType ->
+          sourceSetQualifier = SourceSetQualifier(buildType, SourceSetType.BUILD_TYPE)
           project.getTaskProviderForSourceSet(
             generateResourcesExtensions = catalogExtension.generateResourcesExtensions,
             generateComposeExtensions = generateComposeExtensions,
             generateComposeAnimatedVectorExtensions = generateComposeAnimatedVectorExtensions,
+            packageName = commonExtension.getPackageName(sourceSetQualifier),
             sourceSetDirs = commonExtension.getQualifiedSourceSetsByName(buildType),
-            sourceSetQualifier = SourceSetQualifier(buildType, SourceSetType.BUILD_TYPE),
+            sourceSetQualifier = sourceSetQualifier,
           )
         }
         val flavorTaskProvider = variant.flavorName.takeUnless {
           it?.isEmpty() == true // build variants come with a "" flavor
         }?.let { flavorName ->
+          sourceSetQualifier = SourceSetQualifier(flavorName, SourceSetType.FLAVOR)
           project.getTaskProviderForSourceSet(
             generateResourcesExtensions = catalogExtension.generateResourcesExtensions,
             generateComposeExtensions = generateComposeExtensions,
             generateComposeAnimatedVectorExtensions = generateComposeAnimatedVectorExtensions,
+            packageName = commonExtension.getPackageName(sourceSetQualifier),
             sourceSetDirs = commonExtension.getQualifiedSourceSetsByName(flavorName),
-            sourceSetQualifier = SourceSetQualifier(flavorName, SourceSetType.FLAVOR),
+            sourceSetQualifier = sourceSetQualifier,
           )
         }
         variant.sources.java?.apply {
@@ -116,10 +129,29 @@ class CatalogPlugin : Plugin<Project> {
     }
   }
 
+  private fun CommonExtension<*, *, *, *>.getPackageName(
+    sourceSetQualifier: SourceSetQualifier,
+  ): String {
+    return namespace
+      ?: sourceSets.findByName(sourceSetQualifier.name)?.readManifestPackageName()
+      ?: error("Missing package name in manifest file for source set ${sourceSetQualifier.name}")
+  }
+
+  private fun AndroidSourceSet.readManifestPackageName(): String? {
+    val manifestFile = (manifest as DefaultAndroidSourceFile).srcFile
+    return if (manifestFile.exists()) {
+      val docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+      val doc = docBuilder.parse(manifestFile)
+      val manifestRoot = doc.getElementsByTagName("manifest").item(0)
+      manifestRoot.attributes.getNamedItem("package")?.nodeValue
+    } else null
+  }
+
   private fun Project.getTaskProviderForSourceSet(
     generateResourcesExtensions: Boolean,
     generateComposeExtensions: Boolean,
     generateComposeAnimatedVectorExtensions: Boolean,
+    packageName: String,
     sourceSetDirs: Set<File>,
     sourceSetQualifier: SourceSetQualifier,
   ): TaskProvider<GenerateResourceExtensionsTask> {
@@ -135,6 +167,7 @@ class CatalogPlugin : Plugin<Project> {
           generateResourcesExtensions = generateResourcesExtensions,
           generateComposeExtensions = generateComposeExtensions,
           generateComposeAnimatedVectorExtensions = generateComposeAnimatedVectorExtensions,
+          packageName = packageName,
           sourceSetDirs = sourceSetDirs,
           sourceSetQualifier = sourceSetQualifier,
         )
