@@ -15,9 +15,6 @@
  */
 package com.flaviofaria.catalog.gradle
 
-import com.android.build.api.dsl.AndroidSourceSet
-import com.android.build.api.dsl.CommonExtension
-import com.android.build.gradle.internal.api.DefaultAndroidSourceFile
 import com.flaviofaria.catalog.gradle.codegen.Codegen
 import com.flaviofaria.catalog.gradle.codegen.DrawableResourceParser
 import com.flaviofaria.catalog.gradle.codegen.SourceSetQualifier
@@ -26,7 +23,6 @@ import com.flaviofaria.catalog.gradle.codegen.capitalize
 import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
 import org.gradle.api.DefaultTask
-import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
@@ -61,42 +57,23 @@ abstract class GenerateResourceExtensionsTask : DefaultTask() {
 
   @TaskAction
   fun generateResourceExtensions() {
-    val commonExtension = project.extensions.getByType(CommonExtension::class.java)
-
-    val packageName = commonExtension.namespace
-      ?: commonExtension.sourceSets.findPackageNameInManifest()
-      ?: error("Missing package name in manifest file for source set ${input.sourceSetQualifier.name}")
-
     val docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
 
     Codegen(
       valueResourceParser = ValueResourceParser(docBuilder),
       drawableResourceParser = DrawableResourceParser(docBuilder),
-      packageName = packageName,
+      packageName = input.packageName,
       generateResourcesExtensions = input.generateResourcesExtensions,
       generateComposeExtensions = input.generateComposeExtensions,
       generateComposeAnimatedVectorExtensions = input.generateComposeAnimatedVectorExtensions,
     ).start(input.sourceSetQualifier.name, input.sourceSetDirs, outputFolder.asFile.get())
   }
 
-  private fun NamedDomainObjectContainer<out AndroidSourceSet>.findPackageNameInManifest(): String? {
-    return findByName(input.sourceSetQualifier.name)?.readManifestPackageName()
-  }
-
-  private fun AndroidSourceSet.readManifestPackageName(): String? {
-    val manifestFile = (manifest as DefaultAndroidSourceFile).srcFile
-    return if (manifestFile.exists()) {
-      val docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-      val doc = docBuilder.parse(manifestFile)
-      val manifestRoot = doc.getElementsByTagName("manifest").item(0)
-      manifestRoot.attributes.getNamedItem("package")?.nodeValue
-    } else null
-  }
-
   data class TaskInput(
     @Input val generateResourcesExtensions: Boolean,
     @Input val generateComposeExtensions: Boolean,
     @Input val generateComposeAnimatedVectorExtensions: Boolean,
+    @Input val packageName: String,
     @Internal val sourceSetDirs: Set<File>,
     @Internal val sourceSetQualifier: SourceSetQualifier,
   )
